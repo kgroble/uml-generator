@@ -1,0 +1,47 @@
+@startuml
+class UMLGenerator {
++ main(args: String[]): void
+}
+
+class ClassCell {
+- classNode: ClassNode
+- edges: List<Edge>
+
++ getName(): String
++ getAccess(): int
++ getFields(): List<FieldNode>
++ getMethods(): List<MethodNode>
++ getImplements(): List<ClassNode>
++ getSuper(): ClassNode
+}
+
+class Edge {
+- originClass: ClassCell
+- destClass: ClassCell
+- relation: Relation
+}
+
+class Parser {
+- patterns: List<Pattern>
+- drawRules: Map<String, DrawRule>
+}
+
+class Graph {
+- cells: List<ClassCell>
+- edges: List<Edge>
+}
+
+interface Pattern {
++ detect(g: Graph): Graph
+}
+
+enum Relation {
+}
+
+ClassCell --> Edge
+Edge --> ClassCell
+Edge --> Relation
+Parser --> Pattern
+Pattern --> Graph
+
+@enduml
