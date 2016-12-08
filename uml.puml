@@ -1,6 +1,11 @@
 @startuml
-class UMLGenerator {
+class UMLGeneratorApp {
 + main(args: String[]): void
+}
+
+class GraphGenerator {
+- recursive: boolean
++ execute(classNames: List<String>): Graph
 }
 
 class ClassCell {
@@ -21,27 +26,103 @@ class Edge {
 - relation: Relation
 }
 
+note "The List of concrete, decorated patterns\nwill be ordered by priority" as NParser
 class Parser {
+- wholeGraph: Graph
 - patterns: List<Pattern>
-- drawRules: Map<String, DrawRule>
++ parseGraph(graph: Graph): List<GraphvizElement>
 }
+
+NParser .. Parser
 
 class Graph {
 - cells: List<ClassCell>
 - edges: List<Edge>
 }
 
-interface Pattern {
-+ detect(g: Graph): Graph
+note "The constructor takes the Graph to parse,\nand the parsing takes place immediately upon instantiation" as NPattern
+abstract class Pattern {
+- detected: Graph
++ Pattern(graphToSearch: Graph)
++ toGraphviz(): abstract List<GraphvizElement>
++ getDetectedGraph(): Graph
++ detect(graphToSearch: Graph): abstract Graph
+}
+NPattern .. Pattern
+
+abstract class PatternDecorator extends Pattern {
++ toGraphviz(): List<GraphvizElement>
++ detect(graphToSearch: Graph): Graph
+}
+
+class ColoredDecorator extends PatternDecorator {
++ toGraphviz(): List<GraphvizElement>
+}
+
+class ArrowDecorator extends PatternDecorator {
++ toGraphviz(): List<GraphvizElement>
+}
+
+class SingletonPattern extends Pattern {
++ detect(graphToSearch: Graph): Graph
+}
+
+class AdapterPattern extends Pattern {
++ detect(graphToSearch: Graph): Graph
+}
+
+class DecoratorPattern extends Pattern {
++ detect(graphToSearch: Graph): Graph
 }
 
 enum Relation {
++ INHERITS
++ IMPLEMENTS
++ CONTAINS
 }
 
+note "The map is from a Graphviz attribute to its value." as NGraphvizElement
+abstract class GraphvizElement {
+- attributes: Map<String, String>
++ addAttr(var: String, val: String): void
++ remAttr(var: String): void
++ toGraphviz(): abstract String
+}
+NGraphvizElement .. GraphvizElement
+
+class GraphvizItem extends GraphvizElement {
+- name: String
++ toGraphviz(): String
+}
+
+class GraphvizRel extends GraphvizElement {
+- fromItem: String
+- toItem: String
++ toGraphviz(): String
+}
+
+interface Exporter {
++ export(graphviz: List<GraphvizElement>): void
+}
+
+class FileExporter extends FileWriter implements Exporter {
++ export(graphviz: List<GraphvizElement>): void
+}
+
+UMLGeneratorApp --> GraphGenerator
+UMLGeneratorApp --> Parser
+UMLGeneratorApp --> Exporter
+GraphGenerator --> Graph
 ClassCell --> Edge
 Edge --> ClassCell
 Edge --> Relation
 Parser --> Pattern
 Pattern --> Graph
-
+PatternDecorator --> Pattern
+Pattern --> GraphvizElement
+Graph --> ClassCell
+Graph --> Edge
+Parser --> Graph
+Parser --> GraphvizElement
+Exporter --> GraphvizElement
 @enduml
