@@ -26,29 +26,33 @@ class Edge {
 - relation: Relation
 }
 
-note "The List of concrete, decorated patterns\nwill be ordered by priority" as NParser
 class Parser {
 - wholeGraph: Graph
 - patterns: List<Pattern>
 + parseGraph(graph: Graph): List<GraphvizElement>
 }
-
-NParser .. Parser
+note top of Parser
+  The List of concrete, decorated patterns
+  will be ordered by priority
+end note
 
 class Graph {
 - cells: List<ClassCell>
 - edges: List<Edge>
 }
 
-note "The constructor takes the Graph to parse,\nand the parsing takes place immediately upon instantiation" as NPattern
 abstract class Pattern {
 - detected: Graph
 + Pattern(graphToSearch: Graph)
-+ toGraphviz(): abstract List<GraphvizElement>
++ {abstract} toGraphviz(): List<GraphvizElement>
 + getDetectedGraph(): Graph
-+ detect(graphToSearch: Graph): abstract Graph
++ {abstract} detect(graphToSearch: Graph): Graph
 }
-NPattern .. Pattern
+note top of Pattern
+  The constructor takes the Graph to parse,
+  and the parsing takes place immediately
+  upon instantiation
+end note
 
 abstract class PatternDecorator extends Pattern {
 + toGraphviz(): List<GraphvizElement>
@@ -81,14 +85,15 @@ enum Relation {
 + CONTAINS
 }
 
-note "The map is from a Graphviz attribute to its value." as NGraphvizElement
 abstract class GraphvizElement {
 - attributes: Map<String, String>
 + addAttr(var: String, val: String): void
 + remAttr(var: String): void
-+ toGraphviz(): abstract String
++ {abstract} toGraphviz(): String
 }
-NGraphvizElement .. GraphvizElement
+note top of GraphvizElement
+  The map is from a Graphviz attribute to its value.
+end note
 
 class GraphvizItem extends GraphvizElement {
 - name: String
