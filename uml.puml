@@ -28,12 +28,16 @@ class Edge {
 
 class Parser {
 - wholeGraph: Graph
-- patterns: List<Pattern>
+- patterns: Map<Pattern, Integer>
 + parseGraph(graph: Graph): List<GraphvizElement>
++ addPattern(pattern: Pattern, priority: Integer): boolean
++ remPattern(pattern: Pattern): Pattern
 }
 note top of Parser
-  The List of concrete, decorated patterns
-  will be ordered by priority
+  The addPattern() method checks to ensure
+  there are no repeated priorities and no
+  repeated patterns. Patterns will be searched
+  for from lowest priority value to highest.
 end note
 
 class Graph {
@@ -95,14 +99,20 @@ note top of GraphvizElement
   The map is from a Graphviz attribute to its value.
 end note
 
-class GraphvizItem extends GraphvizElement {
+class GraphvizNode extends GraphvizElement {
 - name: String
 + toGraphviz(): String
 }
 
-class GraphvizRel extends GraphvizElement {
-- fromItem: String
-- toItem: String
+class GraphvizEdge extends GraphvizElement {
+- fromNode: String
+- toNode: String
++ toGraphviz(): String
+}
+
+class GraphvizGlobalParam extends GraphvizElement {
+- parameter: String
+- value: String
 + toGraphviz(): String
 }
 
@@ -110,7 +120,7 @@ interface Exporter {
 + export(graphviz: List<GraphvizElement>): void
 }
 
-class FileExporter extends FileWriter implements Exporter {
+class FileExporter implements Exporter {
 + export(graphviz: List<GraphvizElement>): void
 }
 
