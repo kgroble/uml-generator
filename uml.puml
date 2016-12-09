@@ -72,14 +72,17 @@ class ArrowDecorator extends PatternDecorator {
 }
 
 class SingletonPattern extends Pattern {
++ toGraphviz(): List<GraphvizElement>
 + detect(graphToSearch: Graph): Graph
 }
 
 class AdapterPattern extends Pattern {
++ toGraphviz(): List<GraphvizElement>
 + detect(graphToSearch: Graph): Graph
 }
 
 class DecoratorPattern extends Pattern {
++ toGraphviz(): List<GraphvizElement>
 + detect(graphToSearch: Graph): Graph
 }
 
@@ -93,6 +96,7 @@ abstract class GraphvizElement {
 - attributes: Map<String, String>
 + addAttr(var: String, val: String): void
 + remAttr(var: String): void
++ getAttr(var: String): String
 + {abstract} toGraphviz(): String
 }
 note top of GraphvizElement
@@ -111,8 +115,6 @@ class GraphvizEdge extends GraphvizElement {
 }
 
 class GraphvizGlobalParam extends GraphvizElement {
-- parameter: String
-- value: String
 + toGraphviz(): String
 }
 
