@@ -1,6 +1,6 @@
 @startuml
 class UMLGeneratorApp {
-+ main(args: String[]): void
++ {static} main(args: String[]): void
 }
 
 class GraphGenerator {
@@ -60,6 +60,8 @@ class Graph {
 }
 
 abstract class Pattern {
+- translateFieldNode(node: FieldNode): String
+- translateMethodNode(node: MethodNode): String
 + toGraphviz(): List<GraphvizElement>
 + {abstract} detect(graphToSearch: Graph): Graph
 }

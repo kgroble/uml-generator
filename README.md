@@ -6,3 +6,5 @@
     * Tested multiple run configurations
 ## Kieran
 ## Lewis
+    * Wrote bare-bones class parser up to generating Graphviz code.
+    * Master UML maker.
