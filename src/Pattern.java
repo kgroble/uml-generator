@@ -2,25 +2,19 @@ import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Pattern {
-	private Graph detected;
-	
-	public Pattern(Graph graphToSearch) {
-		this.detected = this.detect(graphToSearch);
-	}
-	
-	public List<GraphvizElement> toGraphviz() {
-    List<GraphvizElement> elements = new ArrayList<>();
-    
-    for (ClassCell cell : this.detected.getCells()) {
-      elements.add(new GraphvizNode(cell.getPrettyName()));
+
+    public List<GraphvizElement> toGraphviz(Graph detected) {
+        List<GraphvizElement> elements = new ArrayList<>();
+
+        for (ClassCell cell : detected.getCells()) {
+            GraphvizNode node = new GraphvizNode(cell.getPrettyName());
+            node.addAttribute("shape", "\"record\"");
+            node.addAttribute("label", "\"{WeatherData|//fields|//methods}\"");
+            elements.add(node);
+        }
+
+        return elements;
     }
 
-    return elements;
-  }
-	
-	public Graph getDetectedGraph() {
-		return this.detected.copy();
-	}
-	
-	public abstract Graph detect(Graph graphToSearch);
+    public abstract Graph detect(Graph graphToSearch);
 }

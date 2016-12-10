@@ -1,0 +1,5 @@
+digraph uml {
+List [
+	shape = "record",
+	label = "{WeatherData|//fields|//methods}"
+];}
