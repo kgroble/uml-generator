@@ -8,7 +8,6 @@ public class UMLGeneratorApp {
         for (String className : args) {
             classNames.add(className);
         }
-        classNames.add("java.util.List");
         GraphGenerator generator = new GraphGenerator(true, GraphGenerator.AccessLevel.PRIVATE);
         Graph g = generator.execute(classNames);
         Parser parser = new Parser();

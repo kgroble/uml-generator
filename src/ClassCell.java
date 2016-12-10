@@ -30,11 +30,11 @@ public class ClassCell {
     }
 
     public List<FieldNode> getFields() {
-        return null;
+        return classNode.fields;
     }
 
     public List<MethodNode> getMethods() {
-        return null;
+        return classNode.methods;
     }
 
     public List<ClassNode> getImplements() {

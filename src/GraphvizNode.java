@@ -18,7 +18,7 @@ public class GraphvizNode extends GraphvizElement {
         }
         code += attributeArray[attributeArray.length - 1]
                 + " = " + this.attributes.get((String) attributeArray[attributeArray.length - 1])
-                + "\n];";
+                + "\n];\n";
         
         return code;
     }
