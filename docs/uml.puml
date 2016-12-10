@@ -5,7 +5,14 @@ class UMLGeneratorApp {
 
 class GraphGenerator {
 - recursive: boolean
+- access: AccessLevel
 + execute(classNames: List<String>): Graph
+}
+
+enum AccessLevel {
++ PUBLIC
++ PRIVATE
++ PROTECTED
 }
 
 class ClassCell {
@@ -13,11 +20,13 @@ class ClassCell {
 - edges: List<Edge>
 
 + getName(): String
++ getPrettyName(): String
 + getAccess(): int
 + getFields(): List<FieldNode>
 + getMethods(): List<MethodNode>
 + getImplements(): List<ClassNode>
 + getSuper(): ClassNode
++ equals(other: Object): boolean
 }
 
 class Edge {
@@ -28,10 +37,10 @@ class Edge {
 
 class Parser {
 - wholeGraph: Graph
-- patterns: Map<Pattern, Integer>
+- patterns: Map<Integer, Pattern>
 + parseGraph(graph: Graph): List<GraphvizElement>
 + addPattern(pattern: Pattern, priority: Integer): boolean
-+ remPattern(pattern: Pattern): Pattern
++ remPattern(pattern: Pattern): boolean
 }
 note top of Parser
   The addPattern() method checks to ensure
@@ -43,20 +52,17 @@ end note
 class Graph {
 - cells: List<ClassCell>
 - edges: List<Edge>
++ addClass(cell: ClassCell): boolean
++ getCells(): List<ClassCell>
++ addEdge(edge: Edge): boolean
++ getEdges(): List<Edge>
++ copy(): Graph
 }
 
 abstract class Pattern {
-- detected: Graph
-+ Pattern(graphToSearch: Graph)
-+ {abstract} toGraphviz(): List<GraphvizElement>
-+ getDetectedGraph(): Graph
++ toGraphviz(): List<GraphvizElement>
 + {abstract} detect(graphToSearch: Graph): Graph
 }
-note top of Pattern
-  The constructor takes the Graph to parse,
-  and the parsing takes place immediately
-  upon instantiation
-end note
 
 abstract class PatternDecorator extends Pattern {
 + toGraphviz(): List<GraphvizElement>
@@ -72,17 +78,19 @@ class ArrowDecorator extends PatternDecorator {
 }
 
 class SingletonPattern extends Pattern {
-+ toGraphviz(): List<GraphvizElement>
 + detect(graphToSearch: Graph): Graph
 }
 
 class AdapterPattern extends Pattern {
-+ toGraphviz(): List<GraphvizElement>
 + detect(graphToSearch: Graph): Graph
 }
 
 class DecoratorPattern extends Pattern {
 + toGraphviz(): List<GraphvizElement>
++ detect(graphToSearch: Graph): Graph
+}
+
+class IdentityPattern extends Pattern {
 + detect(graphToSearch: Graph): Graph
 }
 
@@ -98,24 +106,31 @@ abstract class GraphvizElement {
 + remAttr(var: String): void
 + getAttr(var: String): String
 + {abstract} toGraphviz(): String
++ {abstract} getIdentifier(): String
 }
 note top of GraphvizElement
   The map is from a Graphviz attribute to its value.
+  getIdentifier() must return a String unique to this
+  GraphvizElement but shared with other GraphvizElement\'s
+  that should overwrite this one.
 end note
 
 class GraphvizNode extends GraphvizElement {
 - name: String
 + toGraphviz(): String
++ getIdentifier(): String
 }
 
 class GraphvizEdge extends GraphvizElement {
 - fromNode: String
 - toNode: String
 + toGraphviz(): String
++ getIdentifier(): String
 }
 
 class GraphvizGlobalParam extends GraphvizElement {
 + toGraphviz(): String
++ getIdentifier(): String
 }
 
 interface Exporter {
@@ -130,6 +145,7 @@ UMLGeneratorApp --> GraphGenerator
 UMLGeneratorApp --> Parser
 UMLGeneratorApp --> Exporter
 GraphGenerator --> Graph
+GraphGenerator --> AccessLevel
 ClassCell --> Edge
 Edge --> ClassCell
 Edge --> Relation
