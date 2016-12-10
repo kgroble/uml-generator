@@ -20,7 +20,7 @@ public class GraphvizNode extends GraphvizElement {
                 + " = " + this.attributes.get((String) attributeArray[attributeArray.length - 1])
                 + "\n];\n";
         
-        return code;
+        return sanitizeGraphvizString(code);
     }
 
     @Override

@@ -7,7 +7,7 @@ public class GraphvizGlobalParams extends GraphvizElement {
         for(String attribute : this.attributes.keySet()) {
             code += attribute + " = " + attributes.get(attribute) + ";\n";
         }
-        return code;
+        return sanitizeGraphvizString(code);
     }
 
     @Override

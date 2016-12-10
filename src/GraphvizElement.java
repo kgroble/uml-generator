@@ -33,4 +33,10 @@ public abstract class GraphvizElement {
         }
         list.add(element);
     }
+    
+    protected static String sanitizeGraphvizString(String unsanitized) {
+        String sanitized = unsanitized.replace("<", "\\<");
+        sanitized = sanitized.replace(">", "\\>");
+        return sanitized;
+    }
 }
