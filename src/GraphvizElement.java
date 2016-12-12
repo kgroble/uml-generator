@@ -3,10 +3,19 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class GraphvizElement {
+    private static final Map<String, String> BANNED_STRINGS = initBannedStrings();
     protected Map<String, String> attributes;
 
     public GraphvizElement() {
         this.attributes = new HashMap<>();
+    }
+
+    private static Map initBannedStrings() {
+        Map<String, String> map = new HashMap<>();
+        map.put("<init>", "&lt;init&gt;");
+        map.put("<clinit>", "&lt;clinit&gt;");
+
+        return map;
     }
 
     /**
@@ -86,7 +95,15 @@ public abstract class GraphvizElement {
      * @return The sanitized and therefore legal Graphviz code.
      */
     protected static String sanitizeGraphvizString(String unsanitized) {
-        String sanitized = unsanitized.replaceAll("<(\\w*)>", "\\\\<$1\\\\>");
+        // String sanitized = unsanitized.replaceAll("<(\\w*)>", "\\\\<$1\\\\>");
+        // sanitized = sanitized.replaceAll("<@<@([\\w]*)@>([\\w]*)<@/([\\w]*)@>@>",
+        //         "<<$1>$2</$3>>");
+        String sanitized = unsanitized;
+
+        for (String banned : BANNED_STRINGS.keySet()) {
+            sanitized = sanitized.replace(banned, BANNED_STRINGS.get(banned));
+        }
+
         return sanitized;
     }
 }

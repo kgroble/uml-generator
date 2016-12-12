@@ -53,8 +53,7 @@ public class ClassCell {
      * class.
      */
     public int getAccess() {
-        // TODO Implement method
-        return 0;
+        return this.classNode.access;
     }
 
     /**
@@ -85,7 +84,7 @@ public class ClassCell {
         List<ClassNode> implementedInterfaces = new ArrayList<>();
         ClassReader reader;
         ClassNode interfaceNode;
-        
+
         for(Object interfaceName : this.classNode.interfaces) {
             try {
                 reader = new ClassReader((String) interfaceName);
@@ -110,10 +109,10 @@ public class ClassCell {
     public ClassNode getSuper() {
         ClassReader reader;
         ClassNode superNode = new ClassNode();
-        
+
         try {
             reader = new ClassReader(this.classNode.superName);
-            
+
             reader.accept(superNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,7 +133,7 @@ public class ClassCell {
     public boolean equals(Object other) {
         return other instanceof ClassCell && ((ClassCell) other).getName().equals(this.getName());
     }
-    
+
     public boolean hasNode(ClassNode otherNode) {
         return this.classNode.name.equals(otherNode.name);
     }

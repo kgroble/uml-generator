@@ -27,12 +27,16 @@ public class Edge {
         this.destClass = dest;
         this.relation = relation;
     }
-    
+
     public ClassCell getOrigin() {
         return this.originClass;
     }
-    
+
     public ClassCell getDestination() {
         return this.destClass;
+    }
+
+    public Relation getRelation() {
+        return this.relation;
     }
 }

@@ -49,8 +49,6 @@ public class GraphGenerator {
             }
         }
 
-        // TODO Add edges to the Graph.
-        
         List<ClassCell> cells = graph.getCells();
         for(ClassCell cell : cells) {
             List<ClassNode> interfaces = cell.getImplements();
@@ -58,10 +56,18 @@ public class GraphGenerator {
                 ClassCell implementedCell = graph.containsNode(implemented);
                 if (implementedCell != null) {
                     Edge e = new Edge(cell, implementedCell, Edge.Relation.IMPLEMENTS);
-                    
+
                     graph.addEdge(e);
                     cell.addEdge(e);
                 }
+            }
+
+            ClassCell superCell = graph.containsNode(cell.getSuper());
+            if (superCell != null) {
+                Edge e = new Edge(cell, superCell, Edge.Relation.EXTENDS);
+
+                graph.addEdge(e);
+                cell.addEdge(e);
             }
         }
         return graph;

@@ -27,6 +27,8 @@ class ClassCell {
 + getImplements(): List<ClassNode>
 + getSuper(): ClassNode
 + equals(other: Object): boolean
++ hasNode(otherNode: ClassNode): boolean
++ addEdge(e: Edge): void
 }
 
 class Edge {
@@ -57,6 +59,7 @@ class Graph {
 + addEdge(edge: Edge): boolean
 + getEdges(): List<Edge>
 + copy(): Graph
++ containsNode(node: ClassNode): ClassCell
 }
 
 abstract class Pattern {
