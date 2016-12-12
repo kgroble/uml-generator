@@ -9,7 +9,7 @@ public class GraphvizNode extends GraphvizElement {
     @Override
     public String toGraphviz() {
         String code = "";
-        code += this.name + " [\n\t";
+        code += '\"' + this.name + '\"' + " [\n\t";
         
         Object[] attributeArray = this.attributes.keySet().toArray();
         for(int i = 0; i < attributeArray.length - 1; i++) {

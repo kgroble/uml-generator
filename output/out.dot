@@ -1,10 +1,62 @@
 digraph uml {
-List [
+"ClassCell" [
 	shape = "record",
-	label = "{List||+ size(): int\l+ isEmpty(): boolean\l+ contains(java.lang.Object): boolean\l+ iterator(): java.util.Iterator\l+ toArray(): java.lang.Object[]\l+ toArray(java.lang.Object[]): java.lang.Object[]\l+ add(java.lang.Object): boolean\l+ remove(java.lang.Object): boolean\l+ containsAll(java.util.Collection): boolean\l+ addAll(java.util.Collection): boolean\l+ addAll(int java.util.Collection): boolean\l+ removeAll(java.util.Collection): boolean\l+ retainAll(java.util.Collection): boolean\l+ replaceAll(java.util.function.UnaryOperator): void\l+ sort(java.util.Comparator): void\l+ clear(): void\l+ equals(java.lang.Object): boolean\l+ hashCode(): int\l+ get(int): java.lang.Object\l+ set(int java.lang.Object): java.lang.Object\l+ add(int java.lang.Object): void\l+ remove(int): java.lang.Object\l+ indexOf(java.lang.Object): int\l+ lastIndexOf(java.lang.Object): int\l+ listIterator(): java.util.ListIterator\l+ listIterator(int): java.util.ListIterator\l+ subList(int int): java.util.List\l+ spliterator(): java.util.Spliterator\l}"
+	label = "{ClassCell|- classNode: org.objectweb.asm.tree.ClassNode\l- edges: java.util.List\l|+ \<init\>(java.lang.String): void\l+ getName(): java.lang.String\l+ getPrettyName(): java.lang.String\l+ getAccess(): int\l+ getFields(): java.util.List\l+ getMethods(): java.util.List\l+ getImplements(): java.util.List\l+ getSuper(): org.objectweb.asm.tree.ClassNode\l+ equals(java.lang.Object): boolean\l}"
 ];
-ArrayList [
+"Edge" [
 	shape = "record",
-	label = "{ArrayList|- serialVersionUID: long\l- DEFAULT_CAPACITY: int\l- EMPTY_ELEMENTDATA: java.lang.Object[]\l- DEFAULTCAPACITY_EMPTY_ELEMENTDATA: java.lang.Object[]\l  elementData: java.lang.Object[]\l- size: int\l- MAX_ARRAY_SIZE: int\l|+ \<init\>(int): void\l+ \<init\>(): void\l+ \<init\>(java.util.Collection): void\l+ trimToSize(): void\l+ ensureCapacity(int): void\l- ensureCapacityInternal(int): void\l- ensureExplicitCapacity(int): void\l- grow(int): void\l- hugeCapacity(int): int\l+ size(): int\l+ isEmpty(): boolean\l+ contains(java.lang.Object): boolean\l+ indexOf(java.lang.Object): int\l+ lastIndexOf(java.lang.Object): int\l+ clone(): java.lang.Object\l+ toArray(): java.lang.Object[]\l+ toArray(java.lang.Object[]): java.lang.Object[]\l  elementData(int): java.lang.Object\l+ get(int): java.lang.Object\l+ set(int java.lang.Object): java.lang.Object\l+ add(java.lang.Object): boolean\l+ add(int java.lang.Object): void\l+ remove(int): java.lang.Object\l+ remove(java.lang.Object): boolean\l- fastRemove(int): void\l+ clear(): void\l+ addAll(java.util.Collection): boolean\l+ addAll(int java.util.Collection): boolean\l# removeRange(int int): void\l- rangeCheck(int): void\l- rangeCheckForAdd(int): void\l- outOfBoundsMsg(int): java.lang.String\l+ removeAll(java.util.Collection): boolean\l+ retainAll(java.util.Collection): boolean\l- batchRemove(java.util.Collection boolean): boolean\l- writeObject(java.io.ObjectOutputStream): void\l- readObject(java.io.ObjectInputStream): void\l+ listIterator(int): java.util.ListIterator\l+ listIterator(): java.util.ListIterator\l+ iterator(): java.util.Iterator\l+ subList(int int): java.util.List\l  subListRangeCheck(int int int): void\l+ forEach(java.util.function.Consumer): void\l+ spliterator(): java.util.Spliterator\l+ removeIf(java.util.function.Predicate): boolean\l+ replaceAll(java.util.function.UnaryOperator): void\l+ sort(java.util.Comparator): void\l  access$100(java.util.ArrayList): int\l  \<clinit\>(): void\l}"
+	label = "{Edge|- originClass: ClassCell\l- destClass: ClassCell\l- relation: Edge$Relation\l|+ \<init\>(ClassCell ClassCell Edge$Relation): void\l}"
+];
+"Exporter" [
+	shape = "record",
+	label = "{Exporter||+ export(java.util.List): void\l}"
+];
+"FileExporter" [
+	shape = "record",
+	label = "{FileExporter|- outFile: java.lang.String\l|+ \<init\>(java.lang.String): void\l+ export(java.util.List): void\l}"
+];
+"Graph" [
+	shape = "record",
+	label = "{Graph|- cells: java.util.List\l- edges: java.util.List\l|+ \<init\>(): void\l- \<init\>(java.util.List java.util.List): void\l+ addClass(ClassCell): boolean\l+ getCells(): java.util.List\l+ getEdges(): java.util.List\l+ copy(): Graph\l}"
+];
+"GraphGenerator" [
+	shape = "record",
+	label = "{GraphGenerator|- recursive: boolean\l- access: GraphGenerator$AccessLevel\l|+ \<init\>(boolean GraphGenerator$AccessLevel): void\l+ execute(java.util.List): Graph\l}"
+];
+"GraphvizEdge" [
+	shape = "record",
+	label = "{GraphvizEdge|- fromNode: java.lang.String\l- toNode: java.lang.String\l|+ \<init\>(): void\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l}"
+];
+"GraphvizElement" [
+	shape = "record",
+	label = "{GraphvizElement|# attributes: java.util.Map\l|+ \<init\>(): void\l+ addAttribute(java.lang.String java.lang.String): void\l+ removeAttribute(java.lang.String): void\l+ getAttribute(java.lang.String): java.lang.String\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l+ addOrReplaceElement(java.util.List GraphvizElement): void\l# sanitizeGraphvizString(java.lang.String): java.lang.String\l}"
+];
+"GraphvizGlobalParams" [
+	shape = "record",
+	label = "{GraphvizGlobalParams||+ \<init\>(): void\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l}"
+];
+"GraphvizNode" [
+	shape = "record",
+	label = "{GraphvizNode|- name: java.lang.String\l|+ \<init\>(java.lang.String): void\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l}"
+];
+"IdentityPattern" [
+	shape = "record",
+	label = "{IdentityPattern||+ \<init\>(): void\l+ detect(Graph): Graph\l}"
+];
+"Parser" [
+	shape = "record",
+	label = "{Parser|- patterns: java.util.Map\l|+ \<init\>(): void\l+ parseGraph(Graph): java.util.List\l+ addPattern(Pattern java.lang.Integer): boolean\l+ removePattern(Pattern): boolean\l}"
+];
+"Pattern" [
+	shape = "record",
+	label = "{Pattern||+ \<init\>(): void\l+ toGraphviz(Graph): java.util.List\l+ detect(Graph): Graph\l- translateFieldNode(org.objectweb.asm.tree.FieldNode): java.lang.String\l- translateMethodNode(org.objectweb.asm.tree.MethodNode): java.lang.String\l- getAccessChar(int): char\l}"
+];
+"PatternDecorator" [
+	shape = "record",
+	label = "{PatternDecorator|# innerPattern: Pattern\l|+ \<init\>(Pattern): void\l+ detect(Graph): Graph\l}"
+];
+"UMLGeneratorApp" [
+	shape = "record",
+	label = "{UMLGeneratorApp||+ \<init\>(): void\l+ main(java.lang.String[]): void\l}"
 ];
 }
