@@ -23,7 +23,7 @@ public class Graph {
      * Adds the passed ClassCell to the Graph. If there already exists a
      * ClassCell with the same name, this fails to add the ClassCell and returns
      * false.
-     * 
+     *
      * @param cell
      *            The ClassCell to add to the list.
      * @return True if successfully added, false if the list already contained
