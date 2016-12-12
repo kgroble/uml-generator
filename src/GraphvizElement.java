@@ -86,8 +86,7 @@ public abstract class GraphvizElement {
      * @return The sanitized and therefore legal Graphviz code.
      */
     protected static String sanitizeGraphvizString(String unsanitized) {
-        String sanitized = unsanitized.replace("<", "\\<");
-        sanitized = sanitized.replace(">", "\\>");
+        String sanitized = unsanitized.replaceAll("<(\\w*)>", "\\\\<$1\\\\>");
         return sanitized;
     }
 }

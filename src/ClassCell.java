@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
@@ -20,6 +21,7 @@ public class ClassCell {
         ClassReader reader = new ClassReader(name);
         classNode = new ClassNode();
         reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+        this.edges = new ArrayList<>();
     }
 
     /**
@@ -80,18 +82,45 @@ public class ClassCell {
      * @return A list of all the interfaces the stored class implements.
      */
     public List<ClassNode> getImplements() {
-        // TODO Implement method
-        return null;
+        List<ClassNode> implementedInterfaces = new ArrayList<>();
+        ClassReader reader;
+        ClassNode interfaceNode;
+        
+        for(Object interfaceName : this.classNode.interfaces) {
+            try {
+                reader = new ClassReader((String) interfaceName);
+                interfaceNode = new ClassNode();
+                reader.accept(interfaceNode, ClassReader.EXPAND_FRAMES);
+                implementedInterfaces.add(interfaceNode);
+            } catch (IOException e) {
+                e.printStackTrace();
+                continue;
+            }
+        }
+
+        return implementedInterfaces;
     }
 
     /**
      * Returns the class that the stored class extends.
      *
-     * @return The class that the stored class extends.
+     * @return The class that the stored class extends or
+     *         null if ClassReader creation failed.
      */
     public ClassNode getSuper() {
-        // TODO Implement method
-        return null;
+        ClassReader reader;
+        ClassNode superNode = new ClassNode();
+        
+        try {
+            reader = new ClassReader(this.classNode.superName);
+            
+            reader.accept(superNode, ClassReader.EXPAND_FRAMES);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return superNode;
     }
 
     /**
@@ -104,5 +133,13 @@ public class ClassCell {
     @Override
     public boolean equals(Object other) {
         return other instanceof ClassCell && ((ClassCell) other).getName().equals(this.getName());
+    }
+    
+    public boolean hasNode(ClassNode otherNode) {
+        return this.classNode.name.equals(otherNode.name);
+    }
+
+    public void addEdge(Edge e) {
+        this.edges.add(e);
     }
 }

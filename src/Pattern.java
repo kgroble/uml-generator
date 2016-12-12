@@ -10,7 +10,13 @@ public abstract class Pattern {
 
     public List<GraphvizElement> toGraphviz(Graph detected) {
         List<GraphvizElement> elements = new ArrayList<>();
-
+        
+        //global params
+        GraphvizGlobalParams params = new GraphvizGlobalParams();
+        params.addAttribute("rankdir", "BT");
+        elements.add(params);
+        
+        // nodes
         for (ClassCell cell : detected.getCells()) {
             GraphvizNode node = new GraphvizNode(cell.getPrettyName());
             node.addAttribute("shape", "\"record\"");
@@ -31,6 +37,17 @@ public abstract class Pattern {
             
             node.addAttribute("label", "\"{" + cell.getPrettyName() + "|" + fields + "|" + methods + "}\"");
             elements.add(node);
+        }
+        
+        //edges
+        for(Edge edge : detected.getEdges()) {
+            String from = edge.getOrigin().getPrettyName();
+            String to = edge.getDestination().getPrettyName();
+            
+            GraphvizEdge gvEdge = new GraphvizEdge(from, to);
+            gvEdge.addAttribute("arrowhead", "\"onormal\"");
+            gvEdge.addAttribute("style", "\"dashed\"");
+            elements.add(gvEdge);
         }
 
         return elements;

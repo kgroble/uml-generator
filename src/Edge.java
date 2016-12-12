@@ -4,7 +4,8 @@ public class Edge {
      * ClassCells can be.
      */
     public enum Relation {
-
+        IMPLEMENTS,
+        EXTENDS
     }
 
     private ClassCell originClass;
@@ -25,5 +26,13 @@ public class Edge {
         this.originClass = origin;
         this.destClass = dest;
         this.relation = relation;
+    }
+    
+    public ClassCell getOrigin() {
+        return this.originClass;
+    }
+    
+    public ClassCell getDestination() {
+        return this.destClass;
     }
 }

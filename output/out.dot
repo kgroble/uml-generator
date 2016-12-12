@@ -1,11 +1,12 @@
 digraph uml {
+rankdir = BT;
 "ClassCell" [
 	shape = "record",
-	label = "{ClassCell|- classNode: org.objectweb.asm.tree.ClassNode\l- edges: java.util.List\l|+ \<init\>(java.lang.String): void\l+ getName(): java.lang.String\l+ getPrettyName(): java.lang.String\l+ getAccess(): int\l+ getFields(): java.util.List\l+ getMethods(): java.util.List\l+ getImplements(): java.util.List\l+ getSuper(): org.objectweb.asm.tree.ClassNode\l+ equals(java.lang.Object): boolean\l}"
+	label = "{ClassCell|- classNode: org.objectweb.asm.tree.ClassNode\l- edges: java.util.List\l|+ \<init\>(java.lang.String): void\l+ getName(): java.lang.String\l+ getPrettyName(): java.lang.String\l+ getAccess(): int\l+ getFields(): java.util.List\l+ getMethods(): java.util.List\l+ getImplements(): java.util.List\l+ getSuper(): org.objectweb.asm.tree.ClassNode\l+ equals(java.lang.Object): boolean\l+ hasNode(org.objectweb.asm.tree.ClassNode): boolean\l+ addEdge(Edge): void\l}"
 ];
 "Edge" [
 	shape = "record",
-	label = "{Edge|- originClass: ClassCell\l- destClass: ClassCell\l- relation: Edge$Relation\l|+ \<init\>(ClassCell ClassCell Edge$Relation): void\l}"
+	label = "{Edge|- originClass: ClassCell\l- destClass: ClassCell\l- relation: Edge$Relation\l|+ \<init\>(ClassCell ClassCell Edge$Relation): void\l+ getOrigin(): ClassCell\l+ getDestination(): ClassCell\l}"
 ];
 "Exporter" [
 	shape = "record",
@@ -17,7 +18,7 @@ digraph uml {
 ];
 "Graph" [
 	shape = "record",
-	label = "{Graph|- cells: java.util.List\l- edges: java.util.List\l|+ \<init\>(): void\l- \<init\>(java.util.List java.util.List): void\l+ addClass(ClassCell): boolean\l+ getCells(): java.util.List\l+ getEdges(): java.util.List\l+ copy(): Graph\l}"
+	label = "{Graph|- cells: java.util.List\l- edges: java.util.List\l|+ \<init\>(): void\l- \<init\>(java.util.List java.util.List): void\l+ addClass(ClassCell): boolean\l+ getCells(): java.util.List\l+ getEdges(): java.util.List\l+ addEdge(Edge): void\l+ copy(): Graph\l+ containsNode(org.objectweb.asm.tree.ClassNode): ClassCell\l}"
 ];
 "GraphGenerator" [
 	shape = "record",
@@ -25,7 +26,7 @@ digraph uml {
 ];
 "GraphvizEdge" [
 	shape = "record",
-	label = "{GraphvizEdge|- fromNode: java.lang.String\l- toNode: java.lang.String\l|+ \<init\>(): void\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l}"
+	label = "{GraphvizEdge|- fromNode: java.lang.String\l- toNode: java.lang.String\l|+ \<init\>(java.lang.String java.lang.String): void\l+ toGraphviz(): java.lang.String\l+ getIdentifier(): java.lang.String\l}"
 ];
 "GraphvizElement" [
 	shape = "record",
@@ -58,5 +59,9 @@ digraph uml {
 "UMLGeneratorApp" [
 	shape = "record",
 	label = "{UMLGeneratorApp||+ \<init\>(): void\l+ main(java.lang.String[]): void\l}"
+];
+"FileExporter" -> "Exporter"[
+	style = "dashed",
+	arrowhead = "onormal"
 ];
 }

@@ -3,7 +3,6 @@ import java.util.List;
 
 public class UMLGeneratorApp {
     public static void main(String[] args) {
-        System.out.println("UML Parser running!");
         List<String> classNames = new ArrayList<>();
         for (String className : args) {
             classNames.add(className);

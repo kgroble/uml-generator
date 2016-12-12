@@ -3,10 +3,25 @@ public class GraphvizEdge extends GraphvizElement {
     private String fromNode;
     private String toNode;
 
+    public GraphvizEdge(String from, String to) {
+        this.fromNode = from;
+        this.toNode = to;
+    }
+    
     @Override
     public String toGraphviz() {
-        // TODO Auto-generated method stub
-        return null;
+        String code = "";
+        code += '\"' + this.fromNode + "\" -> \"" + this.toNode + "\"[\n\t";
+        Object[] attributeArray = this.attributes.keySet().toArray();
+        for(int i = 0; i < attributeArray.length - 1; i++) {
+            code += (String) attributeArray[i] + " = " + this.attributes.get((String) attributeArray[i]);
+            code += ",\n\t";
+        }
+        code += attributeArray[attributeArray.length - 1]
+                + " = " + this.attributes.get((String) attributeArray[attributeArray.length - 1])
+                + "\n];\n";
+        
+        return sanitizeGraphvizString(code);
     }
 
     @Override
