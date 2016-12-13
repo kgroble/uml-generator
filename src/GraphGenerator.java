@@ -63,7 +63,6 @@ public class GraphGenerator {
         while(!classesToAdd.isEmpty()){
             try {
                 String last = classesToAdd.remove(classesToAdd.size()-1);
-                System.out.println("Creating new class with name " + last);
                 currentCell = new ClassCell(last);
                 graph.addClass(currentCell);
                 addedClasses.add(last);
