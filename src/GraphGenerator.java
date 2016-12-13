@@ -1,5 +1,8 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.tree.ClassNode;
 
@@ -40,14 +43,43 @@ public class GraphGenerator {
      */
     public Graph execute(List<String> classNames) {
         Graph graph = new Graph();
+        
+        Set<String> addedClasses = new HashSet<String>();
+        List<String> classesToAdd = new ArrayList<String>();
+        classesToAdd.addAll(classNames);
+        ClassCell currentCell = null;
 
-        for (String className : classNames) {
+//        for (String className : classNames) {
+//            try {
+//                currentCell = new ClassCell(className);
+//                graph.addClass(currentCell);
+//                classesToAdd.addAll(currentCell.getAllRelatives());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            
+//        }
+        
+        while(!classesToAdd.isEmpty()){
             try {
-                graph.addClass(new ClassCell(className));
+                String last = classesToAdd.remove(classesToAdd.size()-1);
+                System.out.println("Creating new class with name " + last);
+                currentCell = new ClassCell(last);
+                graph.addClass(currentCell);
+                addedClasses.add(last);
+                if(recursive){
+                    for(String className: currentCell.getAllRelatives()){
+                        if(!addedClasses.contains(className)){
+                            classesToAdd.add(className);
+                        }
+                    }
+                }
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        
 
         List<ClassCell> cells = graph.getCells();
         for(ClassCell cell : cells) {

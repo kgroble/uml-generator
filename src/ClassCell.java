@@ -109,6 +109,10 @@ public class ClassCell {
     public ClassNode getSuper() {
         ClassReader reader;
         ClassNode superNode = new ClassNode();
+        
+        if(this.classNode.superName == null){
+            return null;
+        }
 
         try {
             reader = new ClassReader(this.classNode.superName);
@@ -135,10 +139,26 @@ public class ClassCell {
     }
 
     public boolean hasNode(ClassNode otherNode) {
-        return this.classNode.name.equals(otherNode.name);
+        return otherNode != null && this.classNode.name.equals(otherNode.name);
     }
 
     public void addEdge(Edge e) {
         this.edges.add(e);
+    }
+    
+    public List<String> getAllRelatives(){
+        List<String> result = new ArrayList<String>();
+        
+        if(this.classNode.superName != null){
+            result.add(this.classNode.superName);
+        }
+        
+        
+        List<String> interfaces = this.classNode.interfaces;
+        result.addAll(interfaces);
+        
+        // Inner classes?
+        
+        return result;
     }
 }

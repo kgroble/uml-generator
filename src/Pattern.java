@@ -93,11 +93,12 @@ public abstract class Pattern {
         result += getAccessChar(node.access) + " ";
 
         String arguments = "(";
+        List<String> argTypes = new ArrayList<String>();
         for(Type argType : Type.getArgumentTypes(node.desc)){
-            arguments += argType.getClassName() + " ";
+            argTypes.add(argType.getClassName());
 
         }
-        arguments = arguments.trim();
+        arguments += String.join(", ", argTypes);
         arguments += ")";
 
 
