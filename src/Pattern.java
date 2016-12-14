@@ -8,6 +8,13 @@ import org.objectweb.asm.tree.MethodNode;
 
 public abstract class Pattern {
 
+    /**
+     * Creates a new GraphvizElement list that holds all the abstract
+     * information necessary to draw the passed graph.
+     *
+     * @param detected The graph to generate GraphvizElement's for.
+     * @return A new GraphvizElement list for detected.
+     */
     public List<GraphvizElement> toGraphviz(Graph detected) {
         List<GraphvizElement> elements = new ArrayList<>();
         String cellName;
@@ -71,8 +78,22 @@ public abstract class Pattern {
         return elements;
     }
 
+    /**
+     * Creates a new Graph with all the nodes from graphToSearch that fit this
+     * pattern. If there are multiple occurences of the pattern, it will return
+     * all of them in one disconnected Graph.
+     *
+     * @param graphToSearch The Graph to search through for the pattern.
+     * @return A new Graph containing all the detected nodes and edges.
+     */
     public abstract Graph detect(Graph graphToSearch);
 
+    /**
+     * Translates a FieldNode into a Graphviz string.
+     *
+     * @param node The FieldNode to convert
+     * @return A Graphviz String representing the passed FieldNode
+     */
     private String translateFieldNode(FieldNode node){
         String result = "";
 
@@ -85,6 +106,12 @@ public abstract class Pattern {
         return result;
     }
 
+    /**
+     * Translates a MethodNode into a Graphviz string.
+     *
+     * @param node The MethodNode to convert
+     * @return A Graphviz String representing the passed MethodNode
+     */
     private String translateMethodNode(MethodNode node){
         String result = "";
 
@@ -111,6 +138,12 @@ public abstract class Pattern {
         return result;
     }
 
+    /**
+     * Looks up which access character should be used for a given access level.
+     *
+     * @param access The access bitfield to be masked with Opcodes.
+     * @return A char correlating to that level of access.
+     */
     private char getAccessChar(int access){
         if((access & Opcodes.ACC_PUBLIC) > 0){
             return '+';

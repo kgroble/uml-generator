@@ -31,6 +31,16 @@ public class Parser {
         return parsedElements;
     }
 
+    /**
+     * Adds the passed pattern to the list of patterns to check and give it the
+     * assigned priority value. The lesser the integer, the more patterns this
+     * one will override.
+     *
+     * @param pattern The Pattern object to check.
+     * @param priority The priority value to assign pattern.
+     * @return False if either this pattern or this key has already been added
+     * to the list, false otherwise.
+     */
     public boolean addPattern(Pattern pattern, Integer priority) {
         if (this.patterns.containsKey(priority) || this.patterns.containsValue(pattern)) {
             return false;
@@ -40,6 +50,11 @@ public class Parser {
         return true;
     }
 
+    /**
+     * Removes the passed pattern from the list if it's present.
+     *
+     * @return True of the element was successfully removed, false otherwise
+     */
     public boolean removePattern(Pattern pattern) {
         for(Integer priority : this.patterns.keySet()) {
             if (this.patterns.get(priority).equals(pattern)) {
