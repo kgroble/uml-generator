@@ -10,4 +10,6 @@
     * Parse and display class names
 ## Lewis
     * Wrote bare-bones class parser up to generating Graphviz code.
+    * Updated Javadoc comments.
+    * Implemented inheritance arrows and changed labels to HTML.
     * Master UML maker.
