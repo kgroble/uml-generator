@@ -11,6 +11,12 @@ public class Parser {
         this.patterns = new HashMap<>();
     }
 
+    /**
+     * Parses the passed Graph into a list of GraphvizElements.
+     *
+     * @param graph The graph to parse
+     * @return A list of GraphvizElement's representing graph
+     */
     public List<GraphvizElement> parseGraph(Graph graph) {
         List<GraphvizElement> parsedElements = new ArrayList<GraphvizElement>();
         List<Integer> priorities = new ArrayList<>(this.patterns.keySet());
@@ -40,7 +46,7 @@ public class Parser {
                 return this.patterns.remove(priority, pattern);
             }
         }
-        
+
         return false;
     }
 }

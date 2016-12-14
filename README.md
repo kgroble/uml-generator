@@ -12,4 +12,5 @@
     * Wrote bare-bones class parser up to generating Graphviz code.
     * Updated Javadoc comments.
     * Implemented inheritance arrows and changed labels to HTML.
+    * Implemented access-level field/method hiding.
     * Master UML maker.

@@ -62,7 +62,12 @@ public class Graph {
         copy.addAll(this.edges);
         return copy;
     }
-    
+
+    /**
+     * Adds the passed Edge to the list of Edge's.
+     *
+     * @param e The Edge to add.
+     */
     public void addEdge(Edge e) {
         this.edges.add(e);
     }
@@ -75,10 +80,10 @@ public class Graph {
     public Graph copy() {
         return new Graph(this.cells, this.edges);
     }
-    
+
     /**
      * Checks if the graph contains a cell for the given ClassNode.
-     * 
+     *
      * @param node The ClassNode to check for
      * @return The ClassCell matching the given node, or null
      *         if no such cell exists
@@ -89,7 +94,7 @@ public class Graph {
                 return cell;
             }
         }
-        
+
         return null;
     }
 }

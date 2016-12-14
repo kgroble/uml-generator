@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -10,6 +11,7 @@ import org.objectweb.asm.tree.MethodNode;
 public class ClassCell {
     private ClassNode classNode;
     private List<Edge> edges;
+    private AccessLevel renderAccess;
 
     /**
      * Initializes a new ClassCell for the given class.
@@ -17,11 +19,12 @@ public class ClassCell {
      * @param name The /fully featured/ name of the class to be input. For
      * example, to pass List you would need the string "java.util.List".
      */
-    public ClassCell(String name) throws IOException {
+    public ClassCell(String name, AccessLevel renderAccess) throws IOException {
         ClassReader reader = new ClassReader(name);
         classNode = new ClassNode();
         reader.accept(classNode, ClassReader.EXPAND_FRAMES);
         this.edges = new ArrayList<>();
+        this.renderAccess = renderAccess;
     }
 
     /**
@@ -57,21 +60,39 @@ public class ClassCell {
     }
 
     /**
-     * Returns a list of all the fields in the stored class.
+     * Returns a list of all the fields in the stored class that are at or
+     * above the render access.
      *
      * @return A list of all the fields in the stored class.
      */
     public List<FieldNode> getFields() {
-        return classNode.fields;
+        List<FieldNode> retFields = new ArrayList<>();
+
+        for (FieldNode field : classNode.fields) {
+            if (AccessLevel.hasAccess(field.access, this.renderAccess)) {
+                retFields.add(field);
+            }
+        }
+
+        return retFields;
     }
 
     /**
-     * Returns a list of all the methods in the stored class.
+     * Returns a list of all the methods in the stored class that are at or
+     * above the render access.
      *
      * @return A list of all the methods in the stored class.
      */
     public List<MethodNode> getMethods() {
-        return classNode.methods;
+        List<MethodNode> retMethods = new ArrayList<>();
+
+        for (MethodNode method : classNode.methods) {
+            if (AccessLevel.hasAccess(method.access, this.renderAccess)) {
+                retMethods.add(method);
+            }
+        }
+
+        return retMethods;
     }
 
     /**
@@ -109,7 +130,7 @@ public class ClassCell {
     public ClassNode getSuper() {
         ClassReader reader;
         ClassNode superNode = new ClassNode();
-        
+
         if(this.classNode.superName == null){
             return null;
         }
@@ -135,30 +156,52 @@ public class ClassCell {
      */
     @Override
     public boolean equals(Object other) {
-        return other instanceof ClassCell && ((ClassCell) other).getName().equals(this.getName());
+        return other instanceof ClassCell
+            && ((ClassCell) other).getName().equals(this.getName());
     }
 
+    /**
+     * Checks if the ClassNode stored in this cell is the same as the otherNode
+     * passed in.
+     *
+     * @param otherNode The node to compare this cell to
+     * @return True if otherNode represents the same class as this cell, false
+     * otherwise
+     */
     public boolean hasNode(ClassNode otherNode) {
         return otherNode != null && this.classNode.name.equals(otherNode.name);
     }
 
+    /**
+     * Adds an Edge to this cell.
+     *
+     * @param e The Edge to add to this cell
+     */
     public void addEdge(Edge e) {
         this.edges.add(e);
     }
-    
-    public List<String> getAllRelatives(){
+
+    /**
+     * Creates and returns a new list of Strings representing all the classes
+     * this cell relates to in any way. The returned names are the fully
+     * featured class names.
+     *
+     * @return A new list of all the fully featured class names of all the
+     * classes this cell relates to in any way.
+     */
+    public List<String> getAllRelatives() {
         List<String> result = new ArrayList<String>();
-        
+
         if(this.classNode.superName != null){
             result.add(this.classNode.superName);
         }
-        
-        
+
+
         List<String> interfaces = this.classNode.interfaces;
         result.addAll(interfaces);
-        
+
         // Inner classes?
-        
+
         return result;
     }
 }

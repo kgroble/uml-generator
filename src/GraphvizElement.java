@@ -23,8 +23,7 @@ public abstract class GraphvizElement {
      *
      * @param var The string representing a variable to set to the passed value.
      * @param val The string representing the value to set the passed variable
-     * to. Note that even though Graphviz requires the value be in quotations,
-     * /do not/ pass a quoted value.
+     * to.
      */
     public void addAttribute(String var, String val) {
         this.attributes.put(var, val);
@@ -44,8 +43,7 @@ public abstract class GraphvizElement {
      *
      * @param var The string representing the variable to check the value of.
      * @return The string representing the currently stored value of the
-     * variable. Note that even though Graphviz requires the value be in
-     * quotations, this method /will not/ return a quoted value.
+     * variable.
      */
     public String getAttribute(String var) {
         return this.attributes.get(var);
@@ -56,8 +54,8 @@ public abstract class GraphvizElement {
      * code. This string /may not/ be sanitized, and as such it may need to be
      * passed through sanitizeGraphvizString to become legal code.
      *
-     * @return A string of legal Graphviz code representing all the data stored
-     * in this element.
+     * @return A string of Graphviz code representing all the data stored in
+     * this element.
      */
     public abstract String toGraphviz();
 

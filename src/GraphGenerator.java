@@ -7,12 +7,6 @@ import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
 
 public class GraphGenerator {
-    /**
-     * Defines what access level should be allowed in the graph.
-     */
-    public enum AccessLevel {
-        PUBLIC, PRIVATE, PROTECTED
-    }
 
     private boolean recursive;
     private AccessLevel access;
@@ -37,48 +31,38 @@ public class GraphGenerator {
      * featured, in order to pass List into this method, you would need the
      * string "java.util.List".
      *
-     * @param The list of /fully featured/ class names to generate a graph from.
+     * @param classNames The list of /fully featured/ class names to generate a graph from.
      * @return An appropriate graph for the parameters of this GraphGenerator
      * based off of the classes passed by classNames.
      */
     public Graph execute(List<String> classNames) {
         Graph graph = new Graph();
-        
+
         Set<String> addedClasses = new HashSet<String>();
         List<String> classesToAdd = new ArrayList<String>();
         classesToAdd.addAll(classNames);
         ClassCell currentCell = null;
 
-//        for (String className : classNames) {
-//            try {
-//                currentCell = new ClassCell(className);
-//                graph.addClass(currentCell);
-//                classesToAdd.addAll(currentCell.getAllRelatives());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            
-//        }
-        
         while(!classesToAdd.isEmpty()){
             try {
                 String last = classesToAdd.remove(classesToAdd.size()-1);
-                currentCell = new ClassCell(last);
+                currentCell = new ClassCell(last, this.access);
+                if (!AccessLevel.hasAccess(currentCell.getAccess(), this.access)) {
+                    continue;
+                }
                 graph.addClass(currentCell);
                 addedClasses.add(last);
                 if(recursive){
-                    for(String className: currentCell.getAllRelatives()){
-                        if(!addedClasses.contains(className)){
+                    for(String className: currentCell.getAllRelatives()) {
+                        if(!addedClasses.contains(className)) {
                             classesToAdd.add(className);
                         }
                     }
                 }
-                
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        
 
         List<ClassCell> cells = graph.getCells();
         for(ClassCell cell : cells) {

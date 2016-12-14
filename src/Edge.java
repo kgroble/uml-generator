@@ -28,14 +28,23 @@ public class Edge {
         this.relation = relation;
     }
 
+    /**
+     * @return The origin ClassCell
+     */
     public ClassCell getOrigin() {
         return this.originClass;
     }
 
+    /**
+     * @return The destination ClassCell
+     */
     public ClassCell getDestination() {
         return this.destClass;
     }
 
+    /**
+     * @return The relation type of this Edge
+     */
     public Relation getRelation() {
         return this.relation;
     }

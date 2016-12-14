@@ -5,7 +5,7 @@ public class UMLGeneratorApp {
     public static void main(String[] args) {
         List<String> classNames = new ArrayList<>();
         boolean recursive = false;
-        GraphGenerator.AccessLevel accessLevel = GraphGenerator.AccessLevel.PRIVATE;
+       AccessLevel accessLevel = AccessLevel.PRIVATE;
         for (String className : args) {
             switch(className){
             case "-r":
@@ -13,13 +13,13 @@ public class UMLGeneratorApp {
                 recursive = true;
                 break;
             case "--public":
-                accessLevel = GraphGenerator.AccessLevel.PUBLIC;
+                accessLevel = AccessLevel.PUBLIC;
                 break;
             case "--private":
-                accessLevel = GraphGenerator.AccessLevel.PRIVATE;
+                accessLevel = AccessLevel.PRIVATE;
                 break;
             case "--protected":
-                accessLevel = GraphGenerator.AccessLevel.PROTECTED;
+                accessLevel = AccessLevel.PROTECTED;
             default:
                 classNames.add(className);
                 break;
