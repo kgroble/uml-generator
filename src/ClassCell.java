@@ -68,9 +68,9 @@ public class ClassCell {
     public List<FieldNode> getFields() {
         List<FieldNode> retFields = new ArrayList<>();
 
-        for (FieldNode field : classNode.fields) {
-            if (AccessLevel.hasAccess(field.access, this.renderAccess)) {
-                retFields.add(field);
+        for (Object field : classNode.fields) {
+            if (AccessLevel.hasAccess(((FieldNode) field).access, this.renderAccess)) {
+                retFields.add((FieldNode) field);
             }
         }
 
@@ -86,9 +86,9 @@ public class ClassCell {
     public List<MethodNode> getMethods() {
         List<MethodNode> retMethods = new ArrayList<>();
 
-        for (MethodNode method : classNode.methods) {
-            if (AccessLevel.hasAccess(method.access, this.renderAccess)) {
-                retMethods.add(method);
+        for (Object method : classNode.methods) {
+            if (AccessLevel.hasAccess(((MethodNode) method).access, this.renderAccess)) {
+                retMethods.add((MethodNode) method);
             }
         }
 
