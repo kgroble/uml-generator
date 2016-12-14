@@ -131,7 +131,8 @@ public class ClassCell {
         ClassReader reader;
         ClassNode superNode = new ClassNode();
 
-        if(this.classNode.superName == null){
+        if(this.classNode.superName == null
+                || (this.classNode.access & Opcodes.ACC_INTERFACE) != 0){
             return null;
         }
 
@@ -192,7 +193,8 @@ public class ClassCell {
     public List<String> getAllRelatives() {
         List<String> result = new ArrayList<String>();
 
-        if(this.classNode.superName != null){
+        if(this.classNode.superName != null
+                && (this.classNode.access & Opcodes.ACC_INTERFACE) == 0){
             result.add(this.classNode.superName);
         }
 

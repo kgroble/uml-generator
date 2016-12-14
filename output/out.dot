@@ -1,47 +1,143 @@
 digraph uml {
 rankdir = BT;
-"String" [
+"UMLGeneratorApp" [
 	shape = "record",
-	label = <{String|<table> <tr> <td>- value: char[]<br align="left"/>- hash: int<br align="left"/>- serialVersionUID: long<br align="left"/>- serialPersistentFields: java.io.ObjectStreamField[]<br align="left"/>+ CASE_INSENSITIVE_ORDER: java.util.Comparator<br align="left"/></td></tr></table>|+ &lt;init&gt;(): void<br align="left"/>+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ &lt;init&gt;(char[]): void<br align="left"/>+ &lt;init&gt;(char[], int, int): void<br align="left"/>+ &lt;init&gt;(int[], int, int): void<br align="left"/>+ &lt;init&gt;(byte[], int, int, int): void<br align="left"/>+ &lt;init&gt;(byte[], int): void<br align="left"/>- checkBounds(byte[], int, int): void<br align="left"/>+ &lt;init&gt;(byte[], int, int, java.lang.String): void<br align="left"/>+ &lt;init&gt;(byte[], int, int, java.nio.charset.Charset): void<br align="left"/>+ &lt;init&gt;(byte[], java.lang.String): void<br align="left"/>+ &lt;init&gt;(byte[], java.nio.charset.Charset): void<br align="left"/>+ &lt;init&gt;(byte[], int, int): void<br align="left"/>+ &lt;init&gt;(byte[]): void<br align="left"/>+ &lt;init&gt;(java.lang.StringBuffer): void<br align="left"/>+ &lt;init&gt;(java.lang.StringBuilder): void<br align="left"/>  &lt;init&gt;(char[], boolean): void<br align="left"/>+ length(): int<br align="left"/>+ isEmpty(): boolean<br align="left"/>+ charAt(int): char<br align="left"/>+ codePointAt(int): int<br align="left"/>+ codePointBefore(int): int<br align="left"/>+ codePointCount(int, int): int<br align="left"/>+ offsetByCodePoints(int, int): int<br align="left"/>  getChars(char[], int): void<br align="left"/>+ getChars(int, int, char[], int): void<br align="left"/>+ getBytes(int, int, byte[], int): void<br align="left"/>+ getBytes(java.lang.String): byte[]<br align="left"/>+ getBytes(java.nio.charset.Charset): byte[]<br align="left"/>+ getBytes(): byte[]<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ contentEquals(java.lang.StringBuffer): boolean<br align="left"/>- nonSyncContentEquals(java.lang.AbstractStringBuilder): boolean<br align="left"/>+ contentEquals(java.lang.CharSequence): boolean<br align="left"/>+ equalsIgnoreCase(java.lang.String): boolean<br align="left"/>+ compareTo(java.lang.String): int<br align="left"/>+ compareToIgnoreCase(java.lang.String): int<br align="left"/>+ regionMatches(int, java.lang.String, int, int): boolean<br align="left"/>+ regionMatches(boolean, int, java.lang.String, int, int): boolean<br align="left"/>+ startsWith(java.lang.String, int): boolean<br align="left"/>+ startsWith(java.lang.String): boolean<br align="left"/>+ endsWith(java.lang.String): boolean<br align="left"/>+ hashCode(): int<br align="left"/>+ indexOf(int): int<br align="left"/>+ indexOf(int, int): int<br align="left"/>- indexOfSupplementary(int, int): int<br align="left"/>+ lastIndexOf(int): int<br align="left"/>+ lastIndexOf(int, int): int<br align="left"/>- lastIndexOfSupplementary(int, int): int<br align="left"/>+ indexOf(java.lang.String): int<br align="left"/>+ indexOf(java.lang.String, int): int<br align="left"/>  indexOf(char[], int, int, java.lang.String, int): int<br align="left"/>  indexOf(char[], int, int, char[], int, int, int): int<br align="left"/>+ lastIndexOf(java.lang.String): int<br align="left"/>+ lastIndexOf(java.lang.String, int): int<br align="left"/>  lastIndexOf(char[], int, int, java.lang.String, int): int<br align="left"/>  lastIndexOf(char[], int, int, char[], int, int, int): int<br align="left"/>+ substring(int): java.lang.String<br align="left"/>+ substring(int, int): java.lang.String<br align="left"/>+ subSequence(int, int): java.lang.CharSequence<br align="left"/>+ concat(java.lang.String): java.lang.String<br align="left"/>+ replace(char, char): java.lang.String<br align="left"/>+ matches(java.lang.String): boolean<br align="left"/>+ contains(java.lang.CharSequence): boolean<br align="left"/>+ replaceFirst(java.lang.String, java.lang.String): java.lang.String<br align="left"/>+ replaceAll(java.lang.String, java.lang.String): java.lang.String<br align="left"/>+ replace(java.lang.CharSequence, java.lang.CharSequence): java.lang.String<br align="left"/>+ split(java.lang.String, int): java.lang.String[]<br align="left"/>+ split(java.lang.String): java.lang.String[]<br align="left"/>+ join(java.lang.CharSequence, java.lang.CharSequence[]): java.lang.String<br align="left"/>+ join(java.lang.CharSequence, java.lang.Iterable): java.lang.String<br align="left"/>+ toLowerCase(java.util.Locale): java.lang.String<br align="left"/>+ toLowerCase(): java.lang.String<br align="left"/>+ toUpperCase(java.util.Locale): java.lang.String<br align="left"/>+ toUpperCase(): java.lang.String<br align="left"/>+ trim(): java.lang.String<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ toCharArray(): char[]<br align="left"/>+ format(java.lang.String, java.lang.Object[]): java.lang.String<br align="left"/>+ format(java.util.Locale, java.lang.String, java.lang.Object[]): java.lang.String<br align="left"/>+ valueOf(java.lang.Object): java.lang.String<br align="left"/>+ valueOf(char[]): java.lang.String<br align="left"/>+ valueOf(char[], int, int): java.lang.String<br align="left"/>+ copyValueOf(char[], int, int): java.lang.String<br align="left"/>+ copyValueOf(char[]): java.lang.String<br align="left"/>+ valueOf(boolean): java.lang.String<br align="left"/>+ valueOf(char): java.lang.String<br align="left"/>+ valueOf(int): java.lang.String<br align="left"/>+ valueOf(long): java.lang.String<br align="left"/>+ valueOf(float): java.lang.String<br align="left"/>+ valueOf(double): java.lang.String<br align="left"/>+ intern(): java.lang.String<br align="left"/>+ compareTo(java.lang.Object): int<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
-];
-"CharSequence" [
-	shape = "record",
-	label = <{<I>CharSequence</I>||+ length(): int<br align="left"/>+ charAt(int): char<br align="left"/>+ subSequence(int, int): java.lang.CharSequence<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ chars(): java.util.stream.IntStream<br align="left"/>+ codePoints(): java.util.stream.IntStream<br align="left"/>- lambda$codePoints$1(): java.util.Spliterator$OfInt<br align="left"/>- lambda$chars$0(): java.util.Spliterator$OfInt<br align="left"/>}>
+	label = <{UMLGeneratorApp||+ &lt;init&gt;(): void<br align="left"/>+ main(java.lang.String[]): void<br align="left"/>}>
 ];
 "Object" [
 	shape = "record",
-	label = <{Object||+ &lt;init&gt;(): void<br align="left"/>- registerNatives(): void<br align="left"/>+ getClass(): java.lang.Class<br align="left"/>+ hashCode(): int<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/># clone(): java.lang.Object<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ notify(): void<br align="left"/>+ notifyAll(): void<br align="left"/>+ wait(long): void<br align="left"/>+ wait(long, int): void<br align="left"/>+ wait(): void<br align="left"/># finalize(): void<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
+	label = <{Object||+ &lt;init&gt;(): void<br align="left"/>+ getClass(): java.lang.Class<br align="left"/>+ hashCode(): int<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ notify(): void<br align="left"/>+ notifyAll(): void<br align="left"/>+ wait(long): void<br align="left"/>+ wait(long, int): void<br align="left"/>+ wait(): void<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
 ];
-"Comparable" [
+"PatternDecorator" [
 	shape = "record",
-	label = <{<I>Comparable</I>||+ compareTo(java.lang.Object): int<br align="left"/>}>
+	label = <{<I>PatternDecorator</I>||+ &lt;init&gt;(Pattern): void<br align="left"/>+ detect(Graph): Graph<br align="left"/>}>
+];
+"Pattern" [
+	shape = "record",
+	label = <{<I>Pattern</I>||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(Graph): java.util.List<br align="left"/>+ detect(Graph): Graph<br align="left"/>  $SWITCH_TABLE$Edge$Relation(): int[]<br align="left"/>}>
+];
+"Parser" [
+	shape = "record",
+	label = <{Parser||+ &lt;init&gt;(): void<br align="left"/>+ parseGraph(Graph): java.util.List<br align="left"/>+ addPattern(Pattern, java.lang.Integer): boolean<br align="left"/>+ removePattern(Pattern): boolean<br align="left"/>}>
+];
+"IdentityPattern" [
+	shape = "record",
+	label = <{IdentityPattern||+ &lt;init&gt;(): void<br align="left"/>+ detect(Graph): Graph<br align="left"/>}>
+];
+"GraphvizNode" [
+	shape = "record",
+	label = <{GraphvizNode||+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+];
+"GraphvizElement" [
+	shape = "record",
+	label = <{<I>GraphvizElement</I>||  &lt;clinit&gt;(): void<br align="left"/>+ &lt;init&gt;(): void<br align="left"/>+ addAttribute(java.lang.String, java.lang.String): void<br align="left"/>+ removeAttribute(java.lang.String): void<br align="left"/>+ getAttribute(java.lang.String): java.lang.String<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>+ addOrReplaceElement(java.util.List, GraphvizElement): void<br align="left"/>}>
+];
+"GraphvizGlobalParams" [
+	shape = "record",
+	label = <{GraphvizGlobalParams||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+];
+"AccessLevel" [
+	shape = "record",
+	label = <{AccessLevel|+ PUBLIC: AccessLevel<br align="left"/>+ PROTECTED: AccessLevel<br align="left"/>+ PRIVATE: AccessLevel<br align="left"/>|  &lt;clinit&gt;(): void<br align="left"/>+ hasAccess(int, AccessLevel): boolean<br align="left"/>+ values(): AccessLevel[]<br align="left"/>+ valueOf(java.lang.String): AccessLevel<br align="left"/>}>
+];
+"Enum" [
+	shape = "record",
+	label = <{<I>Enum</I>||+ name(): java.lang.String<br align="left"/>+ ordinal(): int<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ hashCode(): int<br align="left"/>+ compareTo(java.lang.Enum): int<br align="left"/>+ getDeclaringClass(): java.lang.Class<br align="left"/>+ valueOf(java.lang.Class, java.lang.String): java.lang.Enum<br align="left"/>+ compareTo(java.lang.Object): int<br align="left"/>}>
 ];
 "Serializable" [
 	shape = "record",
 	label = <{<I>Serializable</I>||}>
 ];
-"String" -> "Serializable"[
+"Comparable" [
+	shape = "record",
+	label = <{<I>Comparable</I>||+ compareTo(java.lang.Object): int<br align="left"/>}>
+];
+"GraphvizEdge" [
+	shape = "record",
+	label = <{GraphvizEdge||+ &lt;init&gt;(java.lang.String, java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+];
+"GraphGenerator" [
+	shape = "record",
+	label = <{GraphGenerator||+ &lt;init&gt;(boolean, AccessLevel): void<br align="left"/>+ execute(java.util.List): Graph<br align="left"/>}>
+];
+"Graph" [
+	shape = "record",
+	label = <{Graph||+ &lt;init&gt;(): void<br align="left"/>+ addClass(ClassCell): boolean<br align="left"/>+ getCells(): java.util.List<br align="left"/>+ getEdges(): java.util.List<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ copy(): Graph<br align="left"/>+ containsNode(org.objectweb.asm.tree.ClassNode): ClassCell<br align="left"/>}>
+];
+"FileExporter" [
+	shape = "record",
+	label = <{FileExporter||+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ export(java.util.List): void<br align="left"/>}>
+];
+"Exporter" [
+	shape = "record",
+	label = <{<I>Exporter</I>||+ export(java.util.List): void<br align="left"/>}>
+];
+"Edge" [
+	shape = "record",
+	label = <{Edge||+ &lt;init&gt;(ClassCell, ClassCell, Edge$Relation): void<br align="left"/>+ getOrigin(): ClassCell<br align="left"/>+ getDestination(): ClassCell<br align="left"/>+ getRelation(): Edge$Relation<br align="left"/>}>
+];
+"ClassCell" [
+	shape = "record",
+	label = <{ClassCell||+ &lt;init&gt;(java.lang.String, AccessLevel): void<br align="left"/>+ getName(): java.lang.String<br align="left"/>+ getPrettyName(): java.lang.String<br align="left"/>+ getAccess(): int<br align="left"/>+ getFields(): java.util.List<br align="left"/>+ getMethods(): java.util.List<br align="left"/>+ getImplements(): java.util.List<br align="left"/>+ getSuper(): org.objectweb.asm.tree.ClassNode<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ hasNode(org.objectweb.asm.tree.ClassNode): boolean<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ getAllRelatives(): java.util.List<br align="left"/>}>
+];
+"UMLGeneratorApp" -> "Object"[
+	arrowhead = "onormal"
+];
+"PatternDecorator" -> "Pattern"[
+	arrowhead = "onormal"
+];
+"Pattern" -> "Object"[
+	arrowhead = "onormal"
+];
+"Parser" -> "Object"[
+	arrowhead = "onormal"
+];
+"IdentityPattern" -> "Pattern"[
+	arrowhead = "onormal"
+];
+"GraphvizNode" -> "GraphvizElement"[
+	arrowhead = "onormal"
+];
+"GraphvizElement" -> "Object"[
+	arrowhead = "onormal"
+];
+"GraphvizGlobalParams" -> "GraphvizElement"[
+	arrowhead = "onormal"
+];
+"AccessLevel" -> "Enum"[
+	arrowhead = "onormal"
+];
+"Enum" -> "Comparable"[
 	style = "dashed",
 	arrowhead = "onormal"
 ];
-"String" -> "Comparable"[
+"Enum" -> "Serializable"[
 	style = "dashed",
 	arrowhead = "onormal"
 ];
-"String" -> "CharSequence"[
+"Enum" -> "Object"[
+	arrowhead = "onormal"
+];
+"GraphvizEdge" -> "GraphvizElement"[
+	arrowhead = "onormal"
+];
+"GraphGenerator" -> "Object"[
+	arrowhead = "onormal"
+];
+"Graph" -> "Object"[
+	arrowhead = "onormal"
+];
+"FileExporter" -> "Exporter"[
 	style = "dashed",
 	arrowhead = "onormal"
 ];
-"String" -> "Object"[
+"FileExporter" -> "Object"[
 	arrowhead = "onormal"
 ];
-"CharSequence" -> "Object"[
+"Edge" -> "Object"[
 	arrowhead = "onormal"
 ];
-"Comparable" -> "Object"[
-	arrowhead = "onormal"
-];
-"Serializable" -> "Object"[
+"ClassCell" -> "Object"[
 	arrowhead = "onormal"
 ];
 }
