@@ -45,9 +45,7 @@ public abstract class Pattern {
             }
 
             if ((cell.getAccess() & Opcodes.ACC_ABSTRACT) != 0 || (cell.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
-                cellName = "<I>" + cellName + "</I>"; // Special '@' is used to distinguish from non-html
-                // <>'s to
-                // sanitize.
+                cellName = "<I>" + cellName + "</I>";
             }
 
             node.addAttribute("label", "<{" + cellName + "|" + fields + "|" + methods + "}>");
@@ -100,10 +98,29 @@ public abstract class Pattern {
         // Modifiers such as static are currently ignored.
 
         result += getAccessChar(node.access) + " ";
-
-        result += node.name + ": " + Type.getType(node.desc).getClassName() + "<br align=\"left\"/>";
+        String type;
+        String signature = node.signature;
+        if (signature == null) {
+            type = Type.getType(node.desc).getClassName();
+        } else {
+            type = parseSignature(signature);
+        }
+        
+        result += node.name + ": " + type + "<br align=\"left\"/>";
 
         return result;
+    }
+    
+    private String parseSignature(String signature) {
+        signature = signature.substring(1, signature.length()-1);
+        signature = signature.replace("/", ".")
+                             .replace("+L", "+")
+                             .replace(";L", ", ")
+                             .replace("<L", "&lt;")
+                             .replace(";>", "&gt;")
+                             .replace("<", "&lt;")
+                             .replace(">", "&gt;");
+        return signature;
     }
 
     /**
@@ -118,20 +135,56 @@ public abstract class Pattern {
         // Modifiers such as static are currently ignored.
 
         result += getAccessChar(node.access) + " ";
-
-        String arguments = "(";
         List<String> argTypes = new ArrayList<String>();
-        for(Type argType : Type.getArgumentTypes(node.desc)){
-            argTypes.add(argType.getClassName());
 
+        String arguments = "("; 
+        String returnType;        
+        String signature = node.signature;
+        if (signature == null) {
+            returnType = Type.getReturnType(node.desc).getClassName();
+            for (Type argType : Type.getArgumentTypes(node.desc)){
+                argTypes.add(argType.getClassName());
+            }
+        } else {
+            int endArgs = signature.indexOf(')');
+            if (endArgs > 1) {
+                for (int i = 1; i < endArgs; ) {
+                    if (signature.charAt(i) == 'L') {
+                        int countOpen = 0;
+                        int countClosed = 0;
+                        int j = i+1;
+                        char c = signature.charAt(j);
+                        while(c != ';' || countOpen != countClosed) {
+                            if (c == '<') {
+                                countOpen++;
+                            } else if (c == '>') {
+                                countClosed++;
+                            }
+                            j++;
+                            c = signature.charAt(j);
+                        }
+                        argTypes.add(parseSignature(signature.substring(i, j+1)));
+                        i = j+1;
+                    } else {
+                        argTypes.add(Type.getType(signature.charAt(i) + "").getClassName());
+                        i++;
+                    }
+                }
+            }
+            returnType = signature.substring(endArgs + 1);
+            if (returnType.startsWith("L")) {
+                returnType = parseSignature(returnType);
+            } else {
+                returnType = Type.getReturnType(node.desc).getClassName();
+            }
         }
         arguments += String.join(", ", argTypes);
         arguments += ")";
-
+                
         result += node.name
                 + arguments
                 + ": "
-                + Type.getReturnType(node.desc).getClassName()
+                + returnType
                 + "<br align=\"left\"/>";
 
         return result;
