@@ -128,7 +128,6 @@ public abstract class Pattern {
         arguments += String.join(", ", argTypes);
         arguments += ")";
 
-
         result += node.name
                 + arguments
                 + ": "

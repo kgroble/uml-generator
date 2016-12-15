@@ -18,7 +18,7 @@ enum AccessLevel {
 class ClassCell {
 - classNode: ClassNode
 - edges: List<Edge>
-
+- renderAccess: AccessLevel
 + getName(): String
 + getPrettyName(): String
 + getAccess(): int
@@ -29,16 +29,19 @@ class ClassCell {
 + equals(other: Object): boolean
 + hasNode(otherNode: ClassNode): boolean
 + addEdge(e: Edge): void
++ getAllRelatives(): List<String>
 }
 
 class Edge {
 - originClass: ClassCell
 - destClass: ClassCell
 - relation: Relation
++ getOrigin(): ClassCell
++ getDestination(): ClassCell
++ getRelation(): Relation
 }
 
 class Parser {
-- wholeGraph: Graph
 - patterns: Map<Integer, Pattern>
 + parseGraph(graph: Graph): List<GraphvizElement>
 + addPattern(pattern: Pattern, priority: Integer): boolean
@@ -65,6 +68,7 @@ class Graph {
 abstract class Pattern {
 - translateFieldNode(node: FieldNode): String
 - translateMethodNode(node: MethodNode): String
+- getAccessChar(access: int): char
 + toGraphviz(): List<GraphvizElement>
 + {abstract} detect(graphToSearch: Graph): Graph
 }
@@ -152,6 +156,7 @@ UMLGeneratorApp --> Exporter
 GraphGenerator --> Graph
 GraphGenerator --> AccessLevel
 ClassCell --> Edge
+ClassCell --> AccessLevel
 Edge --> ClassCell
 Edge --> Relation
 Parser --> Pattern
