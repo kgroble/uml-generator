@@ -66,11 +66,12 @@ class Graph {
 }
 
 abstract class Pattern {
++ toGraphviz(): List<GraphvizElement>
++ {abstract} detect(graphToSearch: Graph): Graph
 - translateFieldNode(node: FieldNode): String
 - translateMethodNode(node: MethodNode): String
 - getAccessChar(access: int): char
-+ toGraphviz(): List<GraphvizElement>
-+ {abstract} detect(graphToSearch: Graph): Graph
+- parseSignature(signature: String): String
 }
 
 abstract class PatternDecorator extends Pattern {
