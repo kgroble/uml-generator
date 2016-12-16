@@ -12,15 +12,21 @@ To run in Eclipse:
         `-r --public java.util.ArrayList`
     * Flags can be in any order and any position. Providing more than one access level flag (`--public`, `--protected`, `--private`) yields undefined behavior.
 4. Run the newly created configuration. The generated UML will be in the `./output/out.dot` file.
+
+
 # Team member contributions
 ## Joe
 * Added functionality to Pattern.toGraphviz() so it recognizes fields and methods.
 * Tested multiple run configurations
+
+
 ## Kieran
 * Initial class skeletons
 * Added detection and display of "implements" relations
 * Parse and display class names
 * Improved parsing to capture and display types of generically typed classes
+
+
 ## Lewis
 * Wrote bare-bones class parser up to generating Graphviz code.
 * Updated Javadoc comments.
