@@ -10,7 +10,7 @@ rankdir = BT;
 ];
 "Pattern" [
 	shape = "record",
-	label = <{<I>Pattern</I>||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ detect(Graph): Graph<br align="left"/>  $SWITCH_TABLE$Edge$Relation(): int[]<br align="left"/>}>
+	label = <{<I>Pattern</I>||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ detect(Graph): Graph<br align="left"/>+ foo(java.util.ArrayList[]): void<br align="left"/>  $SWITCH_TABLE$Edge$Relation(): int[]<br align="left"/>}>
 ];
 "Parser" [
 	shape = "record",

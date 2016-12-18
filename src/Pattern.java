@@ -140,6 +140,7 @@ public abstract class Pattern {
         String arguments = "("; 
         String returnType;        
         String signature = node.signature;
+        int args = 0;
         if (signature == null) {
             returnType = Type.getReturnType(node.desc).getClassName();
             for (Type argType : Type.getArgumentTypes(node.desc)){
@@ -164,10 +165,23 @@ public abstract class Pattern {
                             c = signature.charAt(j);
                         }
                         argTypes.add(parseSignature(signature.substring(i, j+1)));
+                        args++;
                         i = j+1;
                     } else {
-                        argTypes.add(Type.getType(signature.charAt(i) + "").getClassName());
+                        try {
+                            argTypes.add(Type.getType(signature.charAt(i) + "").getClassName());
+                        } catch (Exception e) {
+                            // found an array of Objects (rather than primitives)
+                            // for now, just use getClassName for everything
+                            System.out.println(signature);
+                            argTypes = new ArrayList<>();
+                            for(Type type: Type.getArgumentTypes(node.desc)) {
+                                argTypes .add(type.getClassName());
+                            }
+                            break;
+                        }
                         i++;
+                        args++;
                     }
                 }
             }
