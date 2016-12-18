@@ -5,13 +5,13 @@ public class UMLGeneratorApp {
     public static void main(String[] args) {
         List<String> classNames = new ArrayList<>();
         boolean recursive = false;
-       AccessLevel accessLevel = AccessLevel.PRIVATE;
+        AccessLevel accessLevel = AccessLevel.PRIVATE;
         for (String className : args) {
-            switch(className){
+            switch(className) {
             case "-r":
             case "--recursive":
                 recursive = true;
-                break;
+            break;
             case "--public":
                 accessLevel = AccessLevel.PUBLIC;
                 break;
@@ -24,8 +24,8 @@ public class UMLGeneratorApp {
                 classNames.add(className);
                 break;
             }
-            
         }
+
         GraphGenerator generator = new GraphGenerator(recursive, accessLevel);
         Graph g = generator.execute(classNames);
         Parser parser = new Parser();
