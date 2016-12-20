@@ -44,17 +44,21 @@ public class GraphGenerator {
         return graph;
     }
 
-    public void addClassCells(List<String> classNames, Graph graph) {
+    public boolean addClassCells(List<String> classNames, Graph graph) {
+        boolean changed = false;
         for (String className : classNames) {
             try {
                 graph.addClass(new ClassCell(className, access));
+                changed = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        return changed;
     }
 
-    public void addEdges(Graph graph) {
-        // Do nothing
+    public boolean addEdges(Graph graph) {
+        return false;
     }
 }

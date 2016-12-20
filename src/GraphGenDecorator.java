@@ -9,8 +9,8 @@ public abstract class GraphGenDecorator extends GraphGenerator {
     }
 
     @Override
-    public abstract void addClassCells(List<String> classNames, Graph graph);
+    public abstract boolean addClassCells(List<String> classNames, Graph graph);
 
     @Override
-    public abstract void addEdges(Graph graph);
+    public abstract boolean addEdges(Graph graph);
 }
