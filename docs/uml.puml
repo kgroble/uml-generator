@@ -8,38 +8,38 @@ class GraphGenerator {
 # recursive: boolean
 # access: AccessLevel
 + execute(classNames: List<String>): Graph
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 
 abstract class GraphGenDecorator extends GraphGenerator {
 # graphGen: GraphGenerator
-+ {abstract} addClassCells(classNames: List<String>, graph: Graph): void
++ {abstract} addClassCells(classNames: List<String>, graph: Graph): boolean
 + {abstract} addEdges(graph: Graph): void
 }
 
 class SuperGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 
 class ImplementsGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 
 class DependencyGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 
 class ContainsGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 
 class BidirectionGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): void
++ addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
 

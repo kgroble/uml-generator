@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class DesignParser {
     /**
      * Reads in a list of Java Classes and reverse engineers their design.
-     * 
+     *
      * @param args
      *            : the names of the classes, separated by spaces. For example:
      *            java example.DesignParser java.lang.String
