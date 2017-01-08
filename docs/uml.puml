@@ -1,13 +1,50 @@
 @startuml
+
 class UMLGeneratorApp {
 + {static} main(args: String[]): void
 }
 
 class GraphGenerator {
-- recursive: boolean
-- access: AccessLevel
+# recursive: boolean
+# access: AccessLevel
 + execute(classNames: List<String>): Graph
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
 }
+
+abstract class GraphGenDecorator extends GraphGenerator {
+# graphGen: GraphGenerator
++ {abstract} addClassCells(classNames: List<String>, graph: Graph): boolean
++ {abstract} addEdges(graph: Graph): void
+}
+
+class SuperGraphGen extends GraphGenDecorator {
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
+}
+
+class ImplementsGraphGen extends GraphGenDecorator {
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
+}
+
+class DependencyGraphGen extends GraphGenDecorator {
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
+}
+
+class ContainsGraphGen extends GraphGenDecorator {
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
+}
+
+class BidirectionGraphGen extends GraphGenDecorator {
++ addClassCells(classNames: List<String>, graph: Graph): boolean
++ addEdges(graph: Graph): void
+}
+
+BidirectionGraphGen -[hidden]--> ContainsGraphGen
+DependencyGraphGen -[hidden]--> ImplementsGraphGen
 
 enum AccessLevel {
 + PUBLIC
@@ -18,7 +55,7 @@ enum AccessLevel {
 class ClassCell {
 - classNode: ClassNode
 - edges: List<Edge>
-
+- renderAccess: AccessLevel
 + getName(): String
 + getPrettyName(): String
 + getAccess(): int
@@ -26,29 +63,46 @@ class ClassCell {
 + getMethods(): List<MethodNode>
 + getImplements(): List<ClassNode>
 + getSuper(): ClassNode
++ getDependencies(): List<ClassNode>
++ getContains(): List<ClassNode>
 + equals(other: Object): boolean
 + hasNode(otherNode: ClassNode): boolean
 + addEdge(e: Edge): void
+}
+
+enum Relation {
++ INHERITS
++ IMPLEMENTS
++ CONTAINS
++ DEPENDS
+}
+
+enum Cardinality {
++ ONE
++ MANY
 }
 
 class Edge {
 - originClass: ClassCell
 - destClass: ClassCell
 - relation: Relation
+- cardinality: Cardinality
++ getOrigin(): ClassCell
++ getDestination(): ClassCell
++ getRelation(): Relation
 }
 
 class Parser {
-- wholeGraph: Graph
 - patterns: Map<Integer, Pattern>
 + parseGraph(graph: Graph): List<GraphvizElement>
 + addPattern(pattern: Pattern, priority: Integer): boolean
 + remPattern(pattern: Pattern): boolean
 }
 note top of Parser
-  The addPattern() method checks to ensure
-  there are no repeated priorities and no
-  repeated patterns. Patterns will be searched
-  for from lowest priority value to highest.
+The addPattern() method checks to ensure
+there are no repeated priorities and no
+repeated patterns. Patterns will be searched
+for from lowest priority value to highest.
 end note
 
 class Graph {
@@ -63,10 +117,12 @@ class Graph {
 }
 
 abstract class Pattern {
-- translateFieldNode(node: FieldNode): String
-- translateMethodNode(node: MethodNode): String
 + toGraphviz(): List<GraphvizElement>
 + {abstract} detect(graphToSearch: Graph): Graph
+- translateFieldNode(node: FieldNode): String
+- translateMethodNode(node: MethodNode): String
+- getAccessChar(access: int): char
+- parseSignature(signature: String): String
 }
 
 abstract class PatternDecorator extends Pattern {
@@ -95,15 +151,18 @@ class DecoratorPattern extends Pattern {
 + detect(graphToSearch: Graph): Graph
 }
 
+class AssociationPattern extends Pattern {
++ toGraphviz(): List<GraphvizElement>
++ detect(graphToSearch: Graph): Graph
+}
+
 class IdentityPattern extends Pattern {
 + detect(graphToSearch: Graph): Graph
 }
 
-enum Relation {
-+ INHERITS
-+ IMPLEMENTS
-+ CONTAINS
-}
+IdentityPattern -[hidden]--> DecoratorPattern
+AssociationPattern -[hidden]--> AdapterPattern
+SingletonPattern -[hidden]--> ArrowDecorator
 
 abstract class GraphvizElement {
 - attributes: Map<String, String>
@@ -114,10 +173,10 @@ abstract class GraphvizElement {
 + {abstract} getIdentifier(): String
 }
 note top of GraphvizElement
-  The map is from a Graphviz attribute to its value.
-  getIdentifier() must return a String unique to this
-  GraphvizElement but shared with other GraphvizElement\'s
-  that should overwrite this one.
+The map is from a Graphviz attribute to its value.
+getIdentifier() must return a String unique to this
+GraphvizElement but shared with other GraphvizElement\'s
+that should overwrite this one.
 end note
 
 class GraphvizNode extends GraphvizElement {
@@ -151,9 +210,12 @@ UMLGeneratorApp --> Parser
 UMLGeneratorApp --> Exporter
 GraphGenerator --> Graph
 GraphGenerator --> AccessLevel
+GraphGenDecorator --> GraphGenerator
 ClassCell --> Edge
+ClassCell --> AccessLevel
 Edge --> ClassCell
 Edge --> Relation
+Edge --> Cardinality
 Parser --> Pattern
 Pattern --> Graph
 PatternDecorator --> Pattern

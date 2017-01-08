@@ -8,8 +8,8 @@ import org.objectweb.asm.tree.ClassNode;
 
 public class GraphGenerator {
 
-    private boolean recursive;
-    private AccessLevel access;
+    protected boolean recursive;
+    protected AccessLevel access;
 
     /**
      * Create a new GraphGenerator with the given specifications on its
@@ -38,53 +38,25 @@ public class GraphGenerator {
     public Graph execute(List<String> classNames) {
         Graph graph = new Graph();
 
-        Set<String> addedClasses = new HashSet<String>();
-        List<String> classesToAdd = new ArrayList<String>();
-        classesToAdd.addAll(classNames);
-        ClassCell currentCell = null;
+        addClassCells(classNames, graph);
+        addEdges(graph);
 
-        while(!classesToAdd.isEmpty()){
+        return graph;
+    }
+
+    public boolean addClassCells(List<String> classNames, Graph graph) {
+        boolean changed = false;
+        for (String className : classNames) {
             try {
-                String last = classesToAdd.remove(classesToAdd.size()-1);
-                currentCell = new ClassCell(last, this.access);
-                if (!AccessLevel.hasAccess(currentCell.getAccess(), this.access)) {
-                    continue;
-                }
-                graph.addClass(currentCell);
-                addedClasses.add(last);
-                if(recursive){
-                    for(String className: currentCell.getAllRelatives()) {
-                        if(!addedClasses.contains(className)) {
-                            classesToAdd.add(className);
-                        }
-                    }
-                }
+                graph.addClass(new ClassCell(className, access));
+                changed = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        List<ClassCell> cells = graph.getCells();
-        for(ClassCell cell : cells) {
-            List<ClassNode> interfaces = cell.getImplements();
-            for(ClassNode implemented : interfaces) {
-                ClassCell implementedCell = graph.containsNode(implemented);
-                if (implementedCell != null) {
-                    Edge e = new Edge(cell, implementedCell, Edge.Relation.IMPLEMENTS);
-
-                    graph.addEdge(e);
-                    cell.addEdge(e);
-                }
-            }
-
-            ClassCell superCell = graph.containsNode(cell.getSuper());
-            if (superCell != null) {
-                Edge e = new Edge(cell, superCell, Edge.Relation.EXTENDS);
-
-                graph.addEdge(e);
-                cell.addEdge(e);
-            }
-        }
-        return graph;
+        return changed;
     }
+
+    public void addEdges(Graph graph) {}
 }

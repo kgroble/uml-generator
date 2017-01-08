@@ -68,7 +68,7 @@ public abstract class GraphvizElement {
     public abstract String getIdentifier();
 
     /**
-     * Adds the givent element to the passed list, and if there's already an
+     * Adds the given element to the passed list, and if there's already an
      * element with a matching identifier that element will be replaced with
      * the passed element.
      *

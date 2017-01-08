@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -44,8 +45,10 @@ public class ClassCell {
      * return the string "List".
      */
     public String getPrettyName() {
-        String[] splitted = getName().split("/");
-        return splitted[splitted.length - 1];
+        // qualified or not?
+//        String[] splitted = getName().split("/");
+//        return splitted[splitted.length - 1];
+        return Type.getObjectType(this.classNode.name).getClassName();
     }
 
     /**

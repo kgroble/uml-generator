@@ -7,7 +7,23 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public abstract class Pattern {
+    private class ParsedSignature {
+        public String parsedString;
+        public int endIndex;
 
+        public ParsedSignature(String parsedString, int endIndex) {
+            this.parsedString = parsedString;
+            this.endIndex = endIndex;
+        }
+    }
+
+    /**
+     * Creates a new GraphvizElement list that holds all the abstract
+     * information necessary to draw the passed graph.
+     *
+     * @param detected The graph to generate GraphvizElement's for.
+     * @return A new GraphvizElement list for detected.
+     */
     public List<GraphvizElement> toGraphviz(Graph detected) {
         List<GraphvizElement> elements = new ArrayList<>();
         String cellName;
@@ -38,9 +54,7 @@ public abstract class Pattern {
             }
 
             if ((cell.getAccess() & Opcodes.ACC_ABSTRACT) != 0 || (cell.getAccess() & Opcodes.ACC_INTERFACE) != 0) {
-                cellName = "<I>" + cellName + "</I>"; // Special '@' is used to distinguish from non-html
-                // <>'s to
-                // sanitize.
+                cellName = "<I>" + cellName + "</I>";
             }
 
             node.addAttribute("label", "<{" + cellName + "|" + fields + "|" + methods + "}>");
@@ -71,20 +85,153 @@ public abstract class Pattern {
         return elements;
     }
 
+    /**
+     * Creates a new Graph with all the nodes from graphToSearch that fit this
+     * pattern. If there are multiple occurences of the pattern, it will return
+     * all of them in one disconnected Graph.
+     *
+     * @param graphToSearch The Graph to search through for the pattern.
+     * @return A new Graph containing all the detected nodes and edges.
+     */
     public abstract Graph detect(Graph graphToSearch);
 
+    /**
+     * Translates a FieldNode into a Graphviz string.
+     *
+     * @param node The FieldNode to convert
+     * @return A Graphviz String representing the passed FieldNode
+     */
     private String translateFieldNode(FieldNode node){
         String result = "";
 
         // Modifiers such as static are currently ignored.
 
         result += getAccessChar(node.access) + " ";
+        String type;
+        String signature = node.signature;
+        if (signature == null) {
+            type = Type.getType(node.desc).getClassName();
+        } else {
+            type = parseSignature(signature).parsedString;
+        }
 
-        result += node.name + ": " + Type.getType(node.desc).getClassName() + "<br align=\"left\"/>";
+        result += node.name + ": " + type + "<br align=\"left\"/>";
 
         return result;
     }
 
+    private ParsedSignature parseSignature(String signature) {
+        if (signature == null || signature.length() == 0) {
+            return new ParsedSignature("", 0);
+        }
+
+        List<String> typeNames = new ArrayList<>();
+        String brackets = "";
+        int leadIndex = 0;
+
+        while (leadIndex < signature.length()
+               && signature.charAt(leadIndex) != ';') {
+            switch (signature.charAt(leadIndex)) {
+            case '[':
+                brackets = "[]";
+                break;
+            case 'V':
+                typeNames.add("void" + brackets);
+                brackets = "";
+                break;
+            case 'I':
+                typeNames.add("int" + brackets);
+                brackets = "";
+                break;
+            case 'J':
+                typeNames.add("long" + brackets);
+                brackets = "";
+                break;
+            case 'T':
+                typeNames.add("T" + brackets);
+                brackets = "";
+                break;
+            case 'E':
+                typeNames.add("E" + brackets);
+                brackets = "";
+                break;
+            case 'L':
+                ParsedSignature parsed
+                    = parseClassSignature(signature.substring(leadIndex + 1));
+                leadIndex += parsed.endIndex + 1;
+                typeNames.add(parsed.parsedString + brackets);
+                brackets = "";
+                break;
+            default:
+                System.err.println("Found unrecognized start flag "
+                                   + signature.charAt(leadIndex) + " in signature " + signature.substring(leadIndex));
+                typeNames.add(signature.charAt(leadIndex) + brackets);
+                brackets = "";
+                break;
+            }
+
+            leadIndex++;
+        }
+
+        return new ParsedSignature(String.join(", ", typeNames).replace("/", "."), leadIndex);
+    }
+
+    private ParsedSignature parseClassSignature(String signature) {
+        String objName = null;
+        int leadIndex = 0;
+
+        while (leadIndex < signature.length()
+               && signature.charAt(leadIndex) != ';'
+               && signature.charAt(leadIndex) != '>') {
+            if (signature.charAt(leadIndex) == '<') {
+                objName = signature.substring(0, leadIndex) + "&lt;";
+                List<String> templateObjects = new ArrayList<>();
+                String brackets = "";
+                ParsedSignature parsed;
+                leadIndex++;
+                do {
+                    if (signature.charAt(leadIndex) == '[') {
+                        brackets = "[]";
+                        leadIndex++;
+                    } else if (signature.charAt(leadIndex) == '*') {
+                        objName += "*";
+                        leadIndex++;
+                        break;
+                    }
+                    leadIndex++;
+
+                    parsed
+                        = parseClassSignature(signature.substring(leadIndex));
+
+                    leadIndex += parsed.endIndex + 1;
+                    templateObjects.add(parsed.parsedString + brackets);
+
+                    brackets = "";
+                } while (signature.charAt(leadIndex) != '>');
+
+                objName += String.join(", ", templateObjects) + "&gt;";
+            }
+
+            leadIndex++;
+        }
+
+        if (signature.charAt(leadIndex) == '>') {
+            leadIndex++;
+        }
+
+        if (objName == null) {
+            objName = signature.substring(0, leadIndex);
+        }
+
+        return new ParsedSignature(objName, leadIndex);
+    }
+
+    /**
+     * Translates a MethodNode into a Graphviz string.
+     *
+     * @param node The MethodNode to convert
+     * @return A Graphviz String representing the passed MethodNode
+     */
     private String translateMethodNode(MethodNode node){
         String result = "";
 
@@ -93,24 +240,46 @@ public abstract class Pattern {
         result += getAccessChar(node.access) + " ";
 
         String arguments = "(";
-        List<String> argTypes = new ArrayList<String>();
-        for(Type argType : Type.getArgumentTypes(node.desc)){
-            argTypes.add(argType.getClassName());
+        String returnType;
+        String signature = node.signature;
+        if (signature == null) {
+            returnType = Type.getReturnType(node.desc).getClassName();
+            List<String> argTypes = new ArrayList<>();
+            for (Type argType : Type.getArgumentTypes(node.desc)){
+                argTypes.add(argType.getClassName());
+            }
+            arguments += String.join(", ", argTypes) + ")";
+        } else {
+            int startArgs = signature.indexOf('(');
+            int endArgs = signature.indexOf(')');
+            if (endArgs - startArgs > 1) {
+                arguments += parseSignature(signature.substring(startArgs + 1, endArgs)).parsedString;
+            }
+            arguments += ")";
 
+            returnType = signature.substring(endArgs + 1);
+            if (returnType.startsWith("L")) {
+                returnType = parseSignature(returnType).parsedString;
+            } else {
+                returnType = Type.getReturnType(node.desc).getClassName();
+            }
         }
-        arguments += String.join(", ", argTypes);
-        arguments += ")";
-
 
         result += node.name
-                + arguments
-                + ": "
-                + Type.getReturnType(node.desc).getClassName()
-                + "<br align=\"left\"/>";
+            + arguments
+            + ": "
+            + returnType
+            + "<br align=\"left\"/>";
 
         return result;
     }
 
+    /**
+     * Looks up which access character should be used for a given access level.
+     *
+     * @param access The access bitfield to be masked with Opcodes.
+     * @return A char correlating to that level of access.
+     */
     private char getAccessChar(int access){
         if((access & Opcodes.ACC_PUBLIC) > 0){
             return '+';
