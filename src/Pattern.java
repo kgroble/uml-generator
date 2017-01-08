@@ -167,41 +167,32 @@ public abstract class Pattern {
         int leadIndex = 0;
 
         while (leadIndex < signature.length()
-               && signature.charAt(leadIndex) != ';'
-               && signature.charAt(leadIndex) != '>') {
+               && signature.charAt(leadIndex) != ';') {
             if (signature.charAt(leadIndex) == '<') {
+                int openIndex = leadIndex;
                 objName = signature.substring(0, leadIndex) + "&lt;";
-                List<String> templateObjects = new ArrayList<>();
-                String brackets = "";
-                ParsedSignature parsed;
+                int angleBracketsCt = 1;
+
                 leadIndex++;
-                do {
-                    if (signature.charAt(leadIndex) == '[') {
-                        brackets = "[]";
-                        leadIndex++;
-                    } else if (signature.charAt(leadIndex) == '*') {
-                        objName += "*";
-                        leadIndex++;
+                while (angleBracketsCt != 0) {
+                    switch (signature.charAt(leadIndex)) {
+                    case '>':
+                        angleBracketsCt--;
+                        break;
+                    case '<':
+                        angleBracketsCt++;
+                        break;
+                    default:
                         break;
                     }
                     leadIndex++;
+                }
 
-                    parsed
-                        = parseClassSignature(signature.substring(leadIndex));
-
-                    leadIndex += parsed.endIndex + 1;
-                    templateObjects.add(parsed.parsedString + brackets);
-
-                    brackets = "";
-                } while (signature.charAt(leadIndex) != '>');
-
-                objName += String.join(", ", templateObjects) + "&gt;";
+                ParsedSignature template = parseSignature(signature.substring(openIndex + 1, leadIndex - 1));
+                objName += template.parsedString + "&gt;";
+                break;
             }
 
-            leadIndex++;
-        }
-
-        if (signature.charAt(leadIndex) == '>') {
             leadIndex++;
         }
 
