@@ -53,24 +53,16 @@ public class SuperGraphGen extends GraphGenDecorator {
     }
 
     @Override
-    public boolean addEdges(Graph graph) {
-        boolean changed;
-        boolean retBool = this.graphGen.addEdges(graph);
+    public void addEdges(Graph graph) {
+        this.graphGen.addEdges(graph);
 
         ClassCell dest;
-
-        do {
-            changed = false;
-            for (ClassCell cell : graph.getCells()) {
-                dest = graph.containsNode(cell.getSuper());
-                if (dest != null) {
-                    graph.addEdge(new Edge(cell, dest, Edge.Relation.EXTENDS));
-                    changed = true;
-                    retBool = true;
-                }
+        for (ClassCell cell : graph.getCells()) {
+            dest = graph.containsNode(cell.getSuper());
+            if (dest != null) {
+                graph.addEdge(new Edge(cell, dest, Edge.Relation.EXTENDS));
             }
-        } while (changed && this.graphGen.addEdges(graph));
+        }
 
-        return retBool;
     }
 }

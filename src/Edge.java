@@ -5,12 +5,20 @@ public class Edge {
      */
     public enum Relation {
         IMPLEMENTS,
-        EXTENDS
+        EXTENDS,
+        CONTAINS,
+        DEPENDS
+    }
+    
+    public enum Cardinality {
+        ONE,
+        MANY
     }
 
     private ClassCell originClass;
     private ClassCell destClass;
     private Relation relation;
+    private Cardinality cardinality;
 
     /**
      * Creates a new Edges with the given information.
@@ -26,6 +34,14 @@ public class Edge {
         this.originClass = origin;
         this.destClass = dest;
         this.relation = relation;
+        this.cardinality = Cardinality.ONE;
+    }
+    
+    public Edge(ClassCell origin, ClassCell dest, Relation relation, Cardinality cardinality) {
+        this.originClass = origin;
+        this.destClass = dest;
+        this.relation = relation;
+        this.cardinality = cardinality;
     }
 
     /**
@@ -47,5 +63,9 @@ public class Edge {
      */
     public Relation getRelation() {
         return this.relation;
+    }
+    
+    public Cardinality getCardinality() {
+        return this.cardinality;
     }
 }

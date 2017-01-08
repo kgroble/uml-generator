@@ -58,7 +58,5 @@ public class GraphGenerator {
         return changed;
     }
 
-    public boolean addEdges(Graph graph) {
-        return false;
-    }
+    public void addEdges(Graph graph) {}
 }
