@@ -52,6 +52,16 @@ public class Graph {
         return copy;
     }
 
+    public List<String> getCellNames() {
+        List<String> names = new ArrayList<>();
+
+        for (ClassCell cell : this.cells) {
+            names.add(cell.getName());
+        }
+
+        return names;
+    }
+
     /**
      * Returns a copy of the list of Edges in the Graph.
      *
@@ -71,7 +81,7 @@ public class Graph {
     public void addEdge(Edge e) {
         this.edges.add(e);
     }
-    
+
 
     /**
      * Returns a new copy of this Graph.
