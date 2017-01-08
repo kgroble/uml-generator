@@ -12,7 +12,17 @@ public class Edge {
     
     public enum Cardinality {
         ONE,
-        MANY
+        MANY;
+        
+        @Override
+        public String toString(){
+            if (this.equals(ONE)) {
+                return "1";
+            } else if (this.equals(MANY)) {
+                return "*";
+            }
+            return "";
+        }
     }
 
     private ClassCell originClass;
