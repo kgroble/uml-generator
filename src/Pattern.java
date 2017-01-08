@@ -7,6 +7,15 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public abstract class Pattern {
+    private class ParsedSignature {
+        public String parsedString;
+        public int endIndex;
+
+        public ParsedSignature(String parsedString, int endIndex) {
+            this.parsedString = parsedString;
+            this.endIndex = endIndex;
+        }
+    }
 
     /**
      * Creates a new GraphvizElement list that holds all the abstract
@@ -103,24 +112,118 @@ public abstract class Pattern {
         if (signature == null) {
             type = Type.getType(node.desc).getClassName();
         } else {
-            type = parseSignature(signature);
+            type = parseSignature(signature).parsedString;
         }
-        
+
         result += node.name + ": " + type + "<br align=\"left\"/>";
 
         return result;
     }
-    
-    private String parseSignature(String signature) {
-        signature = signature.substring(1, signature.length()-1);
-        signature = signature.replace("/", ".")
-                             .replace("+L", "+")
-                             .replace(";L", ", ")
-                             .replace("<L", "&lt;")
-                             .replace(";>", "&gt;")
-                             .replace("<", "&lt;")
-                             .replace(">", "&gt;");
-        return signature;
+
+    private ParsedSignature parseSignature(String signature) {
+        if (signature == null || signature.length() == 0) {
+            return new ParsedSignature("", 0);
+        }
+
+        List<String> typeNames = new ArrayList<>();
+        String brackets = "";
+        int leadIndex = 0;
+
+        while (leadIndex < signature.length()
+               && signature.charAt(leadIndex) != ';') {
+            switch (signature.charAt(leadIndex)) {
+            case '[':
+                brackets = "[]";
+                break;
+            case 'V':
+                typeNames.add("void" + brackets);
+                brackets = "";
+                break;
+            case 'I':
+                typeNames.add("int" + brackets);
+                brackets = "";
+                break;
+            case 'J':
+                typeNames.add("long" + brackets);
+                brackets = "";
+                break;
+            case 'T':
+                typeNames.add("T" + brackets);
+                brackets = "";
+                break;
+            case 'E':
+                typeNames.add("E" + brackets);
+                brackets = "";
+                break;
+            case 'L':
+                ParsedSignature parsed
+                    = parseClassSignature(signature.substring(leadIndex + 1));
+                leadIndex += parsed.endIndex + 1;
+                typeNames.add(parsed.parsedString + brackets);
+                brackets = "";
+                break;
+            default:
+                System.err.println("Found unrecognized start flag "
+                                   + signature.charAt(leadIndex) + " in signature " + signature.substring(leadIndex));
+                typeNames.add(signature.charAt(leadIndex) + brackets);
+                brackets = "";
+                break;
+            }
+
+            leadIndex++;
+        }
+
+        return new ParsedSignature(String.join(", ", typeNames).replace("/", "."), leadIndex);
+    }
+
+    private ParsedSignature parseClassSignature(String signature) {
+        String objName = null;
+        int leadIndex = 0;
+
+        while (leadIndex < signature.length()
+               && signature.charAt(leadIndex) != ';'
+               && signature.charAt(leadIndex) != '>') {
+            if (signature.charAt(leadIndex) == '<') {
+                objName = signature.substring(0, leadIndex) + "&lt;";
+                List<String> templateObjects = new ArrayList<>();
+                String brackets = "";
+                ParsedSignature parsed;
+                leadIndex++;
+                do {
+                    if (signature.charAt(leadIndex) == '[') {
+                        brackets = "[]";
+                        leadIndex++;
+                    } else if (signature.charAt(leadIndex) == '*') {
+                        objName += "*";
+                        leadIndex++;
+                        break;
+                    }
+                    leadIndex++;
+
+                    parsed
+                        = parseClassSignature(signature.substring(leadIndex));
+
+                    leadIndex += parsed.endIndex + 1;
+                    templateObjects.add(parsed.parsedString + brackets);
+
+                    brackets = "";
+                } while (signature.charAt(leadIndex) != '>');
+
+                objName += String.join(", ", templateObjects) + "&gt;";
+            }
+
+            leadIndex++;
+        }
+
+        if (signature.charAt(leadIndex) == '>') {
+            leadIndex++;
+        }
+
+        if (objName == null) {
+            objName = signature.substring(0, leadIndex);
+        }
+
+        return new ParsedSignature(objName, leadIndex);
     }
 
     /**
@@ -135,71 +238,38 @@ public abstract class Pattern {
         // Modifiers such as static are currently ignored.
 
         result += getAccessChar(node.access) + " ";
-        List<String> argTypes = new ArrayList<String>();
 
-        String arguments = "("; 
-        String returnType;        
+        String arguments = "(";
+        String returnType;
         String signature = node.signature;
-        int args = 0;
         if (signature == null) {
             returnType = Type.getReturnType(node.desc).getClassName();
+            List<String> argTypes = new ArrayList<>();
             for (Type argType : Type.getArgumentTypes(node.desc)){
                 argTypes.add(argType.getClassName());
             }
+            arguments += String.join(", ", argTypes) + ")";
         } else {
+            int startArgs = signature.indexOf('(');
             int endArgs = signature.indexOf(')');
-            if (endArgs > 1) {
-                for (int i = 1; i < endArgs; ) {
-                    if (signature.charAt(i) == 'L') {
-                        int countOpen = 0;
-                        int countClosed = 0;
-                        int j = i+1;
-                        char c = signature.charAt(j);
-                        while(c != ';' || countOpen != countClosed) {
-                            if (c == '<') {
-                                countOpen++;
-                            } else if (c == '>') {
-                                countClosed++;
-                            }
-                            j++;
-                            c = signature.charAt(j);
-                        }
-                        argTypes.add(parseSignature(signature.substring(i, j+1)));
-                        args++;
-                        i = j+1;
-                    } else {
-                        try {
-                            argTypes.add(Type.getType(signature.charAt(i) + "").getClassName());
-                        } catch (Exception e) {
-                            // found an array of Objects (rather than primitives)
-                            // for now, just use getClassName for everything
-                            System.out.println(signature);
-                            argTypes = new ArrayList<>();
-                            for(Type type: Type.getArgumentTypes(node.desc)) {
-                                argTypes .add(type.getClassName());
-                            }
-                            break;
-                        }
-                        i++;
-                        args++;
-                    }
-                }
+            if (endArgs - startArgs > 1) {
+                arguments += parseSignature(signature.substring(startArgs + 1, endArgs)).parsedString;
             }
+            arguments += ")";
+
             returnType = signature.substring(endArgs + 1);
             if (returnType.startsWith("L")) {
-                returnType = parseSignature(returnType);
+                returnType = parseSignature(returnType).parsedString;
             } else {
                 returnType = Type.getReturnType(node.desc).getClassName();
             }
         }
-        arguments += String.join(", ", argTypes);
-        arguments += ")";
-                
+
         result += node.name
-                + arguments
-                + ": "
-                + returnType
-                + "<br align=\"left\"/>";
+            + arguments
+            + ": "
+            + returnType
+            + "<br align=\"left\"/>";
 
         return result;
     }
