@@ -1,20 +1,28 @@
 digraph uml {
 rankdir = BT;
+"Foo" [
+	shape = "record",
+	label = <{Foo|- ls: java.util.List&lt;java.lang.Integer&gt;<br align="left"/>- map: java.util.Map&lt;java.lang.Double, java.util.List&lt;java.lang.Integer&gt;&gt;<br align="left"/>- lsOfArr: java.util.List&lt;java.lang.Object[]&gt;<br align="left"/>- arrOfLs: java.util.List&lt;java.lang.Object&gt;[]<br align="left"/>- FooArr: Foo[]<br align="left"/>- integer: int<br align="left"/>- intArr: int[]<br align="left"/>|  &lt;init&gt;(): void<br align="left"/>+ getIntArr(int, int, java.util.List&lt;java.lang.Integer&gt;, int): int[]<br align="left"/>}>
+];
+"java.lang.Object" [
+	shape = "record",
+	label = <{java.lang.Object||+ &lt;init&gt;(): void<br align="left"/>- registerNatives(): void<br align="left"/>+ getClass(): java.lang.Class&lt;*&gt;<br align="left"/>+ hashCode(): int<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/># clone(): java.lang.Object<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ notify(): void<br align="left"/>+ notifyAll(): void<br align="left"/>+ wait(long): void<br align="left"/>+ wait(long, int): void<br align="left"/>+ wait(): void<br align="left"/># finalize(): void<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
+];
 "UMLGeneratorApp" [
 	shape = "record",
 	label = <{UMLGeneratorApp||+ &lt;init&gt;(): void<br align="left"/>+ main(java.lang.String[]): void<br align="left"/>}>
 ];
 "PatternDecorator" [
 	shape = "record",
-	label = <{<I>PatternDecorator</I>||+ &lt;init&gt;(Pattern): void<br align="left"/>+ detect(Graph): Graph<br align="left"/>}>
+	label = <{<I>PatternDecorator</I>|# innerPattern: Pattern<br align="left"/>|+ &lt;init&gt;(Pattern): void<br align="left"/>+ detect(Graph): Graph<br align="left"/>}>
 ];
 "Pattern" [
 	shape = "record",
-	label = <{<I>Pattern</I>||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ detect(Graph): Graph<br align="left"/>+ foo(java.util.ArrayList[]): void<br align="left"/>  $SWITCH_TABLE$Edge$Relation(): int[]<br align="left"/>}>
+	label = <{<I>Pattern</I>||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ detect(Graph): Graph<br align="left"/>- translateFieldNode(org.objectweb.asm.tree.FieldNode): java.lang.String<br align="left"/>- parseSignature(java.lang.String): Pattern$ParsedSignature<br align="left"/>- parseClassSignature(java.lang.String): Pattern$ParsedSignature<br align="left"/>- translateMethodNode(org.objectweb.asm.tree.MethodNode): java.lang.String<br align="left"/>- getAccessChar(int): char<br align="left"/>}>
 ];
 "Parser" [
 	shape = "record",
-	label = <{Parser||+ &lt;init&gt;(): void<br align="left"/>+ parseGraph(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ addPattern(Pattern, java.lang.Integer): boolean<br align="left"/>+ removePattern(Pattern): boolean<br align="left"/>}>
+	label = <{Parser|- patterns: java.util.Map&lt;java.lang.Integer, Pattern&gt;<br align="left"/>|+ &lt;init&gt;(): void<br align="left"/>+ parseGraph(Graph): java.util.List&lt;GraphvizElement&gt;<br align="left"/>+ addPattern(Pattern, java.lang.Integer): boolean<br align="left"/>+ removePattern(Pattern): boolean<br align="left"/>}>
 ];
 "IdentityPattern" [
 	shape = "record",
@@ -22,35 +30,31 @@ rankdir = BT;
 ];
 "GraphvizNode" [
 	shape = "record",
-	label = <{GraphvizNode||+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+	label = <{GraphvizNode|- name: java.lang.String<br align="left"/>|+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+];
+"GraphvizElement" [
+	shape = "record",
+	label = <{<I>GraphvizElement</I>|- BANNED_STRINGS: java.util.Map&lt;java.lang.String, java.lang.String&gt;<br align="left"/># attributes: java.util.Map&lt;java.lang.String, java.lang.String&gt;<br align="left"/>|+ &lt;init&gt;(): void<br align="left"/>- initBannedStrings(): java.util.Map<br align="left"/>+ addAttribute(java.lang.String, java.lang.String): void<br align="left"/>+ removeAttribute(java.lang.String): void<br align="left"/>+ getAttribute(java.lang.String): java.lang.String<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>+ addOrReplaceElement(java.util.List&lt;GraphvizElement&gt;, GraphvizElement): void<br align="left"/># sanitizeGraphvizString(java.lang.String): java.lang.String<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
 ];
 "GraphvizGlobalParams" [
 	shape = "record",
 	label = <{GraphvizGlobalParams||+ &lt;init&gt;(): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
 ];
-"GraphvizElement" [
-	shape = "record",
-	label = <{<I>GraphvizElement</I>||  &lt;clinit&gt;(): void<br align="left"/>+ &lt;init&gt;(): void<br align="left"/>+ addAttribute(java.lang.String, java.lang.String): void<br align="left"/>+ removeAttribute(java.lang.String): void<br align="left"/>+ getAttribute(java.lang.String): java.lang.String<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>+ addOrReplaceElement(java.util.List&lt;GraphvizElement&gt;, GraphvizElement): void<br align="left"/>}>
-];
-"AccessLevel" [
-	shape = "record",
-	label = <{AccessLevel|+ PUBLIC: AccessLevel<br align="left"/>+ PROTECTED: AccessLevel<br align="left"/>+ PRIVATE: AccessLevel<br align="left"/>|  &lt;clinit&gt;(): void<br align="left"/>+ hasAccess(int, AccessLevel): boolean<br align="left"/>+ values(): AccessLevel[]<br align="left"/>+ valueOf(java.lang.String): AccessLevel<br align="left"/>}>
-];
 "GraphvizEdge" [
 	shape = "record",
-	label = <{GraphvizEdge||+ &lt;init&gt;(java.lang.String, java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
+	label = <{GraphvizEdge|- fromNode: java.lang.String<br align="left"/>- toNode: java.lang.String<br align="left"/>|+ &lt;init&gt;(java.lang.String, java.lang.String): void<br align="left"/>+ toGraphviz(): java.lang.String<br align="left"/>+ getIdentifier(): java.lang.String<br align="left"/>}>
 ];
 "GraphGenerator" [
 	shape = "record",
-	label = <{GraphGenerator||+ &lt;init&gt;(boolean, AccessLevel): void<br align="left"/>+ execute(java.util.List&lt;java.lang.String&gt;): Graph<br align="left"/>}>
+	label = <{GraphGenerator|- recursive: boolean<br align="left"/>- access: AccessLevel<br align="left"/>|+ &lt;init&gt;(boolean, AccessLevel): void<br align="left"/>+ execute(java.util.List&lt;java.lang.String&gt;): Graph<br align="left"/>}>
 ];
 "Graph" [
 	shape = "record",
-	label = <{Graph||+ &lt;init&gt;(): void<br align="left"/>+ addClass(ClassCell): boolean<br align="left"/>+ getCells(): java.util.List&lt;ClassCell&gt;<br align="left"/>+ getEdges(): java.util.List&lt;Edge&gt;<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ copy(): Graph<br align="left"/>+ containsNode(org.objectweb.asm.tree.ClassNode): ClassCell<br align="left"/>}>
+	label = <{Graph|- cells: java.util.List&lt;ClassCell&gt;<br align="left"/>- edges: java.util.List&lt;Edge&gt;<br align="left"/>|+ &lt;init&gt;(): void<br align="left"/>- &lt;init&gt;(java.util.List&lt;ClassCell&gt;, java.util.List&lt;Edge&gt;): void<br align="left"/>+ addClass(ClassCell): boolean<br align="left"/>+ getCells(): java.util.List&lt;ClassCell&gt;<br align="left"/>+ getEdges(): java.util.List&lt;Edge&gt;<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ copy(): Graph<br align="left"/>+ containsNode(org.objectweb.asm.tree.ClassNode): ClassCell<br align="left"/>}>
 ];
 "FileExporter" [
 	shape = "record",
-	label = <{FileExporter||+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ export(java.util.List&lt;GraphvizElement&gt;): void<br align="left"/>}>
+	label = <{FileExporter|- outFile: java.lang.String<br align="left"/>|+ &lt;init&gt;(java.lang.String): void<br align="left"/>+ export(java.util.List&lt;GraphvizElement&gt;): void<br align="left"/>}>
 ];
 "Exporter" [
 	shape = "record",
@@ -58,13 +62,41 @@ rankdir = BT;
 ];
 "Edge" [
 	shape = "record",
-	label = <{Edge||+ &lt;init&gt;(ClassCell, ClassCell, Edge$Relation): void<br align="left"/>+ getOrigin(): ClassCell<br align="left"/>+ getDestination(): ClassCell<br align="left"/>+ getRelation(): Edge$Relation<br align="left"/>}>
+	label = <{Edge|- originClass: ClassCell<br align="left"/>- destClass: ClassCell<br align="left"/>- relation: Edge$Relation<br align="left"/>|+ &lt;init&gt;(ClassCell, ClassCell, Edge$Relation): void<br align="left"/>+ getOrigin(): ClassCell<br align="left"/>+ getDestination(): ClassCell<br align="left"/>+ getRelation(): Edge$Relation<br align="left"/>}>
 ];
 "ClassCell" [
 	shape = "record",
-	label = <{ClassCell||+ &lt;init&gt;(java.lang.String, AccessLevel): void<br align="left"/>+ getName(): java.lang.String<br align="left"/>+ getPrettyName(): java.lang.String<br align="left"/>+ getAccess(): int<br align="left"/>+ getFields(): java.util.List&lt;org.objectweb.asm.tree.FieldNode&gt;<br align="left"/>+ getMethods(): java.util.List&lt;org.objectweb.asm.tree.MethodNode&gt;<br align="left"/>+ getImplements(): java.util.List&lt;org.objectweb.asm.tree.ClassNode&gt;<br align="left"/>+ getSuper(): org.objectweb.asm.tree.ClassNode<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ hasNode(org.objectweb.asm.tree.ClassNode): boolean<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ getAllRelatives(): java.util.List&lt;java.lang.String&gt;<br align="left"/>}>
+	label = <{ClassCell|- classNode: org.objectweb.asm.tree.ClassNode<br align="left"/>- edges: java.util.List&lt;Edge&gt;<br align="left"/>- renderAccess: AccessLevel<br align="left"/>|+ &lt;init&gt;(java.lang.String, AccessLevel): void<br align="left"/>+ getName(): java.lang.String<br align="left"/>+ getPrettyName(): java.lang.String<br align="left"/>+ getAccess(): int<br align="left"/>+ getFields(): java.util.List&lt;org.objectweb.asm.tree.FieldNode&gt;<br align="left"/>+ getMethods(): java.util.List&lt;org.objectweb.asm.tree.MethodNode&gt;<br align="left"/>+ getImplements(): java.util.List&lt;org.objectweb.asm.tree.ClassNode&gt;<br align="left"/>+ getSuper(): org.objectweb.asm.tree.ClassNode<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ hasNode(org.objectweb.asm.tree.ClassNode): boolean<br align="left"/>+ addEdge(Edge): void<br align="left"/>+ getAllRelatives(): java.util.List&lt;java.lang.String&gt;<br align="left"/>}>
+];
+"AccessLevel" [
+	shape = "record",
+	label = <{AccessLevel|+ PUBLIC: AccessLevel<br align="left"/>+ PROTECTED: AccessLevel<br align="left"/>+ PRIVATE: AccessLevel<br align="left"/>- $VALUES: AccessLevel[]<br align="left"/>|+ values(): AccessLevel[]<br align="left"/>+ valueOf(java.lang.String): AccessLevel<br align="left"/>- &lt;init&gt;(): void<br align="left"/>+ hasAccess(int, AccessLevel): boolean<br align="left"/>  &lt;clinit&gt;(): void<br align="left"/>}>
+];
+"java.lang.Enum" [
+	shape = "record",
+	label = <{<I>java.lang.Enum</I>|- name: java.lang.String<br align="left"/>- ordinal: int<br align="left"/>|+ name(): java.lang.String<br align="left"/>+ ordinal(): int<br align="left"/># &lt;init&gt;(java.lang.String, int): void<br align="left"/>+ toString(): java.lang.String<br align="left"/>+ equals(java.lang.Object): boolean<br align="left"/>+ hashCode(): int<br align="left"/># clone(): java.lang.Object<br align="left"/>+ compareTo(T, E): int<br align="left"/>+ getDeclaringClass(): java.lang.Class&lt;E&gt;<br align="left"/>+ valueOf(java.lang.Class&lt;T&gt;, java.lang.String): java.lang.Enum<br align="left"/># finalize(): void<br align="left"/>- readObject(java.io.ObjectInputStream): void<br align="left"/>- readObjectNoData(): void<br align="left"/>+ compareTo(java.lang.Object): int<br align="left"/>}>
+];
+"java.io.Serializable" [
+	shape = "record",
+	label = <{<I>java.io.Serializable</I>||}>
+];
+"java.lang.Comparable" [
+	shape = "record",
+	label = <{<I>java.lang.Comparable</I>||+ compareTo(T, T): int<br align="left"/>}>
+];
+"Foo" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"UMLGeneratorApp" -> "java.lang.Object"[
+	arrowhead = "onormal"
 ];
 "PatternDecorator" -> "Pattern"[
+	arrowhead = "onormal"
+];
+"Pattern" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"Parser" -> "java.lang.Object"[
 	arrowhead = "onormal"
 ];
 "IdentityPattern" -> "Pattern"[
@@ -73,14 +105,46 @@ rankdir = BT;
 "GraphvizNode" -> "GraphvizElement"[
 	arrowhead = "onormal"
 ];
+"GraphvizElement" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
 "GraphvizGlobalParams" -> "GraphvizElement"[
 	arrowhead = "onormal"
 ];
 "GraphvizEdge" -> "GraphvizElement"[
 	arrowhead = "onormal"
 ];
+"GraphGenerator" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"Graph" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
 "FileExporter" -> "Exporter"[
 	style = "dashed",
+	arrowhead = "onormal"
+];
+"FileExporter" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"Edge" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"ClassCell" -> "java.lang.Object"[
+	arrowhead = "onormal"
+];
+"AccessLevel" -> "java.lang.Enum"[
+	arrowhead = "onormal"
+];
+"java.lang.Enum" -> "java.lang.Comparable"[
+	style = "dashed",
+	arrowhead = "onormal"
+];
+"java.lang.Enum" -> "java.io.Serializable"[
+	style = "dashed",
+	arrowhead = "onormal"
+];
+"java.lang.Enum" -> "java.lang.Object"[
 	arrowhead = "onormal"
 ];
 }
