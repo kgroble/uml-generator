@@ -135,18 +135,6 @@ public abstract class Pattern {
             case '[':
                 brackets = "[]";
                 break;
-            case 'V':
-                typeNames.add("void" + brackets);
-                brackets = "";
-                break;
-            case 'I':
-                typeNames.add("int" + brackets);
-                brackets = "";
-                break;
-            case 'J':
-                typeNames.add("long" + brackets);
-                brackets = "";
-                break;
             case 'T':
                 typeNames.add("T" + brackets);
                 brackets = "";
@@ -163,9 +151,7 @@ public abstract class Pattern {
                 brackets = "";
                 break;
             default:
-                System.err.println("Found unrecognized start flag "
-                                   + signature.charAt(leadIndex) + " in signature " + signature.substring(leadIndex));
-                typeNames.add(signature.charAt(leadIndex) + brackets);
+                typeNames.add(Type.getType(Character.toString(signature.charAt(leadIndex))).getClassName() + brackets);
                 brackets = "";
                 break;
             }
