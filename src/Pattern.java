@@ -151,7 +151,9 @@ public abstract class Pattern {
                 brackets = "";
                 break;
             default:
-                typeNames.add(Type.getType(Character.toString(signature.charAt(leadIndex))).getClassName() + brackets);
+                String type = Type.getType(Character.toString(signature.charAt(leadIndex))).getClassName();
+                type = (type == null) ? Character.toString(signature.charAt(leadIndex)) : type;
+                typeNames.add(type + brackets);
                 brackets = "";
                 break;
             }
