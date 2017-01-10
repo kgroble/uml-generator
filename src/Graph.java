@@ -108,4 +108,15 @@ public class Graph {
 
         return null;
     }
+    
+    public boolean containsEdge(ClassCell source, ClassCell dest, Edge.Relation relation) {
+        for (Edge e : this.edges) {
+            if (e.getOrigin().equals(source)
+                && e.getDestination().equals(dest)
+                && e.getRelation() == relation) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
