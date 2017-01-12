@@ -1,16 +1,27 @@
-import org.objectweb.asm.tree.ClassNode;
+package graph;
+import graph.Edge.Cardinality;
+import graph.Edge.Relation;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
+import org.objectweb.asm.tree.ClassNode;
 
-public class AssociationGraphGen extends GraphGenDecorator {
+/**
+ * Created by lewis on 1/11/17.
+ */
+public class DependencyGraphGen extends GraphGenDecorator {
     private List<Edge> edgesToAdd;
     private Graph lastCalled;
-
-    public AssociationGraphGen(GraphGenerator graphGen) {
+    
+    public DependencyGraphGen(GraphGenerator graphGen) {
         super(graphGen);
-        edgesToAdd = new ArrayList<>();
     }
 
     @Override
@@ -34,12 +45,14 @@ public class AssociationGraphGen extends GraphGenDecorator {
                 currentClass = classesToCheck.remove();
 
                 try {
-                    Queue<Field> fieldsToCheck = new LinkedList<>();
+                    Queue<FieldTuple> fieldsToCheck = new LinkedList<>();
                     Field field;
-                    fieldsToCheck.addAll(currentClass.getFields());
-                    Edge.Cardinality cardinality = Edge.Cardinality.ONE;
+                    for (Field f : currentClass.getDependencies()) {
+                        fieldsToCheck.add(new FieldTuple(f, Edge.Cardinality.ONE));
+                    }
                     while(!fieldsToCheck.isEmpty()) {
-                        field = fieldsToCheck.remove();
+                        FieldTuple fieldTuple = fieldsToCheck.remove();
+                        field = fieldTuple.field;
                         ClassNode type = field.getType();
 
                         if (type != null) {
@@ -54,16 +67,18 @@ public class AssociationGraphGen extends GraphGenDecorator {
 
                             if (!type.name.equals(currentClass.getName())) {
                                 if (graph.containsNode(type) != null) {
-                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, cardinality));                                        
+                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.DEPENDS, fieldTuple.cardinality));                                        
                                 }
                                 if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
-                                    cardinality = Edge.Cardinality.MANY;
+                                    fieldTuple.cardinality = Edge.Cardinality.MANY;
                                 }
                             }
                         }
 
                         if (field.getTemplate() != null) {
-                            fieldsToCheck.addAll(field.getTemplate());
+                            for (Field f : field.getTemplate()) {
+                                fieldsToCheck.add(new FieldTuple(f, fieldTuple.cardinality));
+                            }
                         }
                     }
                 } catch (IOException e) {
@@ -85,6 +100,16 @@ public class AssociationGraphGen extends GraphGenDecorator {
             for (Edge edge : edgesToAdd) {
                 graph.addEdge(edge);
             }
+        }
+    }
+    
+    private class FieldTuple {
+        public Field field;
+        public Edge.Cardinality cardinality;
+        
+        public FieldTuple(Field field, Edge.Cardinality cardinality) {
+            this.field = field;
+            this.cardinality = cardinality;
         }
     }
 }

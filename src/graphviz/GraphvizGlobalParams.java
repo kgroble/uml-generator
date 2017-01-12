@@ -1,3 +1,4 @@
+package graphviz;
 
 public class GraphvizGlobalParams extends GraphvizElement {
 

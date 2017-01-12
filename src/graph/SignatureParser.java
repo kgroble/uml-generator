@@ -1,3 +1,4 @@
+package graph;
 import org.objectweb.asm.Type;
 
 import java.util.List;
@@ -51,6 +52,12 @@ public class SignatureParser {
 
     public SignatureParser(String signature) {
         isArray = false;
+        
+        if (signature == null || signature.length() == 0) {
+            typeName = "";
+            isPrimitive = true;
+            return;
+        }
 
         int parsedChars = 0;
         
@@ -77,10 +84,10 @@ public class SignatureParser {
         }
 
         isPrimitive = false;
-        if (parsedChars > 0 && signature.charAt(parsedChars) == 'E') { // Arbitrary type
+        if (signature.charAt(parsedChars) == 'E') { // Arbitrary type
             typeName = "E";
             return;
-        } else if (parsedChars > 0 && signature.charAt(parsedChars) != 'L') {
+        } else if (signature.charAt(parsedChars) != 'L') {
             typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
             isPrimitive = true;
             return;

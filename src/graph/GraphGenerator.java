@@ -1,3 +1,4 @@
+package graph;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,8 +43,6 @@ public class GraphGenerator {
 
     public boolean addClassCells(List<String> classNames, Graph graph) {
         boolean changed = false;
-        GraphGenerator tmp = new DependencyGraphGen(this); // FIXME This is only here for testing methodNode
-        List<String> tmpLs = new ArrayList<String>(); // FIXME This too
         for (String className : classNames) {
             try {
                 graph.addClass(new ClassCell(className, access));

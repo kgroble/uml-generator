@@ -1,23 +1,20 @@
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
+package graph;
 import org.objectweb.asm.tree.ClassNode;
 
-/**
- * Created by lewis on 1/11/17.
- */
-public class DependencyGraphGen extends GraphGenDecorator {
+import graph.Edge.Cardinality;
+import graph.Edge.Relation;
+
+import java.io.IOException;
+import java.util.*;
+
+
+public class AssociationGraphGen extends GraphGenDecorator {
     private List<Edge> edgesToAdd;
     private Graph lastCalled;
-    
-    public DependencyGraphGen(GraphGenerator graphGen) {
+
+    public AssociationGraphGen(GraphGenerator graphGen) {
         super(graphGen);
+        edgesToAdd = new ArrayList<>();
     }
 
     @Override
@@ -43,8 +40,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
                 try {
                     Queue<Field> fieldsToCheck = new LinkedList<>();
                     Field field;
-                    fieldsToCheck.addAll(currentClass.getDependencies());
-                    fieldsToCheck.addAll(currentClass.getMethodTypes());
+                    fieldsToCheck.addAll(currentClass.getFields());
                     Edge.Cardinality cardinality = Edge.Cardinality.ONE;
                     while(!fieldsToCheck.isEmpty()) {
                         field = fieldsToCheck.remove();
@@ -62,7 +58,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
 
                             if (!type.name.equals(currentClass.getName())) {
                                 if (graph.containsNode(type) != null) {
-                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.DEPENDS, cardinality));                                        
+                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, cardinality));                                        
                                 }
                                 if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
                                     cardinality = Edge.Cardinality.MANY;

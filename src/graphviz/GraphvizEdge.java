@@ -1,3 +1,4 @@
+package graphviz;
 
 public class GraphvizEdge extends GraphvizElement {
     private String fromNode;

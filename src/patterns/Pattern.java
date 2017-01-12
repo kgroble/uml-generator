@@ -1,3 +1,12 @@
+package patterns;
+import graph.ClassCell;
+import graph.Edge;
+import graph.Graph;
+import graphviz.GraphvizEdge;
+import graphviz.GraphvizElement;
+import graphviz.GraphvizGlobalParams;
+import graphviz.GraphvizNode;
+
 import java.util.List;
 import java.util.ArrayList;
 

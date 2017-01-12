@@ -1,3 +1,6 @@
+package graph;
+import graph.Edge.Relation;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;

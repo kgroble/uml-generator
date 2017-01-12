@@ -1,3 +1,4 @@
+package graphviz;
 
 public class GraphvizNode extends GraphvizElement {
     private String name;

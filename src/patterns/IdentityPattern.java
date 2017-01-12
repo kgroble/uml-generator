@@ -1,3 +1,6 @@
+package patterns;
+import graph.Graph;
+
 /**
  * Created by lewis on 12/10/16.
  */

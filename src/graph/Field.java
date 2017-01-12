@@ -1,3 +1,4 @@
+package graph;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -31,6 +32,7 @@ public class Field {
                     }
                 }
             } catch (IOException e) {
+                // This exception should be swallowed. The default behavior is correct.
                 //e.printStackTrace();
             }
         }

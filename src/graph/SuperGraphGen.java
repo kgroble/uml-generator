@@ -1,9 +1,11 @@
+package graph;
+import graph.Edge.Relation;
+
 import java.util.List;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.HashSet;
-
 import java.io.IOException;
 
 public class SuperGraphGen extends GraphGenDecorator {

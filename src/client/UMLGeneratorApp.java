@@ -1,5 +1,23 @@
+package client;
+import exporters.Exporter;
+import exporters.FileExporter;
+import graph.AccessLevel;
+import graph.AssociationGraphGen;
+import graph.DependencyGraphGen;
+import graph.Graph;
+import graph.GraphGenerator;
+import graph.ImplementsGraphGen;
+import graph.SuperGraphGen;
+import graphviz.GraphvizElement;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import patterns.AssociationPattern;
+import patterns.DependencyPattern;
+import patterns.IdentityPattern;
+import patterns.Parser;
+import patterns.Pattern;
 
 public class UMLGeneratorApp {
     public static void main(String[] args) {

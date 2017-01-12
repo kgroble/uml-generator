@@ -1,3 +1,5 @@
+package graph;
+
 public class Edge {
     /**
      * Defines the different types of relations a connection between two

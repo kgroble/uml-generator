@@ -1,3 +1,4 @@
+package graph;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -91,7 +92,7 @@ public class ClassCell {
         return retFields;
     }
     
-    public List<Field> getMethodTypes() {
+    private List<Field> getMethodTypes() {
         List<Field> types = new ArrayList<>();
         
         String sig = "";
@@ -141,14 +142,6 @@ public class ClassCell {
         List<Field> dependencies = new ArrayList<>();
         Set<String> included = new HashSet<>();
 
-        if (methodNode.localVariables != null) {
-            for (LocalVariableNode localVar : methodNode.localVariables) {
-//                System.out.print(classNode.name + ":" + methodNode.name + " uses " + localVar.name + ": ");
-                // TODO Check if primitives will break this.
-                dependencies.add(new Field(localVar.signature != null ? localVar.signature : localVar.desc));
-            }
-        }
-
         if (methodNode.instructions != null) {
             for (int i = 0; i < methodNode.instructions.size(); i++) {
                 AbstractInsnNode absInsn = methodNode.instructions.get(i);
@@ -159,6 +152,13 @@ public class ClassCell {
 //                            System.out.println(insn.owner + "." + insn.name + ": " + insn.desc);
                             included.add(insn.owner);
                             dependencies.add(new Field("L" + insn.owner + ";"));
+                        } else{
+                            int endArgs = insn.desc.indexOf(')');
+                            Field field = new Field(insn.desc.substring(endArgs + 1));
+                            if (!included.contains(field.getType())) {
+                                dependencies.add(field);
+                                included.add(insn.owner);
+                            }
                         }
                         break;
                     default:
@@ -172,11 +172,12 @@ public class ClassCell {
 
     public List<Field> getDependencies() {
         List<Field> dependencies = new ArrayList<>();
-        Set<String> included = new HashSet<>();
-
+//        Set<String> included = new HashSet<>();
+        
         for (MethodNode methodNode : getMethods()) {
             dependencies.addAll(getInnerDependencies(methodNode));
         }
+        dependencies.addAll(getMethodTypes());
 
         return dependencies;
     }

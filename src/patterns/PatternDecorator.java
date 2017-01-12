@@ -1,3 +1,6 @@
+package patterns;
+import graph.Graph;
+
 public abstract class PatternDecorator extends Pattern {
     protected Pattern innerPattern;
 

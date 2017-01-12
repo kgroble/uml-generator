@@ -1,10 +1,16 @@
+package patterns;
+import graph.Edge;
+import graph.Graph;
+import graphviz.GraphvizEdge;
+import graphviz.GraphvizElement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class AssociationPattern extends Pattern {
+public class DependencyPattern extends Pattern {
 
     /**
      * This is used to detect ONLY Edge.Relation.CONTAINS relationships.
@@ -15,7 +21,8 @@ public class AssociationPattern extends Pattern {
         Graph result = new Graph();
         
         for(Edge edge : graphToSearch.getEdges()){
-            if(edge.getRelation() == Edge.Relation.ASSOCIATION){
+            if(edge.getRelation() == Edge.Relation.DEPENDS
+               && !graphToSearch.containsEdge(edge.getOrigin(), edge.getDestination(), Edge.Relation.ASSOCIATION)){
                 result.addEdge(edge);
             }
         }
@@ -37,8 +44,8 @@ public class AssociationPattern extends Pattern {
             for(Edge otherEdge : edgeToGVEdge.keySet()){
                 if(from.equals(otherEdge.getDestination().getPrettyName())
                         && to.equals(otherEdge.getOrigin().getPrettyName())
-                        && edge.getRelation() == Edge.Relation.ASSOCIATION
-                        && otherEdge.getRelation() == Edge.Relation.ASSOCIATION){
+                        && edge.getRelation() == Edge.Relation.DEPENDS
+                        && otherEdge.getRelation() == Edge.Relation.DEPENDS){
                     edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");
                     edgeToGVEdge.get(otherEdge).addAttribute("taillabel", "\"" + edge.getCardinality().toString() + "\"");
                     wasDuplicate = true;
@@ -50,6 +57,7 @@ public class AssociationPattern extends Pattern {
                 GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
                 gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
                 gvEdge.addAttribute("labeldistance", "1.7");
+                gvEdge.addAttribute("style", "\"dashed\"");
                 elements.add(gvEdge);
                 edgeToGVEdge.put(edge, gvEdge); 
             }

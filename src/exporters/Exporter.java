@@ -1,3 +1,6 @@
+package exporters;
+import graphviz.GraphvizElement;
+
 import java.util.List;
 
 public interface Exporter {

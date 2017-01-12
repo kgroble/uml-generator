@@ -1,3 +1,7 @@
+package patterns;
+import graph.Graph;
+import graphviz.GraphvizElement;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
