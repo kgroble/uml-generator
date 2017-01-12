@@ -40,7 +40,7 @@ public abstract class Pattern {
             node.addAttribute("shape", "\"record\"");
 
             String fields = "";
-            List<FieldNode> fieldList = cell.getFields();
+            List<FieldNode> fieldList = cell.getFieldNodes();
 
             for(FieldNode fieldNode : fieldList) {
                 fields += translateFieldNode(fieldNode);
@@ -66,7 +66,7 @@ public abstract class Pattern {
             String from = edge.getOrigin().getPrettyName();
             String to = edge.getDestination().getPrettyName();
 
-            GraphvizEdge gvEdge = new GraphvizEdge(from, to);
+            GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
             switch (edge.getRelation()) {
             case IMPLEMENTS:
                 gvEdge.addAttribute("arrowhead", "\"onormal\"");
@@ -75,8 +75,11 @@ public abstract class Pattern {
             case EXTENDS:
                 gvEdge.addAttribute("arrowhead", "\"onormal\"");
                 break;
+            case CONTAINS:
+            case DEPENDS:
+                break;
             default:
-                System.err.println("Unrecognized relation: " + edge.getRelation());
+                System.err.println("Pattern::Unrecognized relation: " + edge.getRelation());
                 break;
             }
             elements.add(gvEdge);

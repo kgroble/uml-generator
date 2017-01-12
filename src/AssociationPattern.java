@@ -47,7 +47,7 @@ public class AssociationPattern extends Pattern {
             }
 
             if(!wasDuplicate){
-                GraphvizEdge gvEdge = new GraphvizEdge(from, to);
+                GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
                 gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
                 elements.add(gvEdge);
                 edgeToGVEdge.put(edge, gvEdge); 

@@ -1,4 +1,4 @@
-import jdk.internal.org.objectweb.asm.Type;
+import org.objectweb.asm.Type;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ public class SignatureParser {
     private List<SignatureParser> template;
     private int parsedChars;
     private boolean isArray;
+    private boolean isPrimitive;
 
     public static List<SignatureParser> parseFullSignature(String fullSignature) {
         List<SignatureParser> signatures = new ArrayList<>();
@@ -75,13 +76,13 @@ public class SignatureParser {
             }
         }
 
-        typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
-        if (typeName != null) { // Primitive
-            return;
-        }
-
+        isPrimitive = false;
         if (signature.charAt(parsedChars) == 'E') { // Arbitrary type
             typeName = "E";
+            return;
+        } else if (signature.charAt(parsedChars) != 'L') {
+            typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
+            isPrimitive = true;
             return;
         }
 
@@ -112,13 +113,17 @@ public class SignatureParser {
 
                 template = SignatureParser.parseFullSignature(signature.substring(startIndex, parsedChars - 1));
             } else {
-                typeName += signature.charAt(parsedChars);
+                typeName += signature.charAt(parsedChars++);
             }
         }
     }
 
     public String getTypeName() {
         return typeName;
+    }
+
+    public boolean getIsPrimitive() {
+        return isPrimitive;
     }
 
     public List<SignatureParser> getTemplate() {

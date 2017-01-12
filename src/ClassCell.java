@@ -68,12 +68,26 @@ public class ClassCell {
      *
      * @return A list of all the fields in the stored class.
      */
-    public List<FieldNode> getFields() {
+    public List<FieldNode> getFieldNodes() {
         List<FieldNode> retFields = new ArrayList<>();
 
         for (Object field : classNode.fields) {
             if (AccessLevel.hasAccess(((FieldNode) field).access, this.renderAccess)) {
                 retFields.add((FieldNode) field);
+            }
+        }
+
+        return retFields;
+    }
+
+    public List<Field> getFields() {
+        List<Field> retFields = new ArrayList();
+
+        for (FieldNode fieldNode : getFieldNodes()) {
+            if (fieldNode.signature != null) {
+                retFields.add(new Field(fieldNode.signature));
+            } else {
+                retFields.add(new Field(fieldNode.desc));
             }
         }
 

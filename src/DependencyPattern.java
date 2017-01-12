@@ -48,7 +48,7 @@ public class DependencyPattern extends Pattern {
             }
 
             if(!wasDuplicate){
-                GraphvizEdge gvEdge = new GraphvizEdge(from, to);
+                GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
                 gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
                 gvEdge.addAttribute("style", "\"dashed\"");
                 elements.add(gvEdge);

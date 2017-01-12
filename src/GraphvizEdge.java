@@ -2,10 +2,12 @@
 public class GraphvizEdge extends GraphvizElement {
     private String fromNode;
     private String toNode;
+    private String type;
 
-    public GraphvizEdge(String from, String to) {
+    public GraphvizEdge(String from, String to, String type) {
         this.fromNode = from;
         this.toNode = to;
+        this.type = type;
     }
     
     @Override
@@ -17,16 +19,20 @@ public class GraphvizEdge extends GraphvizElement {
             code += (String) attributeArray[i] + " = " + this.attributes.get((String) attributeArray[i]);
             code += ",\n\t";
         }
-        code += attributeArray[attributeArray.length - 1]
-                + " = " + this.attributes.get((String) attributeArray[attributeArray.length - 1])
-                + "\n];\n";
+        if (attributeArray.length > 0) {
+            code += attributeArray[attributeArray.length - 1]
+                    + " = " + this.attributes.get((String) attributeArray[attributeArray.length - 1])
+                    + "\n];\n";
+        } else {
+            code += "\n]\n";
+        }
         
         return sanitizeGraphvizString(code);
     }
 
     @Override
     public String getIdentifier() {
-        return this.fromNode + "-" + this.toNode;
+        return this.fromNode + "-" + this.toNode + "<" + type + ">";
     }
 
 }
