@@ -36,7 +36,7 @@ public class AssociationPattern extends Pattern {
             
             for(Edge otherEdge : edgeToGVEdge.keySet()){
                 if(from.equals(otherEdge.getDestination().getPrettyName())
-                        && to.equals(edge.getOrigin().getPrettyName())
+                        && to.equals(otherEdge.getOrigin().getPrettyName())
                         && edge.getRelation() == Edge.Relation.CONTAINS
                         && otherEdge.getRelation() == Edge.Relation.CONTAINS){
                     edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");

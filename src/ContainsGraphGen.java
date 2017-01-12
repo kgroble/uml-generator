@@ -34,7 +34,11 @@ public class ContainsGraphGen extends GraphGenDecorator {
                 currentClass = classesToCheck.remove();
 
                 try {
-                    for (Field field : currentClass.getFields()) {
+                    Queue<Field> fieldsToCheck = new LinkedList<>();
+                    Field field;
+                    fieldsToCheck.addAll(currentClass.getFields());
+                    while(!fieldsToCheck.isEmpty()) {
+                        field = fieldsToCheck.remove();
                         ClassNode type = field.getType();
 
                         if (type != null) {
@@ -50,6 +54,10 @@ public class ContainsGraphGen extends GraphGenDecorator {
                             if (graph.containsNode(type) != null) {
                                 edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.CONTAINS, Edge.Cardinality.ONE));
                             }
+                        }
+
+                        if (field.getTemplate() != null) {
+                            fieldsToCheck.addAll(field.getTemplate());
                         }
                     }
                 } catch (IOException e) {

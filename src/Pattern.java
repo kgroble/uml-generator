@@ -77,7 +77,7 @@ public abstract class Pattern {
                 break;
             case CONTAINS:
             case DEPENDS:
-                break;
+                continue;
             default:
                 System.err.println("Pattern::Unrecognized relation: " + edge.getRelation());
                 break;
