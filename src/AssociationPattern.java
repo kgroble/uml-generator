@@ -15,7 +15,7 @@ public class AssociationPattern extends Pattern {
         Graph result = new Graph();
         
         for(Edge edge : graphToSearch.getEdges()){
-            if(edge.getRelation() == Edge.Relation.CONTAINS){
+            if(edge.getRelation() == Edge.Relation.ASSOCIATION){
                 result.addEdge(edge);
             }
         }
@@ -37,8 +37,8 @@ public class AssociationPattern extends Pattern {
             for(Edge otherEdge : edgeToGVEdge.keySet()){
                 if(from.equals(otherEdge.getDestination().getPrettyName())
                         && to.equals(otherEdge.getOrigin().getPrettyName())
-                        && edge.getRelation() == Edge.Relation.CONTAINS
-                        && otherEdge.getRelation() == Edge.Relation.CONTAINS){
+                        && edge.getRelation() == Edge.Relation.ASSOCIATION
+                        && otherEdge.getRelation() == Edge.Relation.ASSOCIATION){
                     edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");
                     edgeToGVEdge.get(otherEdge).addAttribute("taillabel", "\"" + edge.getCardinality().toString() + "\"");
                     wasDuplicate = true;
@@ -49,6 +49,7 @@ public class AssociationPattern extends Pattern {
             if(!wasDuplicate){
                 GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
                 gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
+                gvEdge.addAttribute("labeldistance", "1.7");
                 elements.add(gvEdge);
                 edgeToGVEdge.put(edge, gvEdge); 
             }

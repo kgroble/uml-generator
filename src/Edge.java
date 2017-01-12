@@ -6,7 +6,7 @@ public class Edge {
     public enum Relation {
         IMPLEMENTS,
         EXTENDS,
-        CONTAINS,
+        ASSOCIATION,
         DEPENDS
     }
     

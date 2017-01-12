@@ -16,7 +16,7 @@ public class DependencyPattern extends Pattern {
         
         for(Edge edge : graphToSearch.getEdges()){
             if(edge.getRelation() == Edge.Relation.DEPENDS
-               && !graphToSearch.containsEdge(edge.getOrigin(), edge.getDestination(), Edge.Relation.CONTAINS)){
+               && !graphToSearch.containsEdge(edge.getOrigin(), edge.getDestination(), Edge.Relation.ASSOCIATION)){
                 result.addEdge(edge);
             }
         }
@@ -37,7 +37,7 @@ public class DependencyPattern extends Pattern {
             
             for(Edge otherEdge : edgeToGVEdge.keySet()){
                 if(from.equals(otherEdge.getDestination().getPrettyName())
-                        && to.equals(edge.getOrigin().getPrettyName())
+                        && to.equals(otherEdge.getOrigin().getPrettyName())
                         && edge.getRelation() == Edge.Relation.DEPENDS
                         && otherEdge.getRelation() == Edge.Relation.DEPENDS){
                     edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");
@@ -50,6 +50,7 @@ public class DependencyPattern extends Pattern {
             if(!wasDuplicate){
                 GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
                 gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
+                gvEdge.addAttribute("labeldistance", "1.7");
                 gvEdge.addAttribute("style", "\"dashed\"");
                 elements.add(gvEdge);
                 edgeToGVEdge.put(edge, gvEdge); 

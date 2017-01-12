@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class ContainsGraphGen extends GraphGenDecorator {
+public class AssociationGraphGen extends GraphGenDecorator {
     private List<Edge> edgesToAdd;
     private Graph lastCalled;
 
-    public ContainsGraphGen(GraphGenerator graphGen) {
+    public AssociationGraphGen(GraphGenerator graphGen) {
         super(graphGen);
         edgesToAdd = new ArrayList<>();
     }
@@ -37,6 +37,7 @@ public class ContainsGraphGen extends GraphGenDecorator {
                     Queue<Field> fieldsToCheck = new LinkedList<>();
                     Field field;
                     fieldsToCheck.addAll(currentClass.getFields());
+                    Edge.Cardinality cardinality = Edge.Cardinality.ONE;
                     while(!fieldsToCheck.isEmpty()) {
                         field = fieldsToCheck.remove();
                         ClassNode type = field.getType();
@@ -51,8 +52,13 @@ public class ContainsGraphGen extends GraphGenDecorator {
                                 retBool = true;
                             }
 
-                            if (graph.containsNode(type) != null) {
-                                edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.CONTAINS, Edge.Cardinality.ONE));
+                            if (!type.name.equals(currentClass.getName())) {
+                                if (graph.containsNode(type) != null) {
+                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, cardinality));                                        
+                                }
+                                if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
+                                    cardinality = Edge.Cardinality.MANY;
+                                }
                             }
                         }
 
@@ -61,6 +67,8 @@ public class ContainsGraphGen extends GraphGenDecorator {
                         }
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }

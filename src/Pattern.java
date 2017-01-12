@@ -75,7 +75,7 @@ public abstract class Pattern {
             case EXTENDS:
                 gvEdge.addAttribute("arrowhead", "\"onormal\"");
                 break;
-            case CONTAINS:
+            case ASSOCIATION:
             case DEPENDS:
                 continue;
             default:
