@@ -10,7 +10,7 @@ public abstract class GraphvizElement {
         this.attributes = new HashMap<>();
     }
 
-    private static Map initBannedStrings() {
+    private static Map<String, String> initBannedStrings() {
         Map<String, String> map = new HashMap<>();
         map.put("<init>", "&lt;init&gt;");
         map.put("<clinit>", "&lt;clinit&gt;");

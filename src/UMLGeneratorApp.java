@@ -34,8 +34,8 @@ public class UMLGeneratorApp {
         Parser parser = new Parser();
         Pattern idPattern = new IdentityPattern();
         parser.addPattern(idPattern, 0);
-        parser.addPattern(new AssociationPattern(), 1);
-        parser.addPattern(new DependencyPattern(), 2);
+        parser.addPattern(new DependencyPattern(), 1);
+        parser.addPattern(new AssociationPattern(), 2);
         List<GraphvizElement> elements = parser.parseGraph(g);
         Exporter fileExporter = new FileExporter("./output/out.dot");
         fileExporter.export(elements);

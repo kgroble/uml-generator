@@ -45,9 +45,6 @@ public class ClassCell {
      * return the string "List".
      */
     public String getPrettyName() {
-        // qualified or not?
-//        String[] splitted = getName().split("/");
-//        return splitted[splitted.length - 1];
         return Type.getObjectType(this.classNode.name).getClassName();
     }
 
@@ -79,9 +76,9 @@ public class ClassCell {
 
         return retFields;
     }
-
+    
     public List<Field> getFields() {
-        List<Field> retFields = new ArrayList();
+        List<Field> retFields = new ArrayList<>();
 
         for (FieldNode fieldNode : getFieldNodes()) {
             if (fieldNode.signature != null) {
@@ -92,6 +89,34 @@ public class ClassCell {
         }
 
         return retFields;
+    }
+    
+    public List<Field> getMethodTypes() {
+        List<Field> types = new ArrayList<>();
+        
+        String sig = "";
+        for (MethodNode methodNode : getMethods()) {
+            if (methodNode.signature != null) {
+               sig = methodNode.signature;
+            } else {
+               sig = methodNode.desc;
+            }
+            
+            String args = "";
+            int startArgs = sig.indexOf('(');
+            int endArgs = sig.indexOf(')');
+            if (endArgs - startArgs > 1) {
+                args = sig.substring(startArgs + 1, endArgs);
+                types.add(new Field(args));
+            }
+            
+            String ret = sig.substring(endArgs + 1);
+            types.add(new Field(ret));
+        }
+        
+
+        
+        return types;
     }
 
     /**
