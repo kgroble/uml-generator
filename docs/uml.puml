@@ -33,7 +33,9 @@ class DependencyGraphGen extends GraphGenDecorator {
 + addEdges(graph: Graph): void
 }
 
-class ContainsGraphGen extends GraphGenDecorator {
+class AssociationGraphGen extends GraphGenDecorator {
+'- edgesToAdd: List<Edge>
+'- lastCalled: Graph
 + addClassCells(classNames: List<String>, graph: Graph): boolean
 + addEdges(graph: Graph): void
 }
@@ -43,13 +45,31 @@ class BidirectionGraphGen extends GraphGenDecorator {
 + addEdges(graph: Graph): void
 }
 
-BidirectionGraphGen -[hidden]--> ContainsGraphGen
+'BidirectionGraphGen -[hidden]--> AssociationGraphGen
 DependencyGraphGen -[hidden]--> ImplementsGraphGen
 
 enum AccessLevel {
 + PUBLIC
 + PRIVATE
 + PROTECTED
+}
+
+class SignatureParser {
+- {static} PREFIXES: char[]
+- typeName: String
+- template: List<SignatureParser>
+- parsedChars: int
+- isArray: boolean
+- isPrimitive: boolean
+
++ {static} parseFullSignature(fullSignature: String): List<SignatureParser>
++ {static} isPrefix(character: char): boolean
++ SignatureParser(signature: String)
++ getTypeName(): String
++ getTemplate(): List<SignatureParser>
++ getNumParsedChars(): int
++ getIsPrimitive(): boolean
++ toGraphviz(): String
 }
 
 class ClassCell {
@@ -59,7 +79,8 @@ class ClassCell {
 + getName(): String
 + getPrettyName(): String
 + getAccess(): int
-+ getFields(): List<FieldNode>
++ getFieldNodes(): List<FieldNode>
++ getFields(): List<Field>
 + getMethods(): List<MethodNode>
 + getImplements(): List<ClassNode>
 + getSuper(): ClassNode
@@ -70,10 +91,19 @@ class ClassCell {
 + addEdge(e: Edge): void
 }
 
+class Field {
+- type: ClassNode
+- template: List<Field>
++ Field(sig: String)
++ Field(sig: SignatureParser)
++ getType(): ClassNode
++ getTemplate(): List<Field>
+}
+
 enum Relation {
 + INHERITS
 + IMPLEMENTS
-+ CONTAINS
++ ASSOCIATION
 + DEPENDS
 }
 
@@ -188,6 +218,7 @@ class GraphvizNode extends GraphvizElement {
 class GraphvizEdge extends GraphvizElement {
 - fromNode: String
 - toNode: String
+- type: String
 + toGraphviz(): String
 + getIdentifier(): String
 }
@@ -211,6 +242,8 @@ UMLGeneratorApp --> Exporter
 GraphGenerator --> Graph
 GraphGenerator --> AccessLevel
 GraphGenDecorator --> GraphGenerator
+AssociationGraphGen --> SignatureParser
+AssociationGraphGen --> Field
 ClassCell --> Edge
 ClassCell --> AccessLevel
 Edge --> ClassCell
