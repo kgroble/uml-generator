@@ -43,7 +43,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
                 try {
                     Queue<Field> fieldsToCheck = new LinkedList<>();
                     Field field;
-                    fieldsToCheck.addAll(currentClass.getFields());
+                    fieldsToCheck.addAll(currentClass.getDependencies());
                     Edge.Cardinality cardinality = Edge.Cardinality.ONE;
                     while(!fieldsToCheck.isEmpty()) {
                         field = fieldsToCheck.remove();

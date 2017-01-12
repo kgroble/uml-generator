@@ -1,13 +1,13 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 public class ClassCell {
     private ClassNode classNode;
@@ -110,6 +110,50 @@ public class ClassCell {
         }
 
         return retMethods;
+    }
+
+    private List<Field> getInnerDependencies(MethodNode methodNode) {
+        List<Field> dependencies = new ArrayList<>();
+        Set<String> included = new HashSet<>();
+
+        if (methodNode.localVariables != null) {
+            for (LocalVariableNode localVar : methodNode.localVariables) {
+//                System.out.print(classNode.name + ":" + methodNode.name + " uses " + localVar.name + ": ");
+                // TODO Check if primitives will break this.
+                dependencies.add(new Field(localVar.signature != null ? localVar.signature : localVar.desc));
+            }
+        }
+
+        if (methodNode.instructions != null) {
+            for (int i = 0; i < methodNode.instructions.size(); i++) {
+                AbstractInsnNode absInsn = methodNode.instructions.get(i);
+                switch (absInsn.getType()) {
+                    case AbstractInsnNode.METHOD_INSN:
+                        MethodInsnNode insn = (MethodInsnNode) absInsn;
+                        if (insn.name.equals("<init>") && !included.contains(insn.owner)) {
+//                            System.out.println(insn.owner + "." + insn.name + ": " + insn.desc);
+                            included.add(insn.owner);
+                            dependencies.add(new Field("L" + insn.owner + ";"));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return dependencies;
+    }
+
+    public List<Field> getDependencies() {
+        List<Field> dependencies = new ArrayList<>();
+        Set<String> included = new HashSet<>();
+
+        for (MethodNode methodNode : getMethods()) {
+            dependencies.addAll(getInnerDependencies(methodNode));
+        }
+
+        return dependencies;
     }
 
     /**

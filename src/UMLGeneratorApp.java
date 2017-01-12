@@ -29,11 +29,13 @@ public class UMLGeneratorApp {
         GraphGenerator generator = new GraphGenerator(recursive, accessLevel);
         generator = new SuperGraphGen(new ImplementsGraphGen(generator));
         generator = new AssociationGraphGen(generator);
+        generator = new DependencyGraphGen(generator);
         Graph g = generator.execute(classNames);
         Parser parser = new Parser();
         Pattern idPattern = new IdentityPattern();
         parser.addPattern(idPattern, 0);
         parser.addPattern(new AssociationPattern(), 1);
+        parser.addPattern(new DependencyPattern(), 2);
         List<GraphvizElement> elements = parser.parseGraph(g);
         Exporter fileExporter = new FileExporter("./output/out.dot");
         fileExporter.export(elements);
