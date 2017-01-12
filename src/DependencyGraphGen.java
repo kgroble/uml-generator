@@ -43,7 +43,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
                 try {
                     Queue<Field> fieldsToCheck = new LinkedList<>();
                     Field field;
-                    fieldsToCheck.addAll(currentClass.getFields());
+                    fieldsToCheck.addAll(currentClass.getMethodTypes());
                     Edge.Cardinality cardinality = Edge.Cardinality.ONE;
                     while(!fieldsToCheck.isEmpty()) {
                         field = fieldsToCheck.remove();
@@ -61,7 +61,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
 
                             if (!type.name.equals(currentClass.getName())) {
                                 if (graph.containsNode(type) != null) {
-                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, cardinality));                                        
+                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.DEPENDS, cardinality));                                        
                                 }
                                 if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
                                     cardinality = Edge.Cardinality.MANY;

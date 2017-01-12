@@ -53,7 +53,7 @@ public class SignatureParser {
         isArray = false;
 
         int parsedChars = 0;
-
+        
         while (parsedChars < signature.length()
                && isPrefix(signature.charAt(parsedChars))) {
             parsedChars++;
@@ -77,10 +77,10 @@ public class SignatureParser {
         }
 
         isPrimitive = false;
-        if (signature.charAt(parsedChars) == 'E') { // Arbitrary type
+        if (parsedChars > 0 && signature.charAt(parsedChars) == 'E') { // Arbitrary type
             typeName = "E";
             return;
-        } else if (signature.charAt(parsedChars) != 'L') {
+        } else if (parsedChars > 0 && signature.charAt(parsedChars) != 'L') {
             typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
             isPrimitive = true;
             return;
