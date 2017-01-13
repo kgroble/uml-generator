@@ -1,6 +1,4 @@
 package graph;
-import graph.Edge.Cardinality;
-import graph.Edge.Relation;
 
 import java.io.IOException;
 import java.util.ArrayList;

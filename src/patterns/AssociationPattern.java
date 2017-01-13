@@ -41,7 +41,17 @@ public class AssociationPattern extends Pattern {
             boolean wasDuplicate = false;
             
             for(Edge otherEdge : edgeToGVEdge.keySet()){
-                if(from.equals(otherEdge.getDestination().getPrettyName())
+                if (from.equals(otherEdge.getOrigin().getPrettyName())
+                        && to.equals(otherEdge.getDestination().getPrettyName())) {
+                    if (otherEdge.getCardinality() == Edge.Cardinality.ONE
+                            && edge.getCardinality() == Edge.Cardinality.MANY) {
+                        edgeToGVEdge.remove(otherEdge);
+                        break;
+                    } else {
+                        wasDuplicate = true;
+                        break;
+                    }
+                } else if (from.equals(otherEdge.getDestination().getPrettyName())
                         && to.equals(otherEdge.getOrigin().getPrettyName())
                         && edge.getRelation() == Edge.Relation.ASSOCIATION
                         && otherEdge.getRelation() == Edge.Relation.ASSOCIATION){

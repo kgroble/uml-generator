@@ -152,7 +152,7 @@ public class ClassCell {
 //                            System.out.println(insn.owner + "." + insn.name + ": " + insn.desc);
                             included.add(insn.owner);
                             dependencies.add(new Field("L" + insn.owner + ";"));
-                        } else{
+                        } else {
                             int endArgs = insn.desc.indexOf(')');
                             Field field = new Field(insn.desc.substring(endArgs + 1));
                             if (!included.contains(field.getType())) {
