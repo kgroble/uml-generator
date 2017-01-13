@@ -1,9 +1,6 @@
 package graph;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
@@ -49,43 +46,57 @@ public class ClassCell {
         /* If we want to get the fancy class names like HashMap<K: java.lang.Object, V: java.lang.Object>, we'll
          * have to make this a lost smarter
          */
-//        if (classNode.signature == null) {
+        if (classNode.signature == null || classNode.signature.charAt(0) != '<') {
             return Type.getObjectType(this.classNode.name).getClassName();
-//        } else {
-//            System.out.println("Parsing fancy signature: " + classNode.signature);
-//            String templateName = "";
-//            int angleCt = 0;
-//            int leadIndex = 0;
-//            if (classNode.signature.charAt(leadIndex) != '<') {
-//                System.err.println("New case: " + classNode.signature);
-//                return "ERROR";
-//            } else {
-//                while (angleCt > 0) {
-//                    switch (classNode.signature.charAt(leadIndex)) {
-//                        case '<':
-//                            angleCt++;
-//                            break;
-//                        case '>':
-//                            angleCt--;
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    leadIndex++;
-//                }
-//
-//                List<SignatureParser> template = SignatureParser.parseFullSignature(classNode.signature.substring(1,
-//                        leadIndex));
-//                int i;
-//                for (i = 0; i < template.size() - 1; i++) {
-//                    templateName += template.get(i).toGraphviz() + ", ";
-//                }
-//                if (i < template.size()) {
-//                    templateName += template.get(i).toGraphviz();
-//                }
-//                return Type.getObjectType(classNode.name).getClassName() + "&lt;" + templateName + "&gt;";
-//            }
-//        }
+        } else {
+            int angleCt = 0;
+            int leadIndex = 0;
+            do {
+                switch (classNode.signature.charAt(leadIndex)) {
+                    case '<':
+                        angleCt++;
+                        break;
+                    case '>':
+                        angleCt--;
+                        break;
+                    default:
+                        break;
+                }
+                leadIndex++;
+            } while (angleCt > 0);
+
+            return Type.getObjectType(classNode.name).getClassName() + "&lt;"
+                    + parseClassTemplate(classNode.signature.substring(1, leadIndex)) + "&gt;";
+        }
+    }
+
+    private String parseClassTemplate(String template) {
+        List<String> results = new LinkedList<>();
+        SignatureParser sig;
+        String result = "";
+        int leadIndex = 0;
+        while (leadIndex < template.length()) {
+            result += template.charAt(leadIndex);
+
+            if (template.charAt(leadIndex) == ':') {
+                sig = new SignatureParser(template.substring(++leadIndex));
+                results.add(result + " " + sig.toGraphviz());
+                result = "";
+                leadIndex += sig.getNumParsedChars();
+            }
+            leadIndex++;
+        }
+
+        result = "";
+        int i;
+        for (i = 0; i < results.size() - 1; i++) {
+            result += results.get(i) + ", ";
+        }
+        if (i < results.size()) {
+            result += results.get(i);
+        }
+
+        return result;
     }
 
     /**
