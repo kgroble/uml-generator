@@ -1,133 +1,147 @@
 @startuml
 
-class UMLGeneratorApp {
-+ {static} main(args: String[]): void
+scale max 4096 width
+
+package client {
+  class UMLGeneratorApp {
+  + {static} main(args: String[]): void
+  }
 }
 
-class GraphGenerator {
-# recursive: boolean
-# access: AccessLevel
-+ execute(classNames: List<String>): Graph
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+package graph{
+  class GraphGenerator {
+  # recursive: boolean
+  # access: AccessLevel
+  + execute(classNames: List<String>): Graph
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
 
-abstract class GraphGenDecorator extends GraphGenerator {
-# graphGen: GraphGenerator
-+ {abstract} addClassCells(classNames: List<String>, graph: Graph): boolean
-+ {abstract} addEdges(graph: Graph): void
-}
+  abstract class GraphGenDecorator extends GraphGenerator {
+  # graphGen: GraphGenerator
+  + {abstract} addClassCells(classNames: List<String>, graph: Graph): boolean
+  + {abstract} addEdges(graph: Graph): void
+  }
 
-class SuperGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+  class SuperGraphGen extends GraphGenDecorator {
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
 
-class ImplementsGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+  class ImplementsGraphGen extends GraphGenDecorator {
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
 
-class DependencyGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+  class DependencyGraphGen extends GraphGenDecorator {
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
 
-class AssociationGraphGen extends GraphGenDecorator {
-'- edgesToAdd: List<Edge>
-'- lastCalled: Graph
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+  class FieldTuple {
+  + field: Field
+  + cardinality: Cardinality
+  }
 
-class BidirectionGraphGen extends GraphGenDecorator {
-+ addClassCells(classNames: List<String>, graph: Graph): boolean
-+ addEdges(graph: Graph): void
-}
+  class AssociationGraphGen extends GraphGenDecorator {
+  '- edgesToAdd: List<Edge>
+  '- lastCalled: Graph
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
+
+  class BidirectionGraphGen extends GraphGenDecorator {
+  + addClassCells(classNames: List<String>, graph: Graph): boolean
+  + addEdges(graph: Graph): void
+  }
 
 'BidirectionGraphGen -[hidden]--> AssociationGraphGen
-DependencyGraphGen -[hidden]--> ImplementsGraphGen
+'DependencyGraphGen -[hidden]--> ImplementsGraphGen
 
-enum AccessLevel {
-+ PUBLIC
-+ PRIVATE
-+ PROTECTED
+  enum AccessLevel {
+  + PUBLIC
+  + PRIVATE
+  + PROTECTED
+  }
+
+  class SignatureParser {
+  - {static} PREFIXES: char[]
+  - typeName: String
+  - template: List<SignatureParser>
+  - parsedChars: int
+  - isArray: boolean
+  - isPrimitive: boolean
+
+  + {static} parseFullSignature(fullSignature: String): List<SignatureParser>
+  + {static} isPrefix(character: char): boolean
+  + SignatureParser(signature: String)
+  + getTypeName(): String
+  + getTemplate(): List<SignatureParser>
+  + getNumParsedChars(): int
+  + getIsPrimitive(): boolean
+  + toGraphviz(): String
+  }
+
+  class ClassCell {
+  - classNode: ClassNode
+  - edges: List<Edge>
+  - renderAccess: AccessLevel
+  + getName(): String
+  + getPrettyName(): String
+  + getAccess(): int
+  + getFieldNodes(): List<FieldNode>
+  + getFields(): List<Field>
+  + getMethods(): List<MethodNode>
+  + getImplements(): List<ClassNode>
+  + getSuper(): ClassNode
+  - getMethodTypes(): List<Field>
+  - getInnerDependencies(methodNode: MethodNode): List<Field>
+  + getDependencies(): List<Field>
+  + getContains(): List<ClassNode>
+  + equals(other: Object): boolean
+  + hasNode(otherNode: ClassNode): boolean
+  + addEdge(e: Edge): void
+  }
+
+  class Field {
+  - type: ClassNode
+  - template: List<Field>
+  + Field(sig: String)
+  + Field(sig: SignatureParser)
+  + getType(): ClassNode
+  + getTemplate(): List<Field>
+  }
+
+  enum Relation {
+  + INHERITS
+  + IMPLEMENTS
+  + ASSOCIATION
+  + DEPENDS
+  }
+
+  enum Cardinality {
+  + ONE
+  + MANY
+  }
+
+  class Edge {
+  - originClass: ClassCell
+  - destClass: ClassCell
+  - relation: Relation
+  - cardinality: Cardinality
+  + getOrigin(): ClassCell
+  + getDestination(): ClassCell
+  + getRelation(): Relation
+  }
 }
 
-class SignatureParser {
-- {static} PREFIXES: char[]
-- typeName: String
-- template: List<SignatureParser>
-- parsedChars: int
-- isArray: boolean
-- isPrimitive: boolean
-
-+ {static} parseFullSignature(fullSignature: String): List<SignatureParser>
-+ {static} isPrefix(character: char): boolean
-+ SignatureParser(signature: String)
-+ getTypeName(): String
-+ getTemplate(): List<SignatureParser>
-+ getNumParsedChars(): int
-+ getIsPrimitive(): boolean
-+ toGraphviz(): String
-}
-
-class ClassCell {
-- classNode: ClassNode
-- edges: List<Edge>
-- renderAccess: AccessLevel
-+ getName(): String
-+ getPrettyName(): String
-+ getAccess(): int
-+ getFieldNodes(): List<FieldNode>
-+ getFields(): List<Field>
-+ getMethods(): List<MethodNode>
-+ getImplements(): List<ClassNode>
-+ getSuper(): ClassNode
-+ getDependencies(): List<ClassNode>
-+ getContains(): List<ClassNode>
-+ equals(other: Object): boolean
-+ hasNode(otherNode: ClassNode): boolean
-+ addEdge(e: Edge): void
-}
-
-class Field {
-- type: ClassNode
-- template: List<Field>
-+ Field(sig: String)
-+ Field(sig: SignatureParser)
-+ getType(): ClassNode
-+ getTemplate(): List<Field>
-}
-
-enum Relation {
-+ INHERITS
-+ IMPLEMENTS
-+ ASSOCIATION
-+ DEPENDS
-}
-
-enum Cardinality {
-+ ONE
-+ MANY
-}
-
-class Edge {
-- originClass: ClassCell
-- destClass: ClassCell
-- relation: Relation
-- cardinality: Cardinality
-+ getOrigin(): ClassCell
-+ getDestination(): ClassCell
-+ getRelation(): Relation
-}
-
-class Parser {
-- patterns: Map<Integer, Pattern>
-+ parseGraph(graph: Graph): List<GraphvizElement>
-+ addPattern(pattern: Pattern, priority: Integer): boolean
-+ remPattern(pattern: Pattern): boolean
-}
+package patterns {
+  class Parser {
+  - patterns: Map<Integer, Pattern>
+  + parseGraph(graph: Graph): List<GraphvizElement>
+  + addPattern(pattern: Pattern, priority: Integer): boolean
+  + remPattern(pattern: Pattern): boolean
+  }
 note top of Parser
 The addPattern() method checks to ensure
 there are no repeated priorities and no
@@ -135,73 +149,76 @@ repeated patterns. Patterns will be searched
 for from lowest priority value to highest.
 end note
 
-class Graph {
-- cells: List<ClassCell>
-- edges: List<Edge>
-+ addClass(cell: ClassCell): boolean
-+ getCells(): List<ClassCell>
-+ addEdge(edge: Edge): boolean
-+ getEdges(): List<Edge>
-+ copy(): Graph
-+ containsNode(node: ClassNode): ClassCell
+  class Graph {
+  - cells: List<ClassCell>
+  - edges: List<Edge>
+  + addClass(cell: ClassCell): boolean
+  + getCells(): List<ClassCell>
+  + addEdge(edge: Edge): boolean
+  + getEdges(): List<Edge>
+  + copy(): Graph
+  + containsNode(node: ClassNode): ClassCell
+  + containsEdge(source: ClassCell, dest: ClassCell, relation: Relation): boolean
+  }
+
+  abstract class Pattern {
+  + toGraphviz(): List<GraphvizElement>
+  + {abstract} detect(graphToSearch: Graph): Graph
+  - translateFieldNode(node: FieldNode): String
+  - translateMethodNode(node: MethodNode): String
+  - getAccessChar(access: int): char
+  - parseSignature(signature: String): String
+  }
+
+  abstract class PatternDecorator extends Pattern {
+  + toGraphviz(): List<GraphvizElement>
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class ColoredDecorator extends PatternDecorator {
+  + toGraphviz(): List<GraphvizElement>
+  }
+
+  class ArrowDecorator extends PatternDecorator {
+  + toGraphviz(): List<GraphvizElement>
+  }
+
+  class SingletonPattern extends Pattern {
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class AdapterPattern extends Pattern {
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class DecoratorPattern extends Pattern {
+  + toGraphviz(): List<GraphvizElement>
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class AssociationPattern extends Pattern {
+  + toGraphviz(): List<GraphvizElement>
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class IdentityPattern extends Pattern {
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  'IdentityPattern -[hidden]--> DecoratorPattern
+  'AssociationPattern -[hidden]--> AdapterPattern
+  'SingletonPattern -[hidden]--> ArrowDecorator
 }
 
-abstract class Pattern {
-+ toGraphviz(): List<GraphvizElement>
-+ {abstract} detect(graphToSearch: Graph): Graph
-- translateFieldNode(node: FieldNode): String
-- translateMethodNode(node: MethodNode): String
-- getAccessChar(access: int): char
-- parseSignature(signature: String): String
-}
-
-abstract class PatternDecorator extends Pattern {
-+ toGraphviz(): List<GraphvizElement>
-+ detect(graphToSearch: Graph): Graph
-}
-
-class ColoredDecorator extends PatternDecorator {
-+ toGraphviz(): List<GraphvizElement>
-}
-
-class ArrowDecorator extends PatternDecorator {
-+ toGraphviz(): List<GraphvizElement>
-}
-
-class SingletonPattern extends Pattern {
-+ detect(graphToSearch: Graph): Graph
-}
-
-class AdapterPattern extends Pattern {
-+ detect(graphToSearch: Graph): Graph
-}
-
-class DecoratorPattern extends Pattern {
-+ toGraphviz(): List<GraphvizElement>
-+ detect(graphToSearch: Graph): Graph
-}
-
-class AssociationPattern extends Pattern {
-+ toGraphviz(): List<GraphvizElement>
-+ detect(graphToSearch: Graph): Graph
-}
-
-class IdentityPattern extends Pattern {
-+ detect(graphToSearch: Graph): Graph
-}
-
-IdentityPattern -[hidden]--> DecoratorPattern
-AssociationPattern -[hidden]--> AdapterPattern
-SingletonPattern -[hidden]--> ArrowDecorator
-
-abstract class GraphvizElement {
-- attributes: Map<String, String>
-+ addAttr(var: String, val: String): void
-+ remAttr(var: String): void
-+ getAttr(var: String): String
-+ {abstract} toGraphviz(): String
-+ {abstract} getIdentifier(): String
-}
+package graphviz {
+  abstract class GraphvizElement {
+  - attributes: Map<String, String>
+  + addAttr(var: String, val: String): void
+  + remAttr(var: String): void
+  + getAttr(var: String): String
+  + {abstract} toGraphviz(): String
+  + {abstract} getIdentifier(): String
+  }
 note top of GraphvizElement
 The map is from a Graphviz attribute to its value.
 getIdentifier() must return a String unique to this
@@ -209,31 +226,34 @@ GraphvizElement but shared with other GraphvizElement\'s
 that should overwrite this one.
 end note
 
-class GraphvizNode extends GraphvizElement {
-- name: String
-+ toGraphviz(): String
-+ getIdentifier(): String
+  class GraphvizNode extends GraphvizElement {
+  - name: String
+  + toGraphviz(): String
+  + getIdentifier(): String
+  }
+
+  class GraphvizEdge extends GraphvizElement {
+  - fromNode: String
+  - toNode: String
+  - type: String
+  + toGraphviz(): String
+  + getIdentifier(): String
+  }
+
+  class GraphvizGlobalParam extends GraphvizElement {
+  + toGraphviz(): String
+  + getIdentifier(): String
+  }
 }
 
-class GraphvizEdge extends GraphvizElement {
-- fromNode: String
-- toNode: String
-- type: String
-+ toGraphviz(): String
-+ getIdentifier(): String
-}
+package exporters {
+  interface Exporter {
+  + export(graphviz: List<GraphvizElement>): void
+  }
 
-class GraphvizGlobalParam extends GraphvizElement {
-+ toGraphviz(): String
-+ getIdentifier(): String
-}
-
-interface Exporter {
-+ export(graphviz: List<GraphvizElement>): void
-}
-
-class FileExporter implements Exporter {
-+ export(graphviz: List<GraphvizElement>): void
+  class FileExporter implements Exporter {
+  + export(graphviz: List<GraphvizElement>): void
+  }
 }
 
 UMLGeneratorApp --> GraphGenerator
@@ -244,8 +264,15 @@ GraphGenerator --> AccessLevel
 GraphGenDecorator --> GraphGenerator
 AssociationGraphGen --> SignatureParser
 AssociationGraphGen --> Field
+AssociationGraphGen --> FieldTuple
+DependencyGraphGen --> FieldTuple
+DependencyGraphGen ..> Field
+FieldTuple --> Field
+FieldTuple --> Cardinality
+Field ..> SignatureParser
 ClassCell --> Edge
 ClassCell --> AccessLevel
+ClassCell ..> Field
 Edge --> ClassCell
 Edge --> Relation
 Edge --> Cardinality

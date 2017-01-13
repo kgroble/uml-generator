@@ -2,7 +2,7 @@
 To run in Eclipse:
 1. Create a new run configuration (`Run -> Run Configurations...`). Select `UML-Generator` as the project and `UMLGeneratorApp` as the main class.
 2. In the Arguments tab, provide (fully qualified) Java class names as the program arguments.
-    * E.g., to generate UML for Java's `List` and `ArrayList` classes, enter 
+    * E.g., to generate UML for Java's `List` and `ArrayList` classes, enter
         `java.util.List java.util.ArrayList`
     * Note class names are delimited by spaces (no commas)
 3.  There are several flags to modify behavior:
@@ -31,8 +31,9 @@ To run in Eclipse:
 
 
 ## Lewis
-* Wrote bare-bones class parser up to generating Graphviz code.
+* Wrote extensive parser up to generating Graphviz code.
+* Created base style for the graph generator decorators.
 * Updated Javadoc comments.
 * Implemented inheritance arrows and changed labels to HTML.
 * Implemented access-level field/method hiding.
-* Master UML maker.
+* Master UML maker/curator.

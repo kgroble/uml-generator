@@ -2,6 +2,7 @@ package patterns;
 import graph.ClassCell;
 import graph.Edge;
 import graph.Graph;
+import graph.SignatureParser;
 import graphviz.GraphvizEdge;
 import graphviz.GraphvizElement;
 import graphviz.GraphvizGlobalParams;
@@ -41,6 +42,7 @@ public abstract class Pattern {
         GraphvizGlobalParams params = new GraphvizGlobalParams();
         params.addAttribute("rankdir", "BT");
         elements.add(params);
+        SignatureParser parsed;
 
         // nodes
         for (ClassCell cell : detected.getCells()) {
@@ -52,11 +54,15 @@ public abstract class Pattern {
             List<FieldNode> fieldList = cell.getFieldNodes();
 
             for(FieldNode fieldNode : fieldList) {
-                fields += translateFieldNode(fieldNode);
+                parsed = new SignatureParser(fieldNode.signature == null ? fieldNode.desc : fieldNode.signature);
+                fields += getAccessChar(fieldNode.access) + " " + fieldNode.name + ": " + parsed.toGraphviz() +
+                        "<br align=\"left\"/>";
             }
 
             String methods = "";
             List<MethodNode> methodList = cell.getMethods();
+            String retType;
+
 
             for(MethodNode methodNode : methodList){
                 methods += translateMethodNode(methodNode);
@@ -106,31 +112,6 @@ public abstract class Pattern {
      * @return A new Graph containing all the detected nodes and edges.
      */
     public abstract Graph detect(Graph graphToSearch);
-
-    /**
-     * Translates a FieldNode into a Graphviz string.
-     *
-     * @param node The FieldNode to convert
-     * @return A Graphviz String representing the passed FieldNode
-     */
-    private String translateFieldNode(FieldNode node){
-        String result = "";
-
-        // Modifiers such as static are currently ignored.
-
-        result += getAccessChar(node.access) + " ";
-        String type;
-        String signature = node.signature;
-        if (signature == null) {
-            type = Type.getType(node.desc).getClassName();
-        } else {
-            type = parseSignature(signature).parsedString;
-        }
-
-        result += node.name + ": " + type + "<br align=\"left\"/>";
-
-        return result;
-    }
 
     private ParsedSignature parseSignature(String signature) {
         if (signature == null || signature.length() == 0) {

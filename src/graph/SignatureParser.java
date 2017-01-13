@@ -150,7 +150,7 @@ public class SignatureParser {
             for (i = 0; i < template.size() - 1; i++) {
                 retVal += template.get(i).toGraphviz() + ", ";
             }
-            retVal += template.get(i);
+            retVal += template.get(i).toGraphviz();
             retVal += "&gt;";
         }
 
