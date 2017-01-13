@@ -63,7 +63,6 @@ public abstract class Pattern {
             List<MethodNode> methodList = cell.getMethods();
             String retType;
 
-
             for(MethodNode methodNode : methodList){
                 methods += translateMethodNode(methodNode);
             }
@@ -113,91 +112,6 @@ public abstract class Pattern {
      */
     public abstract Graph detect(Graph graphToSearch);
 
-    private ParsedSignature parseSignature(String signature) {
-        if (signature == null || signature.length() == 0) {
-            return new ParsedSignature("", 0);
-        }
-
-        List<String> typeNames = new ArrayList<>();
-        String brackets = "";
-        int leadIndex = 0;
-
-        while (leadIndex < signature.length()
-               && signature.charAt(leadIndex) != ';') {
-            switch (signature.charAt(leadIndex)) {
-            case '[':
-                brackets = "[]";
-                break;
-            case 'T':
-                typeNames.add("T" + brackets);
-                brackets = "";
-                break;
-            case 'E':
-                typeNames.add("E" + brackets);
-                brackets = "";
-                break;
-            case 'L':
-                ParsedSignature parsed
-                    = parseClassSignature(signature.substring(leadIndex + 1));
-                leadIndex += parsed.endIndex + 1;
-                typeNames.add(parsed.parsedString + brackets);
-                brackets = "";
-                break;
-            default:
-                String type = Type.getType(Character.toString(signature.charAt(leadIndex))).getClassName();
-                type = (type == null) ? Character.toString(signature.charAt(leadIndex)) : type;
-                typeNames.add(type + brackets);
-                brackets = "";
-                break;
-            }
-
-            leadIndex++;
-        }
-
-        return new ParsedSignature(String.join(", ", typeNames).replace("/", "."), leadIndex);
-    }
-
-    private ParsedSignature parseClassSignature(String signature) {
-        String objName = null;
-        int leadIndex = 0;
-
-        while (leadIndex < signature.length()
-               && signature.charAt(leadIndex) != ';') {
-            if (signature.charAt(leadIndex) == '<') {
-                int openIndex = leadIndex;
-                objName = signature.substring(0, leadIndex) + "&lt;";
-                int angleBracketsCt = 1;
-
-                leadIndex++;
-                while (angleBracketsCt != 0) {
-                    switch (signature.charAt(leadIndex)) {
-                    case '>':
-                        angleBracketsCt--;
-                        break;
-                    case '<':
-                        angleBracketsCt++;
-                        break;
-                    default:
-                        break;
-                    }
-                    leadIndex++;
-                }
-
-                ParsedSignature template = parseSignature(signature.substring(openIndex + 1, leadIndex - 1));
-                objName += template.parsedString + "&gt;";
-                break;
-            }
-
-            leadIndex++;
-        }
-
-        if (objName == null) {
-            objName = signature.substring(0, leadIndex);
-        }
-
-        return new ParsedSignature(objName, leadIndex);
-    }
-
     /**
      * Translates a MethodNode into a Graphviz string.
      *
@@ -222,19 +136,21 @@ public abstract class Pattern {
             }
             arguments += String.join(", ", argTypes) + ")";
         } else {
+            List<SignatureParser> parsedArguments;
             int startArgs = signature.indexOf('(');
             int endArgs = signature.indexOf(')');
             if (endArgs - startArgs > 1) {
-                arguments += parseSignature(signature.substring(startArgs + 1, endArgs)).parsedString;
+                int i;
+                parsedArguments = SignatureParser.parseFullSignature(signature.substring(startArgs + 1, endArgs));
+                for (i = 0; i < parsedArguments.size() - 1; i++) {
+                    arguments += parsedArguments.get(i).toGraphviz() + ", ";
+                }
+                arguments += parsedArguments.get(i).toGraphviz();
             }
             arguments += ")";
 
             returnType = signature.substring(endArgs + 1);
-            if (returnType.startsWith("L")) {
-                returnType = parseSignature(returnType).parsedString;
-            } else {
-                returnType = Type.getReturnType(node.desc).getClassName();
-            }
+            returnType = new SignatureParser(returnType).toGraphviz();
         }
 
         result += node.name

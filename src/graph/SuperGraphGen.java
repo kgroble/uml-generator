@@ -1,5 +1,4 @@
 package graph;
-import graph.Edge.Relation;
 
 import java.util.List;
 import java.util.Queue;

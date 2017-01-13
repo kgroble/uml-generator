@@ -46,7 +46,46 @@ public class ClassCell {
      * return the string "List".
      */
     public String getPrettyName() {
-        return Type.getObjectType(this.classNode.name).getClassName();
+        /* If we want to get the fancy class names like HashMap<K: java.lang.Object, V: java.lang.Object>, we'll
+         * have to make this a lost smarter
+         */
+//        if (classNode.signature == null) {
+            return Type.getObjectType(this.classNode.name).getClassName();
+//        } else {
+//            System.out.println("Parsing fancy signature: " + classNode.signature);
+//            String templateName = "";
+//            int angleCt = 0;
+//            int leadIndex = 0;
+//            if (classNode.signature.charAt(leadIndex) != '<') {
+//                System.err.println("New case: " + classNode.signature);
+//                return "ERROR";
+//            } else {
+//                while (angleCt > 0) {
+//                    switch (classNode.signature.charAt(leadIndex)) {
+//                        case '<':
+//                            angleCt++;
+//                            break;
+//                        case '>':
+//                            angleCt--;
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                    leadIndex++;
+//                }
+//
+//                List<SignatureParser> template = SignatureParser.parseFullSignature(classNode.signature.substring(1,
+//                        leadIndex));
+//                int i;
+//                for (i = 0; i < template.size() - 1; i++) {
+//                    templateName += template.get(i).toGraphviz() + ", ";
+//                }
+//                if (i < template.size()) {
+//                    templateName += template.get(i).toGraphviz();
+//                }
+//                return Type.getObjectType(classNode.name).getClassName() + "&lt;" + templateName + "&gt;";
+//            }
+//        }
     }
 
     /**

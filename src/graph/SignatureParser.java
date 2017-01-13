@@ -11,29 +11,33 @@ public class SignatureParser {
     private int parsedChars;
     private boolean isArray;
     private boolean isPrimitive;
+    private boolean doesExtend;
+    private boolean doesSuper;
 
     public static List<SignatureParser> parseFullSignature(String fullSignature) {
         List<SignatureParser> signatures = new ArrayList<>();
+        SignatureParser toAdd;
         if (fullSignature == null || fullSignature.length() == 0) {
             return signatures;
         }
 
-        String prefix = "";
         int leadIndex = 0;
 
         while (leadIndex < fullSignature.length()
                && fullSignature.charAt(leadIndex) != ';') {
-            if (isPrefix(fullSignature.charAt(leadIndex))) {
-                prefix += fullSignature.charAt(leadIndex);
-            } else {
-                signatures.add(new SignatureParser(prefix + fullSignature.substring(leadIndex)));
-                leadIndex += signatures.get(signatures.size() - 1).getNumParsedChars()
-                    - prefix.length();
-                prefix = "";
-                break;
-            }
+//            if (isPrefix(fullSignature.charAt(leadIndex))) {
+//                prefix += fullSignature.charAt(leadIndex);
+//            } else {
+//                signatures.add(new SignatureParser(prefix + fullSignature.substring(leadIndex)));
+//                leadIndex += signatures.get(signatures.size() - 1).getNumParsedChars()
+//                    - prefix.length();
+//                prefix = "";
+//                continue;
+//            }
 
-            leadIndex++;
+            toAdd = new SignatureParser(fullSignature.substring(leadIndex));
+            signatures.add(toAdd);
+            leadIndex += toAdd.getNumParsedChars() + 1;
         }
 
 
@@ -51,41 +55,45 @@ public class SignatureParser {
     }
 
     public SignatureParser(String signature) {
+        boolean isTemplate = false;
         isArray = false;
-        
+        isPrimitive = false;
+
         if (signature == null || signature.length() == 0) {
             typeName = "";
             isPrimitive = true;
             return;
         }
 
-        int parsedChars = 0;
+        parsedChars = 0;
         
-        while (parsedChars < signature.length()
+        while (!isTemplate
+               && parsedChars < signature.length()
                && isPrefix(signature.charAt(parsedChars))) {
-            parsedChars++;
             switch (signature.charAt(parsedChars)) {
             case 'T':
-                // TODO implement
+                isTemplate = true;
                 break;
             case '*':
-                // TODO implement
-                break;
+                typeName = "?";
+                return;
             case '+':
-                // TODO implement
+                doesExtend = true;
                 break;
             case '-':
-                // TODO implement
+                doesSuper = true;
                 break;
             case '[':
                 isArray = true;
                 break;
             }
+
+            parsedChars++;
         }
 
-        isPrimitive = false;
-        if (signature.charAt(parsedChars) == 'E') { // Arbitrary type
-            typeName = "E";
+        if (isTemplate) {
+            typeName = signature.substring(parsedChars, parsedChars + 1);
+            parsedChars++;
             return;
         } else if (signature.charAt(parsedChars) != 'L') {
             typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
@@ -143,6 +151,12 @@ public class SignatureParser {
 
     public String toGraphviz() {
         String retVal = typeName.replace("/", ".");
+
+        if (doesExtend) {
+            retVal = "? extends " + retVal;
+        } else if (doesSuper) {
+            retVal = "? super " + retVal;
+        }
 
         if (template != null) {
             retVal += "&lt;";
