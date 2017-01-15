@@ -10,8 +10,18 @@ public abstract class GraphGenDecorator extends GraphGenerator {
     }
 
     @Override
-    public abstract boolean addClassCells(List<String> classNames, Graph graph);
+    protected boolean execute(List<String> classNames, Graph graph) {
+        boolean changed = graphGen.execute(classNames, graph);
+        boolean retBool = changed;
 
-    @Override
-    public abstract void addEdges(Graph graph);
+        do {
+            System.out.println(this + " is looping in the do-while.");
+            changed = genObjects(classNames, graph);
+            retBool = changed || retBool;
+        } while (recursive && (changed || graphGen.execute(classNames, graph)));
+
+        return retBool;
+    }
+
+    protected abstract boolean genObjects(List<String> classNames, Graph graph);
 }

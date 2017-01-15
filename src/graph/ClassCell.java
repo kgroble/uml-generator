@@ -110,6 +110,10 @@ public class ClassCell {
         return this.classNode.access;
     }
 
+    public ClassNode getClassNode() {
+        return classNode;
+    }
+
     /**
      * Returns a list of all the fields in the stored class that are at or
      * above the render access.

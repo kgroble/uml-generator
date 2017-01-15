@@ -13,57 +13,37 @@ public class SuperGraphGen extends GraphGenDecorator {
     }
 
     @Override
-    public boolean addClassCells(List<String> classNames, Graph graph) {
-        boolean retBool = this.graphGen.addClassCells(classNames, graph);
+    protected boolean genObjects(List<String> classNames, Graph graph) {
+        boolean changed = false;
 
-        if (!this.recursive) {
-            return false;
-        }
+        Queue<ClassCell> classesToSuper = new LinkedList<>();
+        classesToSuper.addAll(graph.getCells());
+        Set<String> addedClasses = new HashSet<>();
+        addedClasses.addAll(graph.getCellNames());
 
-        boolean changed;
+        ClassCell currentClass;
+        ClassCell superClass;
 
-        do {
-            changed = false;
-
-            Queue<ClassCell> classesToSuper = new LinkedList<>();
-            classesToSuper.addAll(graph.getCells());
-            Set<String> addedClasses = new HashSet<>();
-            addedClasses.addAll(graph.getCellNames());
-
-            ClassCell currentClass;
-
-            while (!classesToSuper.isEmpty()) {
-                currentClass = classesToSuper.remove();
-                try {
-                    if (currentClass.getSuper() != null
-                        && graph.containsNode(currentClass.getSuper()) == null) {
-                        currentClass = new ClassCell(currentClass.getSuper().name,
-                                                     this.access);
-                        graph.addClass(currentClass);
-                        classesToSuper.add(currentClass);
+        while (!classesToSuper.isEmpty()) {
+            System.out.println(this + " is looping in the while.");
+            currentClass = classesToSuper.remove();
+            try {
+                if (currentClass.getSuper() != null) {
+                    superClass = new ClassCell(currentClass.getSuper().name,
+                            this.access);
+                    if (graph.containsNode(superClass.getClassNode()) == null) {
+                        graph.addClass(superClass);
+                        classesToSuper.add(superClass);
                         changed = true;
-                        retBool = true;
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                    graph.addEdge(new Edge(currentClass, superClass, Edge.Relation.EXTENDS));
                 }
-            }
-        } while (changed && this.graphGen.addClassCells(new LinkedList<>(), graph));
-
-        return retBool;
-    }
-
-    @Override
-    public void addEdges(Graph graph) {
-        this.graphGen.addEdges(graph);
-
-        ClassCell dest;
-        for (ClassCell cell : graph.getCells()) {
-            dest = graph.containsNode(cell.getSuper());
-            if (dest != null) {
-                graph.addEdge(new Edge(cell, dest, Edge.Relation.EXTENDS));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
+        return changed;
     }
 }

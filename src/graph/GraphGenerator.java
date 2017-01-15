@@ -32,21 +32,24 @@ public class GraphGenerator {
      * @return An appropriate graph for the parameters of this GraphGenerator
      * based off of the classes passed by classNames.
      */
-    public Graph execute(List<String> classNames) {
+    public final Graph execute(List<String> classNames) {
         Graph graph = new Graph();
 
-        addClassCells(classNames, graph);
-        addEdges(graph);
+        execute(classNames, graph);
 
         return graph;
     }
 
-    public boolean addClassCells(List<String> classNames, Graph graph) {
+    protected boolean execute(List<String> classNames, Graph graph) {
         boolean changed = false;
+        ClassCell currentCell;
         for (String className : classNames) {
             try {
-                graph.addClass(new ClassCell(className, access));
-                changed = true;
+                currentCell = new ClassCell(className, access);
+                if (graph.containsNode(currentCell.getClassNode()) == null) {
+                    graph.addClass(currentCell);
+                    changed = true;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -54,6 +57,4 @@ public class GraphGenerator {
 
         return changed;
     }
-
-    public void addEdges(Graph graph) {}
 }
