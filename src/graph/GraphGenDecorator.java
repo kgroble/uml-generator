@@ -15,7 +15,6 @@ public abstract class GraphGenDecorator extends GraphGenerator {
         boolean retBool = changed;
 
         do {
-            System.out.println(this + " is looping in the do-while.");
             changed = genObjects(classNames, graph);
             retBool = changed || retBool;
         } while (recursive && (changed || graphGen.execute(classNames, graph)));

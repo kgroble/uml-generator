@@ -25,7 +25,6 @@ public class SuperGraphGen extends GraphGenDecorator {
         ClassCell superClass;
 
         while (!classesToSuper.isEmpty()) {
-            System.out.println(this + " is looping in the while.");
             currentClass = classesToSuper.remove();
             try {
                 if (currentClass.getSuper() != null) {

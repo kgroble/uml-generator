@@ -6,6 +6,22 @@ package client {
   class UMLGeneratorApp {
   + {static} main(args: String[]): void
   }
+
+  class ConfigSettings {
+  - config: ConfigSettings
+  - isRecursive: boolean
+  - whiteList: List<String>
+  - blackList: List<String>
+  - showSynthetic: boolean
+  - patterns: List<Class<? extends Pattern>>
+
+  + {static} getRecursive(): boolean
+  + {static} getWhiteList(): List<String>
+  + {static} getBlackList(): List<String>
+  + {static} getSynthetic(): boolean
+  + {static} getPatternList(): List<Class<? extends Pattern>>
+  + {static} parseSettingsFile(filename: String): void
+  }
 }
 
 package graph{
@@ -13,50 +29,41 @@ package graph{
   # recursive: boolean
   # access: AccessLevel
   + execute(classNames: List<String>): Graph
+  # execute(classNames: List<String>, graph: Graph): boolean
   + addClassCells(classNames: List<String>, graph: Graph): boolean
   + addEdges(graph: Graph): void
   }
 
   abstract class GraphGenDecorator extends GraphGenerator {
   # graphGen: GraphGenerator
-  + {abstract} addClassCells(classNames: List<String>, graph: Graph): boolean
-  + {abstract} addEdges(graph: Graph): void
+  # execute(classNames: List<String>, graph: Graph): boolean
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
   }
 
   class SuperGraphGen extends GraphGenDecorator {
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
   }
 
   class ImplementsGraphGen extends GraphGenDecorator {
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
   }
 
   class DependencyGraphGen extends GraphGenDecorator {
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
+  }
+
+  class AssociationGraphGen extends GraphGenDecorator {
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
+  }
+
+  class BidirectionGraphGen extends GraphGenDecorator {
+  # {abstract} genObjects(classNames: List<String>, graph: Graph): boolean
   }
 
   class FieldTuple {
   + field: Field
   + cardinality: Cardinality
   }
-
-  class AssociationGraphGen extends GraphGenDecorator {
-  '- edgesToAdd: List<Edge>
-  '- lastCalled: Graph
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
-  }
-
-  class BidirectionGraphGen extends GraphGenDecorator {
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
-  }
-
-'BidirectionGraphGen -[hidden]--> AssociationGraphGen
-'DependencyGraphGen -[hidden]--> ImplementsGraphGen
 
   enum AccessLevel {
   + PUBLIC
@@ -176,6 +183,7 @@ end note
   }
 
   class ColoredDecorator extends PatternDecorator {
+  - color: String
   + toGraphviz(): List<GraphvizElement>
   }
 
@@ -205,9 +213,14 @@ end note
   + detect(graphToSearch: Graph): Graph
   }
 
-  'IdentityPattern -[hidden]--> DecoratorPattern
-  'AssociationPattern -[hidden]--> AdapterPattern
-  'SingletonPattern -[hidden]--> ArrowDecorator
+  class InheritancePattern extends Pattern {
+  + detect(graphToSearch: Graph): Graph
+  }
+
+  class SingletonPattern extends Pattern {
+  + toGraphviz(): List<GraphvizElement>
+  + detect(graphToSearch: Graph): Graph
+  }
 }
 
 package graphviz {
@@ -256,9 +269,15 @@ package exporters {
   }
 }
 
+class BidirectionalPattern extends Pattern {
++ toGraphviz(): List<GraphvizElement>
++ detect(graphToSearch: Graph): Graph
+}
+
 UMLGeneratorApp --> GraphGenerator
 UMLGeneratorApp --> Parser
 UMLGeneratorApp --> Exporter
+ConfigSettings --> Pattern
 GraphGenerator --> Graph
 GraphGenerator --> AccessLevel
 GraphGenDecorator --> GraphGenerator

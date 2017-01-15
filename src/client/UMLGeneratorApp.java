@@ -46,9 +46,9 @@ public class UMLGeneratorApp {
 
         GraphGenerator generator = new GraphGenerator(recursive, accessLevel);
 //        generator = new ImplementsGraphGen(generator);
-        generator = new SuperGraphGen(generator);
-//        generator = new AssociationGraphGen(generator);
-//        generator = new DependencyGraphGen(generator);
+//        generator = new SuperGraphGen(generator);
+        generator = new AssociationGraphGen(generator);
+        generator = new DependencyGraphGen(generator);
         Graph g = generator.execute(classNames);
         Parser parser = new Parser();
         Pattern idPattern = new IdentityPattern();
