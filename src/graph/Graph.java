@@ -122,4 +122,16 @@ public class Graph {
         }
         return false;
     }
+    
+    public boolean containsEdge(ClassCell source, ClassCell dest, Edge.Relation relation, Edge.Cardinality card) {
+        for (Edge e : this.edges) {
+            if (e.getOrigin().equals(source)
+                && e.getDestination().equals(dest)
+                && e.getRelation() == relation
+                && e.getCardinality() == card) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

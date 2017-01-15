@@ -7,17 +7,17 @@ import java.util.*;
 
 
 public class AssociationGraphGen extends GraphGenDecorator {
-    private List<Edge> edgesToAdd;
+    private Graph edgesToAdd;
     private Graph lastCalled;
 
     public AssociationGraphGen(GraphGenerator graphGen) {
         super(graphGen);
-        edgesToAdd = new ArrayList<>();
+        edgesToAdd = new Graph();
     }
 
     @Override
     public boolean addClassCells(List<String> classNames, Graph graph) {
-        edgesToAdd = new ArrayList<>();
+        edgesToAdd = new Graph();
         lastCalled = graph;
 
         boolean retBool = this.graphGen.addClassCells(classNames, graph);
@@ -57,8 +57,9 @@ public class AssociationGraphGen extends GraphGenDecorator {
                             }
 
                             if (!type.name.equals(currentClass.getName())) {
-                                if (graph.containsNode(type) != null) {
-                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, fieldTuple.cardinality));                                        
+                                if (graph.containsNode(type) != null
+                                        && !edgesToAdd.containsEdge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, fieldTuple.cardinality)) {
+                                    edgesToAdd.addEdge(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION, fieldTuple.cardinality));                                        
                                 }
                                 if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
                                     fieldTuple.cardinality = Edge.Cardinality.MANY;
@@ -79,7 +80,6 @@ public class AssociationGraphGen extends GraphGenDecorator {
                 }
             }
         } while (changed && this.graphGen.addClassCells(new LinkedList<>(), graph));
-
         return retBool;
     }
 
@@ -88,7 +88,7 @@ public class AssociationGraphGen extends GraphGenDecorator {
         this.graphGen.addEdges(graph);
 
         if (graph == lastCalled) {
-            for (Edge edge : edgesToAdd) {
+            for (Edge edge : edgesToAdd.getEdges()) {
                 graph.addEdge(edge);
             }
         }

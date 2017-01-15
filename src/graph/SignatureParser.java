@@ -97,6 +97,9 @@ public class SignatureParser {
             return;
         } else if (signature.charAt(parsedChars) != 'L') {
             typeName = Type.getType(signature.substring(parsedChars, parsedChars + 1)).getClassName();
+            if (typeName == null) {
+                typeName = signature.substring(parsedChars, parsedChars + 1);
+            }
             isPrimitive = true;
             return;
         }

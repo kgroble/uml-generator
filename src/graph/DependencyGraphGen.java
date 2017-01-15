@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.ClassNode;
  * Created by lewis on 1/11/17.
  */
 public class DependencyGraphGen extends GraphGenDecorator {
-    private List<Edge> edgesToAdd;
+    private Graph edgesToAdd;
     private Graph lastCalled;
     
     public DependencyGraphGen(GraphGenerator graphGen) {
@@ -24,7 +24,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
 
     @Override
     public boolean addClassCells(List<String> classNames, Graph graph) {
-        edgesToAdd = new ArrayList<>();
+        edgesToAdd = new Graph();
         lastCalled = graph;
 
         boolean retBool = this.graphGen.addClassCells(classNames, graph);
@@ -58,14 +58,16 @@ public class DependencyGraphGen extends GraphGenDecorator {
 
                             if (recursive && graph.containsNode(type) == null) {
                                 graph.addClass(referencedCell);
+                                System.out.println("adding dependency class: " + referencedCell.getName());
                                 classesToCheck.add(referencedCell);
                                 changed = true;
                                 retBool = true;
                             }
 
                             if (!type.name.equals(currentClass.getName())) {
-                                if (graph.containsNode(type) != null) {
-                                    edgesToAdd.add(new Edge(currentClass, referencedCell, Edge.Relation.DEPENDS, fieldTuple.cardinality));                                        
+                                if (graph.containsNode(type) != null
+                                        && !edgesToAdd.containsEdge(currentClass, referencedCell, Edge.Relation.DEPENDS, fieldTuple.cardinality)) {
+                                    edgesToAdd.addEdge(new Edge(currentClass, referencedCell, Edge.Relation.DEPENDS, fieldTuple.cardinality));                                        
                                 }
                                 if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
                                     fieldTuple.cardinality = Edge.Cardinality.MANY;
@@ -95,7 +97,7 @@ public class DependencyGraphGen extends GraphGenDecorator {
         this.graphGen.addEdges(graph);
 
         if (graph == lastCalled) {
-            for (Edge edge : edgesToAdd) {
+            for (Edge edge : edgesToAdd.getEdges()) {
                 graph.addEdge(edge);
             }
         }
