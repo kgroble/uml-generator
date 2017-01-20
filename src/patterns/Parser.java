@@ -25,7 +25,7 @@ public class Parser {
         List<GraphvizElement> parsedElements = new ArrayList<GraphvizElement>();
         List<Integer> priorities = new ArrayList<>(this.patterns.keySet());
         Collections.sort(priorities);
-        for(int i = priorities.size() - 1; i >= 0; i--) {
+        for(int i = 0; i < priorities.size(); i++) {
             Pattern pattern = this.patterns.get(priorities.get(i));
             Graph detectedPattern = pattern.detect(graph);
             for(GraphvizElement element : pattern.toGraphviz(detectedPattern)) {

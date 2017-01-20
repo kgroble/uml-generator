@@ -1,6 +1,4 @@
 package graph;
-import graph.Edge.Relation;
-
 import java.util.ArrayList;
 import java.util.List;
 

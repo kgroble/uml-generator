@@ -30,13 +30,15 @@ public class SuperGraphGen extends GraphGenDecorator {
                 if (currentClass.getSuper() != null) {
                     superClass = new ClassCell(currentClass.getSuper().name,
                             this.access);
-                    if (graph.containsNode(superClass.getClassNode()) == null) {
+                    if (graph.containsNode(superClass.getClassNode()) == null && recursive) {
                         graph.addClass(superClass);
                         classesToSuper.add(superClass);
                         changed = true;
                     }
-
-                    graph.addEdge(new Edge(currentClass, superClass, Edge.Relation.EXTENDS));
+                    
+                    if (graph.containsNode(superClass.getClassNode()) != null) {
+                        graph.addEdge(new Edge(currentClass, superClass, Edge.Relation.EXTENDS));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,5 +1,4 @@
 package graph;
-import graph.Edge.Relation;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -31,13 +30,15 @@ public class ImplementsGraphGen extends GraphGenDecorator {
             try {
                 for (ClassNode implementedNode : currentClass.getImplements()) {
                     ClassCell implementedCell = new ClassCell(implementedNode.name, this.access);
-                    if  (graph.containsNode(implementedNode) == null) {
+                    if  (graph.containsNode(implementedNode) == null && recursive) {
                         graph.addClass(implementedCell);
                         classesToImplement.add(implementedCell);
                         changed = true;
                     }
 
-                    graph.addEdge(new Edge(currentClass, implementedCell, Edge.Relation.IMPLEMENTS));
+                    if  (graph.containsNode(implementedNode) != null) {
+                        graph.addEdge(new Edge(currentClass, implementedCell, Edge.Relation.IMPLEMENTS));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

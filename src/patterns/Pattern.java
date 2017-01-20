@@ -17,15 +17,15 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public abstract class Pattern {
-    private class ParsedSignature {
-        public String parsedString;
-        public int endIndex;
-
-        public ParsedSignature(String parsedString, int endIndex) {
-            this.parsedString = parsedString;
-            this.endIndex = endIndex;
-        }
-    }
+//    private class ParsedSignature {
+//        public String parsedString;
+//        public int endIndex;
+//
+//        public ParsedSignature(String parsedString, int endIndex) {
+//            this.parsedString = parsedString;
+//            this.endIndex = endIndex;
+//        }
+//    }
 
     /**
      * Creates a new GraphvizElement list that holds all the abstract
@@ -61,7 +61,7 @@ public abstract class Pattern {
 
             String methods = "";
             List<MethodNode> methodList = cell.getMethods();
-            String retType;
+//            String retType;
 
             for(MethodNode methodNode : methodList){
                 methods += translateMethodNode(methodNode);
