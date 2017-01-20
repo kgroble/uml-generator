@@ -28,6 +28,8 @@ To run in Eclipse:
 * Added detection and display of "implements" relations
 * Parse and display class names
 * Improved parsing to capture and display types of generically typed classes
+* Added detection of dependencies in return types and arguments
+* Added drawing of dependency arrows
 
 
 ## Lewis
