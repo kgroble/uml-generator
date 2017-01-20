@@ -21,6 +21,7 @@ package client {
   + {static} getSynthetic(): boolean
   + {static} getPatternList(): List<Class<? extends Pattern>>
   + {static} parseSettingsFile(filename: String): void
+  + {static} getCustomValue(key: String): String
   }
 }
 

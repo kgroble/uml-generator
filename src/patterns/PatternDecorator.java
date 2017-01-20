@@ -13,4 +13,7 @@ public abstract class PatternDecorator extends Pattern {
         return this.innerPattern.detect(graphToSearch);
     }
 
+    public void setInner(Pattern inner) {
+        this.innerPattern = inner;
+    }
 }
