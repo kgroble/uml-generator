@@ -30,8 +30,6 @@ package graph{
   # access: AccessLevel
   + execute(classNames: List<String>): Graph
   # execute(classNames: List<String>, graph: Graph): boolean
-  + addClassCells(classNames: List<String>, graph: Graph): boolean
-  + addEdges(graph: Graph): void
   }
 
   abstract class GraphGenDecorator extends GraphGenerator {
