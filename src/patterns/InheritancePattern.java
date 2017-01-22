@@ -20,9 +20,7 @@ public class InheritancePattern extends Pattern {
                 g.addClass(cell);
                 g.addClass(superCell);
                 for (Edge edge : cell.getEdges()) {
-                    System.out.println("Checking " + edge);
                     if (edge.getDestination().equals(superCell)) {
-                        System.out.println(edge);
                         g.addEdge(edge);
                         break;
                     }
