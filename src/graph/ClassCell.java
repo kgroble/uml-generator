@@ -323,6 +323,10 @@ public class ClassCell {
         this.edges.add(e);
     }
 
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
     /**
      * Creates and returns a new list of Strings representing all the classes
      * this cell relates to in any way. The returned names are the fully

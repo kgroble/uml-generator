@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import client.ConfigSettings;
 import org.objectweb.asm.tree.ClassNode;
 
 public class ImplementsGraphGen extends GraphGenDecorator {
@@ -30,7 +31,8 @@ public class ImplementsGraphGen extends GraphGenDecorator {
             try {
                 for (ClassNode implementedNode : currentClass.getImplements()) {
                     ClassCell implementedCell = new ClassCell(implementedNode.name, this.access);
-                    if  (graph.containsNode(implementedNode) == null && recursive) {
+                    if  (recursive && !ConfigSettings.classInBlacklist(implementedNode.name)
+                            && graph.containsNode(implementedNode) == null) {
                         graph.addClass(implementedCell);
                         classesToImplement.add(implementedCell);
                         changed = true;

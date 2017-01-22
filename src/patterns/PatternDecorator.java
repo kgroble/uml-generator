@@ -8,6 +8,10 @@ public abstract class PatternDecorator extends Pattern {
         this.innerPattern = pattern;
     }
 
+    public PatternDecorator() {
+        innerPattern = null;
+    }
+
     @Override
     public Graph detect(Graph graphToSearch) {
         return this.innerPattern.detect(graphToSearch);

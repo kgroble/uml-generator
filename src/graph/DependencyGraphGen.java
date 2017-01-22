@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import client.ConfigSettings;
 import org.objectweb.asm.tree.ClassNode;
 
 /**
@@ -46,7 +47,8 @@ public class DependencyGraphGen extends GraphGenDecorator {
                     if (type != null) {
                         ClassCell referencedCell = new ClassCell(type.name, this.access);
 
-                        if (recursive && graph.containsNode(type) == null) {
+                        if (recursive && !ConfigSettings.classInBlacklist(type.name)
+                                && graph.containsNode(type) == null) {
                             graph.addClass(referencedCell);
                             classesToCheck.add(referencedCell);
                             changed = true;

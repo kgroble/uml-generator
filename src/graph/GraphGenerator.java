@@ -33,6 +33,7 @@ public class GraphGenerator {
      * based off of the classes passed by classNames.
      */
     public final Graph execute(List<String> classNames) {
+        // TODO: This method is inconsistent since it takes the whitelist but manually retrieves the blacklist
         Graph graph = new Graph();
 
         execute(classNames, graph);

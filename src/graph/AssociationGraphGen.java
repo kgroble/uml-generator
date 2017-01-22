@@ -1,4 +1,5 @@
 package graph;
+import client.ConfigSettings;
 import org.objectweb.asm.tree.ClassNode;
 
 
@@ -37,7 +38,8 @@ public class AssociationGraphGen extends GraphGenDecorator {
                     if (type != null) {
                         ClassCell referencedCell = new ClassCell(type.name, this.access);
 
-                        if (recursive && graph.containsNode(type) == null) {
+                        if (recursive && !ConfigSettings.classInBlacklist(type.name)
+                                && graph.containsNode(type) == null) {
                             graph.addClass(referencedCell);
                             classesToCheck.add(referencedCell);
                             changed = true;

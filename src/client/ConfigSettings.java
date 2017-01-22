@@ -6,7 +6,6 @@ import patterns.Pattern;
 import patterns.PatternDecorator;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +60,16 @@ public class ConfigSettings {
         return properties.getProperty(key);
     }
 
+    public static boolean classInBlacklist(String className) {
+        for (String listedItem : blackList) {
+            if (className.contains(listedItem)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void setupConfig(String[] args) throws IOException {
         for (String arg : args) {
             if (arg.contains(SETTINGS_FLAG)) {
@@ -108,7 +117,7 @@ public class ConfigSettings {
         if (!buff.equals("")) {
             String[] patChains = buff.split(";");
             for (int j = 0; j < patChains.length; j++) {
-                String[] classNames = patChains[j].split(" ");
+                String[] classNames = patChains[j].trim().split(" ");
                 Pattern patt;
                 PatternDecorator dec;
                 if (classNames.length == 0) {
