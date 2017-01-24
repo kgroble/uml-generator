@@ -1,0 +1,3 @@
+recursive = true
+patterns = patterns.InheritancePattern patterns.OrangePatternDecorator;patterns.AssociationPattern; patterns.DependencyPattern
+exclude = java org
