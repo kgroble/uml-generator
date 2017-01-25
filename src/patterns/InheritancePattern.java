@@ -16,11 +16,13 @@ public class InheritancePattern extends Pattern {
         for (ClassCell cell : graphToSearch.getCells()) {
             if (cell.getSuper() != null && (cell.getSuper().access & Opcodes.ACC_ABSTRACT) == 0
                     && (cell.getSuper().access & Opcodes.ACC_INTERFACE) == 0
-                    && (superCell = graphToSearch.containsNode(cell.getSuper())) != null) {
+                    && (superCell = graphToSearch.containsNode(cell.getSuper())) != null
+                    && !superCell.getName().equals("java/lang/Object")) {
                 g.addClass(cell);
                 g.addClass(superCell);
                 for (Edge edge : cell.getEdges()) {
-                    if (edge.getDestination().equals(superCell)) {
+                    if (edge.getDestination().equals(superCell)
+                            && edge.getRelation() == Edge.Relation.EXTENDS) {
                         g.addEdge(edge);
                         break;
                     }

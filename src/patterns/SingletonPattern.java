@@ -4,6 +4,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import graph.AccessLevel;
 import graph.ClassCell;
 import graph.Graph;
 
@@ -22,8 +23,8 @@ public class SingletonPattern extends Pattern{
                     && (node.access & Opcodes.ACC_ENUM) == 0) {
                 singleton = true;
                 for (MethodNode method : cell.getMethods()) {
-                    if (method.name.equals("<init>") 
-                            && (method.access & Opcodes.ACC_PUBLIC) != 0) {
+                    if (method.name.equals("<init>")
+                            && AccessLevel.hasAccess(method.access, AccessLevel.PUBLIC)) {
                         singleton = false;
                         break;
                     }

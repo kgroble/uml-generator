@@ -6,7 +6,7 @@ public class GraphvizNode extends GraphvizElement {
     public GraphvizNode(String name) {
         this.name = name;
     }
-
+    
     @Override
     public String toGraphviz() {
         String code = "";

@@ -1,10 +1,10 @@
 package client;
 
 import graph.AccessLevel;
-import graph.ClassCell;
 import patterns.Pattern;
 import patterns.PatternDecorator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class ConfigSettings {
     private static final String SETTINGS_FLAG = "--settings=";
-    private static final String DEFAULT_SETTINGS_FILE = "/home/lewis/curr-programs/uml-generator/config/settings.txt";
+    private static final String DEFAULT_SETTINGS_FILE = new File("config/settings.txt").getAbsolutePath();
     private static final String RECURSIVE_TAG = "recursive";
     private static final String SYNTHETIC_TAG = "synthetic";
     private static final String WHITELIST_TAG = "include";
@@ -32,6 +32,8 @@ public class ConfigSettings {
     private static AccessLevel accessLevel = AccessLevel.PRIVATE;
     private static Properties properties;
 
+    private ConfigSettings() {}
+    
     public static boolean getRecursive() {
         return isRecursive;
     }
@@ -85,14 +87,14 @@ public class ConfigSettings {
         }
 
         String buff;
-        buff = properties.getProperty(RECURSIVE_TAG, "");
+        buff = properties.getProperty(RECURSIVE_TAG, "false");
         if (buff.equals("true")) {
             isRecursive = true;
         } else if (buff.equals("false")) {
             isRecursive = false;
         }
 
-        buff = properties.getProperty(SYNTHETIC_TAG, "");
+        buff = properties.getProperty(SYNTHETIC_TAG, "false");
         if (buff.equals("true")) {
             showSynthetic = true;
         } else if (buff.equals("false")) {
@@ -125,6 +127,7 @@ public class ConfigSettings {
                 }
 
                 try {
+                    System.out.println(classNames[0]);
                     patt = (Pattern) Class.forName(classNames[0]).newInstance();
 
 
@@ -142,7 +145,7 @@ public class ConfigSettings {
             }
         }
 
-        buff = properties.getProperty(ACCESS_TAG, "");
+        buff = properties.getProperty(ACCESS_TAG, "public");
         if (buff.equals("public")) {
             accessLevel = AccessLevel.PUBLIC;
         } else if (buff.equals("private")) {
@@ -166,7 +169,9 @@ public class ConfigSettings {
             case "--protected":
                 accessLevel = AccessLevel.PROTECTED;
             default:
-                whiteList.add(arg);
+                if (!arg.startsWith(SETTINGS_FLAG)) {
+                    whiteList.add(arg);
+                }
                 break;
             }
         }

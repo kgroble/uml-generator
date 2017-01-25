@@ -51,7 +51,6 @@ public abstract class Pattern {
 
             String methods = "";
             List<MethodNode> methodList = cell.getMethods();
-//            String retType;
 
             for(MethodNode methodNode : methodList){
                 methods += translateMethodNode(methodNode);
