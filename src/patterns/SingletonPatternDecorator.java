@@ -17,7 +17,7 @@ public class SingletonPatternDecorator extends PatternDecorator {
     
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected) {
-        List<GraphvizElement> elements = super.toGraphviz(detected);
+        List<GraphvizElement> elements = innerPattern.toGraphviz(detected);
         for (GraphvizElement element : elements) {
             if (element instanceof GraphvizNode) {
                 String label = element.getAttribute("label");

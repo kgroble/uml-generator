@@ -127,7 +127,6 @@ public class ConfigSettings {
                 }
 
                 try {
-                    System.out.println(classNames[0]);
                     patt = (Pattern) Class.forName(classNames[0]).newInstance();
 
 
