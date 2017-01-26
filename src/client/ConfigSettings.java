@@ -145,6 +145,7 @@ public class ConfigSettings {
         }
 
         buff = properties.getProperty(ACCESS_TAG, "");
+
         if (buff.equals("public")) {
             accessLevel = AccessLevel.PUBLIC;
         } else if (buff.equals("private")) {

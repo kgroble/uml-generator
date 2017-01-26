@@ -132,10 +132,36 @@ public class ClassCell {
         return retFields;
     }
     
+    public List<FieldNode> getFieldNodes(AccessLevel level) {
+        List<FieldNode> retFields = new ArrayList<>();
+
+        for (Object field : classNode.fields) {
+            if (AccessLevel.hasAccess(((FieldNode) field).access, level)) {
+                retFields.add((FieldNode) field);
+            }
+        }
+
+        return retFields;
+    }
+    
     public List<Field> getFields() {
         List<Field> retFields = new ArrayList<>();
 
         for (FieldNode fieldNode : getFieldNodes()) {
+            if (fieldNode.signature != null) {
+                retFields.add(new Field(fieldNode.signature));
+            } else {
+                retFields.add(new Field(fieldNode.desc));
+            }
+        }
+
+        return retFields;
+    }
+    
+    public List<Field> getFields(AccessLevel level) {
+        List<Field> retFields = new ArrayList<>();
+
+        for (FieldNode fieldNode : getFieldNodes(level)) {
             if (fieldNode.signature != null) {
                 retFields.add(new Field(fieldNode.signature));
             } else {
@@ -185,6 +211,18 @@ public class ClassCell {
 
         for (Object method : classNode.methods) {
             if (AccessLevel.hasAccess(((MethodNode) method).access, this.renderAccess)) {
+                retMethods.add((MethodNode) method);
+            }
+        }
+
+        return retMethods;
+    }
+    
+    public List<MethodNode> getMethods(AccessLevel level) {
+        List<MethodNode> retMethods = new ArrayList<>();
+
+        for (Object method : classNode.methods) {
+            if (AccessLevel.hasAccess(((MethodNode) method).access, level)) {
                 retMethods.add((MethodNode) method);
             }
         }
