@@ -2,6 +2,7 @@ package patterns;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import graph.AccessLevel;
@@ -33,9 +34,11 @@ public class SingletonPattern extends Pattern{
                 }
                 
                 hasSelfInstance = false;
-                for (Field field : cell.getFields(AccessLevel.PRIVATE)) {
+                for (FieldNode fieldNode : cell.getFieldNodes()) {
+                    Field field = fieldNode.signature == null ? new Field(fieldNode.desc) : new Field(fieldNode.signature); 
                     if (field.getType() != null 
-                            && field.getType().name.equals(cell.getName())) {
+                            && field.getType().name.equals(cell.getName())
+                            && (fieldNode.access & Opcodes.ACC_STATIC) != 0) {
                         hasSelfInstance = true;
                     }
                 }
