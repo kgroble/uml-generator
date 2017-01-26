@@ -87,14 +87,14 @@ public class ConfigSettings {
         }
 
         String buff;
-        buff = properties.getProperty(RECURSIVE_TAG, "false");
+        buff = properties.getProperty(RECURSIVE_TAG, "");
         if (buff.equals("true")) {
             isRecursive = true;
         } else if (buff.equals("false")) {
             isRecursive = false;
         }
 
-        buff = properties.getProperty(SYNTHETIC_TAG, "false");
+        buff = properties.getProperty(SYNTHETIC_TAG, "");
         if (buff.equals("true")) {
             showSynthetic = true;
         } else if (buff.equals("false")) {
@@ -144,7 +144,7 @@ public class ConfigSettings {
             }
         }
 
-        buff = properties.getProperty(ACCESS_TAG, "public");
+        buff = properties.getProperty(ACCESS_TAG, "");
         if (buff.equals("public")) {
             accessLevel = AccessLevel.PUBLIC;
         } else if (buff.equals("private")) {

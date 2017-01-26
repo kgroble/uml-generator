@@ -20,7 +20,7 @@ public class OrangePatternDecorator extends PatternDecorator {
 
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected) {
-        List<GraphvizElement> elements = innerPattern.toGraphviz(detected);
+        List<GraphvizElement> elements = super.toGraphviz(detected);
         for (GraphvizElement element : elements) {
             element.addAttribute("color", "\"orange\"");
         }

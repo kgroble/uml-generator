@@ -1,8 +1,11 @@
 package patterns;
+import java.util.List;
+
 import graph.Graph;
+import graphviz.GraphvizElement;
 
 public abstract class PatternDecorator extends Pattern {
-    protected Pattern innerPattern;
+    private Pattern innerPattern;
 
     public PatternDecorator(Pattern pattern) {
         this.innerPattern = pattern;
@@ -15,6 +18,11 @@ public abstract class PatternDecorator extends Pattern {
     @Override
     public Graph detect(Graph graphToSearch) {
         return this.innerPattern.detect(graphToSearch);
+    }
+    
+    @Override
+    public List<GraphvizElement> toGraphviz(Graph detected){
+        return this.innerPattern.toGraphviz(detected);
     }
 
     public void setInner(Pattern inner) {
