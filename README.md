@@ -16,6 +16,7 @@ To run in Eclipse:
 
 # Team member contributions
 ## Joe
+* Added functionality to Pattern.toGraphviz() so it recognizes fields and methods.
 * Repackaged everything.
 * Added Association Pattern functionality.
 * Added bidirectional arrow functionality.
