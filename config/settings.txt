@@ -1,2 +1,2 @@
 patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator;patterns.AssociationPattern; patterns.DependencyPattern
-exclude = java asm
+exclude = java/ org/objectweb/asm/

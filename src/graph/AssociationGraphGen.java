@@ -49,8 +49,10 @@ public class AssociationGraphGen extends GraphGenDecorator {
                             if (graph.containsNode(type) != null
                                     && !graph.containsEdge(currentClass, referencedCell, Edge.Relation.ASSOCIATION,
                                     fieldTuple.cardinality)) {
-                                graph.addEdge(new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION,
-                                        fieldTuple.cardinality));
+                                Edge e = new Edge(currentClass, referencedCell, Edge.Relation.ASSOCIATION,
+                                        fieldTuple.cardinality);
+                                graph.addEdge(e);
+                                currentClass.addEdge(e);
                             }
                             if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
                                 fieldTuple.cardinality = Edge.Cardinality.MANY;

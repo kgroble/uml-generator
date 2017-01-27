@@ -25,7 +25,7 @@ public class ConfigSettings {
     private static final String ACCESS_TAG = "access";
 
     private static boolean isRecursive = false;
-    private static boolean showSynthetic = true;
+    private static boolean showSynthetic = false;
     private static List<String> whiteList = new ArrayList<>();
     private static List<String> blackList = new ArrayList<>();
     private static List<Pattern> patterns = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ConfigSettings {
 
     public static boolean classInBlacklist(String className) {
         for (String listedItem : blackList) {
-            if (className.contains(listedItem)) {
+            if (className.startsWith(listedItem)) {
                 return true;
             }
         }
@@ -74,7 +74,7 @@ public class ConfigSettings {
 
     public static void setupConfig(String[] args) throws IOException {
         for (String arg : args) {
-            if (arg.contains(SETTINGS_FLAG)) {
+            if (arg.startsWith(SETTINGS_FLAG)) {
                 properties = new Properties();
                 properties.load(new FileInputStream(arg.substring(SETTINGS_FLAG.length())));
                 break;

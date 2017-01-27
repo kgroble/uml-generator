@@ -39,7 +39,9 @@ public class ImplementsGraphGen extends GraphGenDecorator {
                     }
 
                     if  (graph.containsNode(implementedNode) != null) {
-                        graph.addEdge(new Edge(currentClass, implementedCell, Edge.Relation.IMPLEMENTS));
+                        Edge e = new Edge(currentClass, implementedCell, Edge.Relation.IMPLEMENTS);
+                        graph.addEdge(e);
+                        currentClass.addEdge(e);
                     }
                 }
             } catch (IOException e) {
