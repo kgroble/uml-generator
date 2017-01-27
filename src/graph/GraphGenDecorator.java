@@ -1,12 +1,24 @@
 package graph;
+
 import java.util.List;
 
 public abstract class GraphGenDecorator extends GraphGenerator {
-    protected GraphGenerator graphGen;
+    private GraphGenerator graphGen;
+
+    public GraphGenDecorator() {
+        super(false, AccessLevel.PRIVATE);
+        graphGen = null;
+    }
 
     public GraphGenDecorator(GraphGenerator graphGen) {
         super(graphGen.recursive, graphGen.access);
         this.graphGen = graphGen;
+    }
+
+    public void setInner(GraphGenerator inner) {
+        recursive = inner.recursive;
+        access = inner.access;
+        graphGen = inner;
     }
 
     @Override

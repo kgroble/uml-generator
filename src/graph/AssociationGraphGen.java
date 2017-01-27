@@ -8,6 +8,10 @@ import java.util.*;
 
 
 public class AssociationGraphGen extends GraphGenDecorator {
+    public AssociationGraphGen() {
+        super();
+    }
+
     public AssociationGraphGen(GraphGenerator graphGen) {
         super(graphGen);
     }
