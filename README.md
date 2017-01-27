@@ -21,6 +21,8 @@ To run in Eclipse:
 * Added bidirectional arrow functionality.
 * Integrated dependency functionality for method return types and method bodies.
 * Added cardinality labeling to single and bidirectional arrows.
+* Fixed various ConfigSettings bugs.
+* Added functionality for including or excluding Synthetic methods and fields.
 
 
 ## Kieran
