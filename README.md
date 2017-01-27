@@ -42,3 +42,5 @@ To run in Eclipse:
 * Implemented inheritance arrows and changed labels to HTML.
 * Implemented access-level field/method hiding.
 * Master UML maker/curator.
+* Created ConfigSettings
+* Created the Inheritance Pattern
