@@ -1,13 +1,7 @@
 package client;
 import exporters.Exporter;
 import exporters.FileExporter;
-import graph.AccessLevel;
-import graph.AssociationGraphGen;
-import graph.DependencyGraphGen;
-import graph.Graph;
-import graph.GraphGenerator;
-import graph.ImplementsGraphGen;
-import graph.SuperGraphGen;
+import graph.*;
 import graphviz.GraphvizElement;
 
 import java.io.IOException;
@@ -28,11 +22,7 @@ public class UMLGeneratorApp {
             System.err.println("Failed to read settings file.");
         }
 
-        GraphGenerator generator = new GraphGenerator(ConfigSettings.getRecursive(), ConfigSettings.getAccessLevel());
-        generator = new ImplementsGraphGen(generator);
-        generator = new SuperGraphGen(generator);
-        generator = new AssociationGraphGen(generator);
-        generator = new DependencyGraphGen(generator);
+        GraphGenerator generator = ConfigSettings.getGenerator();
 
         Graph g = generator.execute(ConfigSettings.getWhiteList());
 

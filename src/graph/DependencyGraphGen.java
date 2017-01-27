@@ -16,6 +16,10 @@ import org.objectweb.asm.tree.ClassNode;
  */
 public class DependencyGraphGen extends GraphGenDecorator {
 
+    public DependencyGraphGen() {
+        super();
+    }
+
     public DependencyGraphGen(GraphGenerator graphGen) {
         super(graphGen);
     }

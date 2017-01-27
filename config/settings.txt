@@ -1,2 +1,5 @@
-patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator;patterns.AssociationPattern; patterns.DependencyPattern
+patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator; patterns.AssociationPattern; patterns.DependencyPattern
 exclude = java/ org/objectweb/asm/
+generate = graph.SuperGraphGen graph.ImplementsGraphGen graph.AssociationGraphGen graph.DependencyGraphGen
+recursive = true
+include = client.UMLGeneratorApp

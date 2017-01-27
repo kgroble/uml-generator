@@ -1,6 +1,8 @@
 package client;
 
 import graph.AccessLevel;
+import graph.GraphGenDecorator;
+import graph.GraphGenerator;
 import patterns.Pattern;
 import patterns.PatternDecorator;
 
@@ -23,12 +25,14 @@ public class ConfigSettings {
     private static final String BLACKLIST_TAG = "exclude";
     private static final String PATTERNS_TAG = "patterns";
     private static final String ACCESS_TAG = "access";
+    private static final String GENERATOR_TAG = "generate";
 
     private static boolean isRecursive = false;
     private static boolean showSynthetic = false;
     private static List<String> whiteList = new ArrayList<>();
     private static List<String> blackList = new ArrayList<>();
     private static List<Pattern> patterns = new ArrayList<>();
+    private static GraphGenerator generator;
     private static AccessLevel accessLevel = AccessLevel.PRIVATE;
     private static Properties properties;
 
@@ -52,6 +56,10 @@ public class ConfigSettings {
 
     public static List<Pattern> getPatterns() {
         return patterns;
+    }
+
+    public static GraphGenerator getGenerator() {
+        return generator;
     }
 
     public static AccessLevel getAccessLevel() {
@@ -173,6 +181,23 @@ public class ConfigSettings {
                     whiteList.add(arg);
                 }
                 break;
+            }
+        }
+
+        GraphGenDecorator genDecorator;
+        generator = new GraphGenerator(isRecursive, accessLevel);
+        buff = properties.getProperty(GENERATOR_TAG, "graph.SuperGraphGen graph.ImplementsGraphGen "
+                + "graph.AssociationGraphGen graph.DependencyGraphGen");
+        if (!buff.equals("")) {
+            String[] gens = buff.split(" ");
+            for (int j = 0; j < gens.length; j++) {
+                try {
+                    genDecorator = (GraphGenDecorator) Class.forName(gens[j]).newInstance();
+                    genDecorator.setInner(generator);
+                    generator = genDecorator;
+                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -10,6 +10,10 @@ import java.util.HashSet;
 import java.io.IOException;
 
 public class SuperGraphGen extends GraphGenDecorator {
+    public SuperGraphGen() {
+        super();
+    }
+
     public SuperGraphGen(GraphGenerator graphGen) {
         super(graphGen);
     }

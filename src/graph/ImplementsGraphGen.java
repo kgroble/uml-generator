@@ -11,6 +11,10 @@ import client.ConfigSettings;
 import org.objectweb.asm.tree.ClassNode;
 
 public class ImplementsGraphGen extends GraphGenDecorator {
+    public ImplementsGraphGen() {
+        super();
+    }
+
     public ImplementsGraphGen(GraphGenerator graphGen) {
         super(graphGen);
     }
