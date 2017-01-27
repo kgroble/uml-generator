@@ -1,2 +1,3 @@
 patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator;patterns.AssociationPattern; patterns.DependencyPattern
-exclude = java/ org/objectweb/asm/
+exclude = java org/objectweb/asm/ sun
+include = java.awt.Window javax.swing.JFrame java.awt.Frame

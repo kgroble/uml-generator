@@ -19,7 +19,6 @@ public class InheritancePattern extends Pattern {
                     && (superCell = graphToSearch.containsNode(cell.getSuper())) != null
                     && !superCell.getName().equals("java/lang/Object")) {
                 g.addClass(cell);
-                g.addClass(superCell);
                 for (Edge edge : cell.getEdges()) {
                     if (edge.getDestination().equals(superCell)
                             && edge.getRelation() == Edge.Relation.EXTENDS) {
