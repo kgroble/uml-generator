@@ -1,5 +1,7 @@
 package client;
 
+import exporters.Exporter;
+import exporters.FileExporter;
 import graph.AccessLevel;
 import graph.GraphGenDecorator;
 import graph.GraphGenerator;
@@ -26,6 +28,7 @@ public class ConfigSettings {
     private static final String PATTERNS_TAG = "patterns";
     private static final String ACCESS_TAG = "access";
     private static final String GENERATOR_TAG = "generate";
+    private static final String EXPORTER_TAG = "exporter";
 
     private static boolean isRecursive = false;
     private static boolean showSynthetic = false;
@@ -35,6 +38,7 @@ public class ConfigSettings {
     private static GraphGenerator generator;
     private static AccessLevel accessLevel = AccessLevel.PRIVATE;
     private static Properties properties;
+    private static Exporter exporter;
 
     private ConfigSettings() {}
     
@@ -66,6 +70,10 @@ public class ConfigSettings {
         return accessLevel;
     }
 
+    public static Exporter getExporter() {
+        return exporter;
+    }
+
     public static String getAssociatedVal(String key) {
         return properties.getProperty(key);
     }
@@ -81,6 +89,7 @@ public class ConfigSettings {
     }
 
     public static void setupConfig(String[] args) throws IOException {
+        String[] localArgs = new String[0];
         for (String arg : args) {
             if (arg.startsWith(SETTINGS_FLAG)) {
                 properties = new Properties();
@@ -121,6 +130,30 @@ public class ConfigSettings {
             for (String packPref : buff.split(" ")) {
                 blackList.add(packPref);
             }
+        }
+
+        buff = properties.getProperty(EXPORTER_TAG, "exporters.FileExporter");
+        if (buff.contains("(")) {
+            localArgs = buff.substring(buff.indexOf('(') + 1, buff.indexOf(')')).split(",");
+            for (int i = 0; i < localArgs.length; i++) {
+                localArgs[i] = localArgs[i].trim();
+            }
+        }
+
+        try {
+            try {
+                exporter = (Exporter)Class.forName(buff.substring(0, buff.indexOf('('))).newInstance();
+                exporter.setArgs(localArgs);
+            } catch (StringIndexOutOfBoundsException e) {
+                exporter = (Exporter)Class.forName(buff).newInstance();
+                exporter.setArgs(localArgs);
+            }
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+            exporter = new FileExporter();
+            exporter.setArgs(localArgs);
+
+            localArgs = new String[0];
         }
 
         buff = properties.getProperty(PATTERNS_TAG, "");

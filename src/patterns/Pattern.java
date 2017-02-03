@@ -169,4 +169,7 @@ public abstract class Pattern {
 
     }
 
+    public void setArgs(String[] args) {
+        // Do nothing
+    }
 }

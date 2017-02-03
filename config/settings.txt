@@ -1,4 +1,3 @@
-patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator;patterns.AssociationPattern; patterns.DependencyPattern
+patterns = patterns.SingletonPattern patterns.SingletonPatternDecorator; patterns.AssociationPattern; patterns.DependencyPattern; patterns.DependencyPattern patterns.ViolateDepInvPatternDecorator patterns.PurplePatternDecorator; patterns.InheritancePattern patterns.OrangePatternDecorator;
 exclude = java org/objectweb/asm/ sun
-include = java.awt.Window javax.swing.JFrame java.awt.Frame
-
+exporter = exporters.FileExporter(./output/out.dot)

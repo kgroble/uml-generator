@@ -34,7 +34,7 @@ public class UMLGeneratorApp {
         }
 
         List<GraphvizElement> elements = parser.parseGraph(g);
-        Exporter fileExporter = new FileExporter("./output/out.dot");
-        fileExporter.export(elements);
+        Exporter exporter = ConfigSettings.getExporter();
+        exporter.export(elements);
     }
 }

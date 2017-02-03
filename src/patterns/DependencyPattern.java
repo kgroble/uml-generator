@@ -16,7 +16,7 @@ public class DependencyPattern extends Pattern {
     public Graph detect(Graph graphToSearch) {
         Graph result = new Graph();
         
-        for(Edge edge : graphToSearch.getEdges()){
+        for(Edge edge : graphToSearch.getEdges()) {
             if (edge.getRelation() == Edge.Relation.DEPENDS
                 && !graphToSearch.containsEdge(edge.getOrigin(), edge.getDestination(), Edge.Relation.ASSOCIATION)) {
                 result.addEdge(edge);
@@ -28,7 +28,7 @@ public class DependencyPattern extends Pattern {
     
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected){
-        List<GraphvizElement> elements = new ArrayList<>();
+        List<GraphvizElement> elements = super.toGraphviz(detected);
         Map<Edge, GraphvizEdge> edgeToGVEdge = new HashMap<>();
         
         // Assume this only deals with edges

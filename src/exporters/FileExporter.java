@@ -5,16 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class FileExporter implements Exporter {
+public class FileExporter extends Exporter {
     private String outFile;
 
-    /**
-     * Creates a new FileExporter and sets its output file to file.
-     *
-     * @param file The file at which to output the Graphviz code.
-     */
-    public FileExporter(String file) {
-        this.outFile = file;
+    @Override
+    public void setArgs(String[] args) {
+        if (args.length < 1) {
+            outFile = "./output/out.dot";
+        } else {
+            outFile = args[0];
+        }
     }
 
     @Override

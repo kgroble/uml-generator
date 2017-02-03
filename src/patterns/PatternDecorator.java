@@ -28,4 +28,9 @@ public abstract class PatternDecorator extends Pattern {
     public void setInner(Pattern inner) {
         this.innerPattern = inner;
     }
+
+    @Override
+    public void setArgs(String[] args) {
+        innerPattern.setArgs(args);
+    }
 }

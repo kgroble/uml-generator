@@ -3,12 +3,17 @@ import graphviz.GraphvizElement;
 
 import java.util.List;
 
-public interface Exporter {
+public abstract class Exporter {
+
+    public Exporter() {}
+
+    public abstract void setArgs(String[] args);
+
     /**
      * Exports the given GraphviElements into some final presentable format for
      * the end user.
      *
      * @param elements A list of all the GraphvizElements to export.
      */
-    public void export(List<GraphvizElement> elements);
+    public abstract void export(List<GraphvizElement> elements);
 }

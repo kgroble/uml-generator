@@ -1,4 +1,5 @@
 package patterns;
+import graph.AssociationGraphGen;
 import graph.Edge;
 import graph.Graph;
 import graphviz.GraphvizEdge;
@@ -28,10 +29,10 @@ public class AssociationPattern extends Pattern {
         
         return result;
     }
-    
+
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected){
-        List<GraphvizElement> elements = new ArrayList<>();
+        List<GraphvizElement> elements = super.toGraphviz(detected);
         Map<Edge, GraphvizEdge> edgeToGVEdge = new HashMap<>();
         
         // Assume this only deals with edges
