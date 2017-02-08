@@ -123,7 +123,7 @@ public class ClassCell {
     public List<FieldNode> getFieldNodes() {
         return getFieldNodes(this.renderAccess);
     }
-    
+
     public List<FieldNode> getFieldNodes(AccessLevel level) {
         List<FieldNode> retFields = new ArrayList<>();
 
@@ -135,11 +135,11 @@ public class ClassCell {
 
         return retFields;
     }
-    
+
     public List<Field> getFields() {
         return getFields(this.renderAccess);
     }
-    
+
     public List<Field> getFields(AccessLevel level) {
         List<Field> retFields = new ArrayList<>();
 
@@ -153,10 +153,10 @@ public class ClassCell {
 
         return retFields;
     }
-    
+
     private List<Field> getMethodTypes() {
         List<Field> types = new ArrayList<>();
-        
+
         String sig = "";
         for (MethodNode methodNode : getMethods()) {
             if (methodNode.signature != null) {
@@ -164,7 +164,7 @@ public class ClassCell {
             } else {
                sig = methodNode.desc;
             }
-            
+
             String args = "";
             int startArgs = sig.indexOf('(');
             int endArgs = sig.indexOf(')');
@@ -172,13 +172,13 @@ public class ClassCell {
                 args = sig.substring(startArgs + 1, endArgs);
                 types.add(new Field(args));
             }
-            
+
             String ret = sig.substring(endArgs + 1);
             types.add(new Field(ret));
         }
-        
 
-        
+
+
         return types;
     }
 
@@ -199,7 +199,7 @@ public class ClassCell {
 
         return retMethods;
     }
-    
+
     public List<MethodNode> getMethods(AccessLevel level) {
         List<MethodNode> retMethods = new ArrayList<>();
 
@@ -247,7 +247,7 @@ public class ClassCell {
     public List<Field> getDependencies() {
         List<Field> dependencies = new ArrayList<>();
 //        Set<String> included = new HashSet<>();
-        
+
         for (MethodNode methodNode : getMethods()) {
             dependencies.addAll(getInnerDependencies(methodNode));
         }

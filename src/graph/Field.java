@@ -45,9 +45,4 @@ public class Field {
     public List<Field> getTemplate() {
         return template;
     }
-    
-    //TODO: REMOVE!
-    public ClassCell foo() {
-        return null;
-    }
 }
