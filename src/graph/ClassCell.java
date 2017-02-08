@@ -12,6 +12,10 @@ public class ClassCell {
     private List<Edge> edges;
     private AccessLevel renderAccess;
 
+    public AccessLevel getRenderAccess() {
+        return renderAccess;
+    }
+
     /**
      * Initializes a new ClassCell for the given class.
      *

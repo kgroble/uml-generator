@@ -2,7 +2,7 @@ package patterns;
 
 import graph.Graph;
 
-public class MalformedAdapterPattern extends Pattern {
+public class MalformedDecoratorPattern extends Pattern {
 
     @Override
     public Graph detect(Graph graphToSearch) {

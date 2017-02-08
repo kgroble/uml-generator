@@ -30,12 +30,11 @@ public class AssociationPattern extends Pattern {
         return result;
     }
 
-    @Override
+    /*@Override
     public List<GraphvizElement> toGraphviz(Graph detected){
         List<GraphvizElement> elements = super.toGraphviz(detected);
         Map<Edge, GraphvizEdge> edgeToGVEdge = new HashMap<>();
         
-        // Assume this only deals with edges
         for(Edge edge : detected.getEdges()) {
             String from = edge.getOrigin().getPrettyName();
             String to = edge.getDestination().getPrettyName();
@@ -74,6 +73,6 @@ public class AssociationPattern extends Pattern {
         }
 
         return elements;
-    }
+    }*/
 
 }

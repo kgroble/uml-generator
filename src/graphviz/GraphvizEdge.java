@@ -33,7 +33,7 @@ public class GraphvizEdge extends GraphvizElement {
 
     @Override
     public String getIdentifier() {
-        String names = fromNode.compareTo(toNode) < 0 ? fromNode + "-" + toNode : toNode + fromNode;
+        String names = fromNode.compareTo(toNode) < 0 ? fromNode + "-" + toNode : toNode + "-" + fromNode;
         return names + "<" + type + ">";
     }
 
