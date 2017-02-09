@@ -16,7 +16,7 @@ import graphviz.GraphvizEdge;
 import graphviz.GraphvizElement;
 import graphviz.GraphvizNode;
 
-public class DecoratorPattern extends Pattern {
+public class MalformedDecoratorPattern extends Pattern {
     
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected) {
@@ -45,6 +45,7 @@ public class DecoratorPattern extends Pattern {
             if (gvE instanceof GraphvizNode) {
                 gvE.addAttribute("style", "\"filled\"");
                 gvE.addAttribute("fillcolor", "\"green\"");
+                gvE.addAttribute("color", "\"red\"");
                 if (decoratorNames.contains(gvE.getIdentifier())) {
                     String label = gvE.getAttribute("label");
                     label = "<{" + "&lt;&lt;Decorator&gt;&gt;<br align=\"center\"/>" + label.substring(2);
@@ -71,12 +72,6 @@ public class DecoratorPattern extends Pattern {
            newInstances = false;
            for (ClassCell potentialDecorator : graphToSearch.getCells()) {
                boolean alreadyFound = decorators.contains(potentialDecorator);
-               /*for (DecoratorCell c : decorators) {
-                   if (c.equals(potentialDecorator)) {
-                       alreadyFound = true;
-                       break;
-                   }
-               }*/
                if (alreadyFound) {
                    continue;
                }
@@ -122,7 +117,7 @@ public class DecoratorPattern extends Pattern {
                            }
                        }
                        
-                       if (!overrides) {
+                       if (overrides) {
                            continue;
                        }
                        

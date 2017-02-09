@@ -9,7 +9,9 @@ import graphviz.GraphvizGlobalParams;
 import graphviz.GraphvizNode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -65,27 +67,97 @@ public abstract class Pattern {
         }
 
         //edges
+        Map<Edge, GraphvizEdge> edgeToGVEdge = new HashMap<>();
         for(Edge edge : detected.getEdges()) {
             String from = edge.getOrigin().getPrettyName();
             String to = edge.getDestination().getPrettyName();
 
             GraphvizEdge gvEdge = new GraphvizEdge(from, to, edge.getRelation().toString());
+            boolean wasDuplicate = false;
             switch (edge.getRelation()) {
             case IMPLEMENTS:
                 gvEdge.addAttribute("arrowhead", "\"onormal\"");
                 gvEdge.addAttribute("style", "\"dashed\"");
+                elements.add(gvEdge);
                 break;
             case EXTENDS:
                 gvEdge.addAttribute("arrowhead", "\"onormal\"");
+                elements.add(gvEdge);
                 break;
             case ASSOCIATION:
+                wasDuplicate = false;
+                
+                for (Edge otherEdge : edgeToGVEdge.keySet()) {
+                    if (from.equals(otherEdge.getOrigin().getPrettyName())
+                            && to.equals(otherEdge.getDestination().getPrettyName())) {
+                        if (otherEdge.getCardinality() == Edge.Cardinality.ONE
+                                && edge.getCardinality() == Edge.Cardinality.MANY) {
+                            edgeToGVEdge.remove(otherEdge);
+                            break;
+                        } else {
+                            wasDuplicate = true;
+                            break;
+                        }
+                    } else if (from.equals(otherEdge.getDestination().getPrettyName())
+                            && to.equals(otherEdge.getOrigin().getPrettyName())
+                            && edge.getRelation() == Edge.Relation.ASSOCIATION
+                            && otherEdge.getRelation() == Edge.Relation.ASSOCIATION){
+                        edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");
+                        edgeToGVEdge.get(otherEdge).addAttribute("taillabel", "\"" + edge.getCardinality().toString() + "\"");
+                        wasDuplicate = true;
+                        break;
+                    }
+                }
+
+                if(!wasDuplicate){
+                    gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
+                    gvEdge.addAttribute("labeldistance", "1.7");
+                    elements.add(gvEdge);
+                    edgeToGVEdge.put(edge, gvEdge); 
+                }
+                
+                break;
             case DEPENDS:
-                continue;
+                wasDuplicate = false;
+                /*if (detected.containsEdge(edge.getOrigin(), edge.getDestination(), Edge.Relation.ASSOCIATION)) {
+                    break;
+                }*/
+                
+                for(Edge otherEdge : edgeToGVEdge.keySet()){
+                    if (from.equals(otherEdge.getOrigin().getPrettyName())
+                            && to.equals(otherEdge.getDestination().getPrettyName())) {
+                        if (otherEdge.getCardinality() == Edge.Cardinality.ONE
+                                && edge.getCardinality() == Edge.Cardinality.MANY) {
+                            edgeToGVEdge.remove(otherEdge);
+                            break;
+                        } else {
+                            wasDuplicate = true;
+                            break;
+                        }
+                    } else if (from.equals(otherEdge.getDestination().getPrettyName())
+                            && to.equals(otherEdge.getOrigin().getPrettyName())
+                            && edge.getRelation() == Edge.Relation.DEPENDS
+                            && otherEdge.getRelation() == Edge.Relation.DEPENDS){
+                        edgeToGVEdge.get(otherEdge).addAttribute("dir", "\"both\"");
+                        edgeToGVEdge.get(otherEdge).addAttribute("taillabel", "\"" + edge.getCardinality().toString() + "\"");
+                        wasDuplicate = true;
+                        break;
+                    }
+                }
+
+                if(!wasDuplicate){
+                    gvEdge.addAttribute("headlabel", "\"" + edge.getCardinality().toString() + "\"");
+                    gvEdge.addAttribute("labeldistance", "1.7");
+                    gvEdge.addAttribute("style", "\"dashed\"");
+                    elements.add(gvEdge);
+                    edgeToGVEdge.put(edge, gvEdge); 
+                }
+                
+                break;
             default:
                 System.err.println("Pattern::Unrecognized relation: " + edge.getRelation());
                 break;
             }
-            elements.add(gvEdge);
         }
 
         return elements;

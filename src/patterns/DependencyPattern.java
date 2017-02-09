@@ -26,7 +26,7 @@ public class DependencyPattern extends Pattern {
         return result;
     }
     
-    @Override
+   /* @Override
     public List<GraphvizElement> toGraphviz(Graph detected){
         List<GraphvizElement> elements = super.toGraphviz(detected);
         Map<Edge, GraphvizEdge> edgeToGVEdge = new HashMap<>();
@@ -71,6 +71,6 @@ public class DependencyPattern extends Pattern {
         }
 
         return elements;
-    }
+    }*/
 
 }
