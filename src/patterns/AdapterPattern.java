@@ -1,8 +1,10 @@
 package patterns;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.MethodNode;
 
 import graph.AccessLevel;
@@ -18,40 +20,49 @@ public class AdapterPattern extends Pattern {
     
     @Override
     public List<GraphvizElement> toGraphviz(Graph detected) {
-        String adapteeName = "", targetName = "", adapterName = "";
+        List<String> adapteeNames, targetNames, adapterNames;
+        adapteeNames = new ArrayList<>();
+        targetNames = new ArrayList<>();
+        adapterNames = new ArrayList<>();
         for (ClassCell c : detected.getCells()) {
             if (c instanceof AdapteeCell) {
-                adapteeName = c.getName();
+                adapteeNames.add(c.getPrettyName());
             } else if (c instanceof TargetCell) {
-                targetName = c.getName();
+                targetNames.add(c.getPrettyName());
             } else if (c instanceof AdapterCell) {
-                adapterName = c.getName();
+                adapterNames.add(c.getPrettyName());
             }
         }
         
-        String edgeNames = adapterName.compareTo(adapteeName) < 0 ? adapterName + "-" + adapteeName : adapteeName + "-" + adapterName;
-        String adaptsName = edgeNames + "<" + Edge.Relation.ASSOCIATION + ">";
-
+        List<String> adaptsNames = new ArrayList<>();
+        String edgeName;
+        for (String adapterName: adapterNames) {
+            for (String adapteeName :adapteeNames) {
+                edgeName = adapterName.compareTo(adapteeName) < 0 ? adapterName + "-" + adapteeName : adapteeName + "-" + adapterName;
+                adaptsNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">");
+            }
+        }
+                
         List<GraphvizElement> gvElements = super.toGraphviz(detected);
         for (GraphvizElement gvE : gvElements) {
             if (gvE instanceof GraphvizNode) {
                 gvE.addAttribute("style", "\"filled\"");
-                gvE.addAttribute("fillcolor", "\"red\"");
-                if (gvE.getIdentifier().equals(adapteeName)) {
+                gvE.addAttribute("fillcolor", "\"red4\"");
+                if (adapteeNames.contains(gvE.getIdentifier())) {
                     String label = gvE.getAttribute("label");
                     label = "<{" + "&lt;&lt;Adaptee&gt;&gt;<br align=\"center\"/>" + label.substring(2);
                     gvE.addAttribute("label", label);
-                } else if (gvE.getIdentifier().equals(adapterName)) {
+                } else if (adapterNames.contains(gvE.getIdentifier())) {
                     String label = gvE.getAttribute("label");
                     label = "<{" + "&lt;&lt;Adapter&gt;&gt;<br align=\"center\"/>" + label.substring(2);
                     gvE.addAttribute("label", label);
-                } else if (gvE.getIdentifier().equals(targetName)) {
+                } else if (targetNames.contains(gvE.getIdentifier())) {
                     String label = gvE.getAttribute("label");
                     label = "<{" + "&lt;&lt;Target&gt;&gt;<br align=\"center\"/>" + label.substring(2);
                     gvE.addAttribute("label", label);
                 }
             } else if (gvE instanceof GraphvizEdge
-                        && gvE.getIdentifier().equals(adaptsName)) {
+                        && adaptsNames.contains(gvE.getIdentifier())) {
                 gvE.addAttribute("label", "\"&lt;&lt;adapts&gt;&gt;\"");
             }
         }
@@ -71,6 +82,10 @@ public class AdapterPattern extends Pattern {
                     target = e.getDestination();
                     boolean overrides = true;
                     for (MethodNode n : target.getMethods(AccessLevel.PUBLIC)) {
+                        if (n.name.equals("<init>")
+                                || (n.access & Opcodes.ACC_FINAL) != 0) {
+                            continue;
+                        }
                         boolean found = false;
                         for (MethodNode n2 : potentialAdapter.getMethods(AccessLevel.PUBLIC)) {
                             if (n2.name.equals(n.name)) {
