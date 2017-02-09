@@ -125,7 +125,7 @@ public class DecoratorPattern extends Pattern {
                        if (!overrides) {
                            continue;
                        }
-                       
+
                        for (Edge e2: potentialDecorator.getEdges()) {
                            if (e2.getRelation() == Edge.Relation.ASSOCIATION) {
                                Edge decoratesEdge = e2;
@@ -133,7 +133,7 @@ public class DecoratorPattern extends Pattern {
                                    continue;
                                }
                                boolean constructorFound = false;
-                               for (MethodNode n : potentialDecorator.getMethods(AccessLevel.PUBLIC)) {
+                               for (MethodNode n : potentialDecorator.getMethods(AccessLevel.PRIVATE)) {
                                    if (n.name.equals("<init>")) {
                                        String sig = n.desc;
                                        int startArgs = sig.indexOf('(');

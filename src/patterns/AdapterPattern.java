@@ -112,7 +112,7 @@ public class AdapterPattern extends Pattern {
                                 continue;
                             }
                             boolean constructorFound = false;
-                            for (MethodNode n : potentialAdapter.getMethods(AccessLevel.PUBLIC)) {
+                            for (MethodNode n : potentialAdapter.getMethods(AccessLevel.PRIVATE)) {
                                 if (n.name.equals("<init>")) {
                                     String sig = n.desc;
                                     int startArgs = sig.indexOf('(');

@@ -46,6 +46,7 @@ public class MalformedDecoratorPattern extends Pattern {
                 gvE.addAttribute("style", "\"filled\"");
                 gvE.addAttribute("fillcolor", "\"green\"");
                 gvE.addAttribute("color", "\"red\"");
+                gvE.addAttribute("fontcolor", "\"red\"");
                 if (decoratorNames.contains(gvE.getIdentifier())) {
                     String label = gvE.getAttribute("label");
                     label = "<{" + "&lt;&lt;Decorator&gt;&gt;<br align=\"center\"/>" + label.substring(2);
@@ -128,7 +129,7 @@ public class MalformedDecoratorPattern extends Pattern {
                                    continue;
                                }
                                boolean constructorFound = false;
-                               for (MethodNode n : potentialDecorator.getMethods(AccessLevel.PUBLIC)) {
+                               for (MethodNode n : potentialDecorator.getMethods(AccessLevel.PRIVATE)) {
                                    if (n.name.equals("<init>")) {
                                        String sig = n.desc;
                                        int startArgs = sig.indexOf('(');
