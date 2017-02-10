@@ -79,6 +79,9 @@ The format for the file is very simple, specifically in the form `var
 * Added cardinality labeling to single and bidirectional arrows.
 * Fixed various ConfigSettings bugs.
 * Added functionality for including or excluding Synthetic methods and fields.
+* Added the ability to specify arguments for Patterns and PatternDecorators within the config file.
+* Added the ability to blacklist classes when considering dependency inversion principle violations.
+* Added a ColorPatternDecorator that accepts colors as arguments within the config file (and removed existing decorators such as PurplePatternDecorator.)
 
 
 ## Kieran
