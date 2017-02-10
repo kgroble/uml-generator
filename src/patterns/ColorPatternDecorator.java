@@ -8,13 +8,15 @@ import java.util.List;
 /**
  * Created by lewis on 1/22/17.
  */
-public class OrangePatternDecorator extends PatternDecorator {
+public class ColorPatternDecorator extends PatternDecorator {
+    String color;
 
-    public OrangePatternDecorator() {
+    public ColorPatternDecorator() {
         super();
+        color = "black";
     }
 
-    public OrangePatternDecorator(Pattern pattern) {
+    public ColorPatternDecorator(Pattern pattern) {
         super(pattern);
     }
 
@@ -22,9 +24,16 @@ public class OrangePatternDecorator extends PatternDecorator {
     public List<GraphvizElement> toGraphviz(Graph detected) {
         List<GraphvizElement> elements = super.toGraphviz(detected);
         for (GraphvizElement element : elements) {
-            element.addAttribute("color", "\"orange\"");
+            element.addAttribute("color", "\""+color+"\"");
         }
 
         return elements;
+    }
+    
+    @Override
+    public void setArgs(String[] args){
+        if (args.length > 0){
+            color = args[0];            
+        }
     }
 }

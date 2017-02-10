@@ -41,7 +41,75 @@ public class ConfigSettings {
     private static Exporter exporter;
 
     private ConfigSettings() {}
-    
+
+    public static void setIsRecursive(boolean recurse) {
+        isRecursive = recurse;
+    }
+
+    public static void setShowSynthetic(boolean synth) {
+        showSynthetic = synth;
+    }
+
+    public static void addToWhiteList(String name) {
+        whiteList.add(name);
+    }
+
+    public static void addToWhiteList(List<String> names) {
+        whiteList.addAll(names);
+    }
+
+    public static void removeFromWhiteList(String name) {
+        whiteList.remove(name);
+    }
+
+    public static void removeFromWhiteList(List<String> names) {
+        whiteList.removeAll(names);
+    }
+
+    public static void addToBlackList(String name) {
+        blackList.add(name);
+    }
+
+    public static void addToBlackList(List<String> names) {
+        blackList.addAll(names);
+    }
+
+    public static void removeFromBlackList(String name) {
+        blackList.remove(name);
+    }
+
+    public static void removeFromBlackList(List<String> names) {
+        blackList.removeAll(names);
+    }
+
+    public static void addToPatterns(Pattern patt) {
+        patterns.add(patt);
+    }
+
+    public static void addToPatterns(List<Pattern> patts) {
+        patterns.addAll(patts);
+    }
+
+    public static void removeFromPatterns(Pattern patt) {
+        patterns.remove(patt);
+    }
+
+    public static void removeFromPatterns(List<Pattern> patts) {
+        patterns.removeAll(patts);
+    }
+
+    public static void setGenerator(GraphGenerator gen) {
+        generator = gen;
+    }
+
+    public static void setAccessLevel(AccessLevel access) {
+        accessLevel = access;
+    }
+
+    public static void setExporter(Exporter exp) {
+        exporter = exp;
+    }
+
     public static boolean getRecursive() {
         return isRecursive;
     }
@@ -128,7 +196,7 @@ public class ConfigSettings {
         buff = properties.getProperty(BLACKLIST_TAG, "");
         if (!buff.equals("")) {
             for (String packPref : buff.split(" ")) {
-                blackList.add(packPref);
+                blackList.add(packPref.replace('.', '/'));
             }
         }
 
@@ -156,7 +224,7 @@ public class ConfigSettings {
             localArgs = new String[0];
         }
 
-        buff = properties.getProperty(PATTERNS_TAG, "");
+        buff = properties.getProperty(PATTERNS_TAG, "patterns.IdentityPattern");
         if (!buff.equals("")) {
             String[] patChains = buff.split(";");
             for (int j = 0; j < patChains.length; j++) {
@@ -168,11 +236,14 @@ public class ConfigSettings {
                 }
 
                 try {
-                    patt = (Pattern) Class.forName(classNames[0]).newInstance();
+                    
+//                    patt = (Pattern) Class.forName(classNames[0]).newInstance();
+                    patt = makePatternFromString(classNames[0]);
 
 
                     for (int i = 1; i < classNames.length; i++) {
-                        dec = (PatternDecorator) Class.forName(classNames[i]).newInstance();
+//                        dec = (PatternDecorator) Class.forName(classNames[i]).newInstance();
+                        dec = (PatternDecorator) makePatternFromString(classNames[i]);
                         dec.setInner(patt);
 
                         patt = dec;
@@ -233,5 +304,22 @@ public class ConfigSettings {
                 }
             }
         }
+    }
+    
+    public static Pattern makePatternFromString(String full) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+        String[] localArgs = new String[0];
+        String name = "";
+        name = full;
+        if (full.contains("(")) {
+            name = full.substring(0, full.indexOf("("));
+            localArgs = full.substring(full.indexOf('(') + 1, full.indexOf(')')).split(",");
+            for (int i = 0; i < localArgs.length; i++) {
+                localArgs[i] = localArgs[i].trim();
+            }
+        }
+        Pattern result = (Pattern) Class.forName(name).newInstance();
+        
+        result.setArgs(localArgs);
+        return result;
     }
 }

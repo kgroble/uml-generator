@@ -28,9 +28,9 @@ public class UMLGeneratorApp {
 
         Parser parser = new Parser();
         List<Pattern> patterns = ConfigSettings.getPatterns();
-        parser.addPattern(new IdentityPattern(), 0);
+//        parser.addPattern(new IdentityPattern(), 0);
         for (int i = 0; i < patterns.size(); i++) {
-            parser.addPattern(patterns.get(i), i + 1);
+            parser.addPattern(patterns.get(i), i);
         }
 
         List<GraphvizElement> elements = parser.parseGraph(g);
