@@ -1,3 +1,5 @@
+![UML](http://i.imgur.com/nWZANfA.png)
+
 # Running instructions
 To run in Eclipse:
 1. Create a new run configuration (`Run -> Run Configurations...`). Select `UML-Generator` as the project and `UMLGeneratorApp` as the main class.
@@ -93,6 +95,7 @@ The format for the file is very simple, specifically in the form `var
 * Added drawing of dependency arrows
 * Detection and rendering of Singleton patterns
 * Bidirectional highlighting/project setup
+* Adapter, Decorator, Bad Decorator detection implementatio
 
 
 ## Lewis
