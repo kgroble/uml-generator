@@ -67,9 +67,14 @@ public class DependencyGraphGen extends GraphGenDecorator {
                                 graph.addEdge(e);
                                 currentClass.addEdge(e);
                             }
-                            if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
-                                fieldTuple.cardinality = Edge.Cardinality.MANY;
+                            try {
+                                if (Collection.class.isAssignableFrom(Class.forName(type.name.replace("/", ".")))) {
+                                    fieldTuple.cardinality = Edge.Cardinality.MANY;
+                                } 
+                            } catch (ClassNotFoundException|NoClassDefFoundError e) {
+                                // probably not a collection
                             }
+                            
                         }
                     }
 
@@ -80,8 +85,6 @@ public class DependencyGraphGen extends GraphGenDecorator {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

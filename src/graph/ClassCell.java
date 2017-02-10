@@ -306,6 +306,8 @@ public class ClassCell {
 
             reader.accept(superNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
+            System.out.println(this.classNode.superName + " super of " + this.classNode.name);
+            System.out.flush();
             e.printStackTrace();
             return null;
         }
