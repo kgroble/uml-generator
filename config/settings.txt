@@ -1,3 +1,4 @@
-patterns = patterns.AdapterPattern
+patterns = patterns.IdentityPattern; patterns.IdentityPattern patterns.ViolateDepInvPatternDecorator(java.lang.String) patterns.ColorPatternDecorator(purple);
 recursive = false;
 exporter = exporters.FileExporter(./output/out.dot)
+include = java.lang.String java.lang.Object
