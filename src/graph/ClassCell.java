@@ -136,7 +136,7 @@ public class ClassCell {
      * @return A list of all the fields in the stored class that meet
      * the access level.
      */
-    public List<FieldNovsde> getFieldNodes(AccessLevel level) {
+    public List<FieldNode> getFieldNodes(AccessLevel level) {
         List<FieldNode> retFields = new ArrayList<>();
 
         for (Object field : classNode.fields) {

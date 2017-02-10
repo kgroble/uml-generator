@@ -36,7 +36,8 @@ public class DecoratorPattern extends Pattern {
         for (String decoratorName: decoratorNames) {
             for (String componentName :componentNames) {
                 edgeName = decoratorName.compareTo(componentName) < 0 ? decoratorName + "-" + componentName : componentName + "-" + decoratorName;
-                decoratesNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">");
+                decoratesNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">true");
+                decoratesNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">false");
             }
         }
                 
@@ -71,12 +72,6 @@ public class DecoratorPattern extends Pattern {
            newInstances = false;
            for (ClassCell potentialDecorator : graphToSearch.getCells()) {
                boolean alreadyFound = decorators.contains(potentialDecorator);
-               /*for (DecoratorCell c : decorators) {
-                   if (c.equals(potentialDecorator)) {
-                       alreadyFound = true;
-                       break;
-                   }
-               }*/
                if (alreadyFound) {
                    continue;
                }
@@ -142,7 +137,7 @@ public class DecoratorPattern extends Pattern {
                                        if (endArgs - startArgs > 1) {
                                            String args = sig.substring(startArgs + 1, endArgs);
                                            Field field = new Field(args);
-                                           if (field.getType().name.equals(component.getName())) {
+                                           if (field.getType() != null && field.getType().name.equals(component.getName())) {
                                                constructorFound = true;
                                                break;
                                            }

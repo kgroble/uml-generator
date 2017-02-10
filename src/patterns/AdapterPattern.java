@@ -39,7 +39,8 @@ public class AdapterPattern extends Pattern {
         for (String adapterName: adapterNames) {
             for (String adapteeName :adapteeNames) {
                 edgeName = adapterName.compareTo(adapteeName) < 0 ? adapterName + "-" + adapteeName : adapteeName + "-" + adapterName;
-                adaptsNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">");
+                adaptsNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">true");
+                adaptsNames.add(edgeName + "<" + Edge.Relation.ASSOCIATION + ">false");
             }
         }
                 
@@ -121,7 +122,7 @@ public class AdapterPattern extends Pattern {
                                     if (endArgs - startArgs > 1) {
                                         String args = sig.substring(startArgs + 1, endArgs);
                                         Field field = new Field(args);
-                                        if (field.getType().name.equals(adaptee.getName())) {
+                                        if (field.getType() != null && field.getType().name.equals(adaptee.getName())) {
                                             constructorFound = true;
                                             break;
                                         }
