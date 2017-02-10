@@ -128,7 +128,15 @@ public class ClassCell {
         return getFieldNodes(this.renderAccess);
     }
 
-    public List<FieldNode> getFieldNodes(AccessLevel level) {
+    /**
+     * Returns a list of all the fields in the stored class that are at or
+     * above the provided render access.
+     *
+     * @param level The level at or above which to return fields.
+     * @return A list of all the fields in the stored class that meet
+     * the access level.
+     */
+    public List<FieldNovsde> getFieldNodes(AccessLevel level) {
         List<FieldNode> retFields = new ArrayList<>();
 
         for (Object field : classNode.fields) {

@@ -41,7 +41,75 @@ public class ConfigSettings {
     private static Exporter exporter;
 
     private ConfigSettings() {}
-    
+
+    public static void setIsRecursive(boolean recurse) {
+        isRecursive = recurse;
+    }
+
+    public static void setShowSynthetic(boolean synth) {
+        showSynthetic = synth;
+    }
+
+    public static void addToWhiteList(String name) {
+        whiteList.add(name);
+    }
+
+    public static void addToWhiteList(List<String> names) {
+        whiteList.addAll(names);
+    }
+
+    public static void removeFromWhiteList(String name) {
+        whiteList.remove(name);
+    }
+
+    public static void removeFromWhiteList(List<String> names) {
+        whiteList.removeAll(names);
+    }
+
+    public static void addToBlackList(String name) {
+        blackList.add(name);
+    }
+
+    public static void addToBlackList(List<String> names) {
+        blackList.addAll(names);
+    }
+
+    public static void removeFromBlackList(String name) {
+        blackList.remove(name);
+    }
+
+    public static void removeFromBlackList(List<String> names) {
+        blackList.removeAll(names);
+    }
+
+    public static void addToPatterns(Pattern patt) {
+        patterns.add(patt);
+    }
+
+    public static void addToPatterns(List<Pattern> patts) {
+        patterns.addAll(patts);
+    }
+
+    public static void removeFromPatterns(Pattern patt) {
+        patterns.remove(patt);
+    }
+
+    public static void removeFromPatterns(List<Pattern> patts) {
+        patterns.removeAll(patts);
+    }
+
+    public static void setGenerator(GraphGenerator gen) {
+        generator = gen;
+    }
+
+    public static void setAccessLevel(AccessLevel access) {
+        accessLevel = access;
+    }
+
+    public static void setExporter(Exporter exp) {
+        exporter = exp;
+    }
+
     public static boolean getRecursive() {
         return isRecursive;
     }
