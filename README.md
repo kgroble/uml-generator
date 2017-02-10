@@ -1,3 +1,5 @@
+![UML](http://i.imgur.com/nWZANfA.png)
+
 # Running instructions
 To run in Eclipse:
 1. Create a new run configuration (`Run -> Run Configurations...`). Select `UML-Generator` as the project and `UMLGeneratorApp` as the main class.
@@ -79,6 +81,9 @@ The format for the file is very simple, specifically in the form `var
 * Added cardinality labeling to single and bidirectional arrows.
 * Fixed various ConfigSettings bugs.
 * Added functionality for including or excluding Synthetic methods and fields.
+* Added the ability to specify arguments for Patterns and PatternDecorators within the config file.
+* Added the ability to blacklist classes when considering dependency inversion principle violations.
+* Added a ColorPatternDecorator that accepts colors as arguments within the config file (and removed existing decorators such as PurplePatternDecorator.)
 
 
 ## Kieran
@@ -90,6 +95,7 @@ The format for the file is very simple, specifically in the form `var
 * Added drawing of dependency arrows
 * Detection and rendering of Singleton patterns
 * Bidirectional highlighting/project setup
+* Adapter, Decorator, Bad Decorator detection implementatio
 
 
 ## Lewis
