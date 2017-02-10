@@ -128,7 +128,7 @@ public class ConfigSettings {
         buff = properties.getProperty(BLACKLIST_TAG, "");
         if (!buff.equals("")) {
             for (String packPref : buff.split(" ")) {
-                blackList.add(packPref);
+                blackList.add(packPref.replace('.', '/'));
             }
         }
 
@@ -156,7 +156,7 @@ public class ConfigSettings {
             localArgs = new String[0];
         }
 
-        buff = properties.getProperty(PATTERNS_TAG, "");
+        buff = properties.getProperty(PATTERNS_TAG, "patterns.IdentityPattern");
         if (!buff.equals("")) {
             String[] patChains = buff.split(";");
             for (int j = 0; j < patChains.length; j++) {
@@ -168,11 +168,14 @@ public class ConfigSettings {
                 }
 
                 try {
-                    patt = (Pattern) Class.forName(classNames[0]).newInstance();
+                    
+//                    patt = (Pattern) Class.forName(classNames[0]).newInstance();
+                    patt = makePatternFromString(classNames[0]);
 
 
                     for (int i = 1; i < classNames.length; i++) {
-                        dec = (PatternDecorator) Class.forName(classNames[i]).newInstance();
+//                        dec = (PatternDecorator) Class.forName(classNames[i]).newInstance();
+                        dec = (PatternDecorator) makePatternFromString(classNames[i]);
                         dec.setInner(patt);
 
                         patt = dec;
@@ -233,5 +236,22 @@ public class ConfigSettings {
                 }
             }
         }
+    }
+    
+    public static Pattern makePatternFromString(String full) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+        String[] localArgs = new String[0];
+        String name = "";
+        name = full;
+        if (full.contains("(")) {
+            name = full.substring(0, full.indexOf("("));
+            localArgs = full.substring(full.indexOf('(') + 1, full.indexOf(')')).split(",");
+            for (int i = 0; i < localArgs.length; i++) {
+                localArgs[i] = localArgs[i].trim();
+            }
+        }
+        Pattern result = (Pattern) Class.forName(name).newInstance();
+        
+        result.setArgs(localArgs);
+        return result;
     }
 }
